@@ -1,0 +1,78 @@
+body {
+   background-color: #3DF500;
+}
+
+.title, .subtitle {
+	color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	text-align: center;
+	width: 80%;
+}
+
+.title {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.subtitle {
+	font-size: 18px;
+}
+
+.centered {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 160px;
+	width: 80%;
+}
+
+.addbox {
+	border: 2px solid white;
+	color: white;
+	display: block;
+	float: left;
+	height: 80px;
+	margin-right: 15px;
+	overflow: hidden;
+	text-align: center;
+	width: 31%;
+}
+
+li {
+	list-style: none;
+	margin: 0 0 0.25em;
+	overflow: hidden;
+	padding: 0;
+	position: relative;
+	z-index: 1;
+}
+
+li a {
+	color: white;
+	text-decoration: none;
+}
+
+.add-alt a:before{
+	background: #fff;
+	height: 15px;
+	left: 6px;
+	margin-top: -7px;
+	width: 5px;
+}
+
+.add-alt a:after{
+	background: #fff;
+	height: 5px;
+	left: 1px;
+	margin-top: -2px;
+	width: 15px;
+}
+
+li:before, li:after, li a:before, li a:after {
+	content: "";
+	left: 5px;
+	position: absolute;
+	top: 50%;
+}
+

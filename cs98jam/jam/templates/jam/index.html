@@ -1,2 +1,29 @@
-<h1>This is my first header</h1>
-<h2>This is my second header</h2>
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" />
+
+<div class="title">
+	JobApplicationManager
+</div>
+<div class="subtitle">
+	Visualize your job search in a streamlined UI and get hired today!
+</div>
+<div class="centered">
+	<div class="addbox">
+		<li id="addcompany" class="add-alt">
+			<a>Add a company</a>
+		</li>
+	</div>
+	<div class="addbox">
+		<li id="addcontact" class="add-alt">
+			<a>Add a contact</a>
+		</li>
+	</div>
+	<div class="addbox">
+		<li id="addevent" class="add-alt">
+			<a>Add an event</a>
+		</li>
+	</div>
+</div>
+
+<script src="{% static 'jam/handlers.js' %}"></script>
