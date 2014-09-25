@@ -3,6 +3,8 @@ var addCompany = document.getElementById('addcompany');
 var addEvent = document.getElementById('addevent');
 
 addContact.addEventListener('click', function(){
+	var overlay = document.getElementById('overlay');
+	overlay.style.display = "block";
     console.log("This will create a contact!");
 });
 

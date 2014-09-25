@@ -76,3 +76,25 @@ li:before, li:after, li a:before, li a:after {
 	top: 50%;
 }
 
+.overlay {
+	background-color: rgba(0,0,0,0.5);
+	display: none;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 10;
+}
+
+.modal {
+	background-color: white;
+	border-radius: 2px;
+	border: 1px solid white;
+	color: green;
+	height: 300px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 10px;
+	width: 300px;
+}
