@@ -4,11 +4,15 @@
 
 <div id="overlay" class="overlay">
 	<div class="modal">
-		Who do you want to add to your graph?
+		<h2>New Contact Info</h2>
 		<form>
-			<input name="name_input" placeholder="Nicole Hedley"/>
-			<input name="phone_number_input" placeholder="(917) 669-0190"/>
-			<input name="email_input" placeholder="nicole.k.hedley.15@dartmouth.edu"/>
+			<label for="name_input">Name: </label>
+			<input id="name_input" name="name" placeholder="Nicole Hedley"/>
+			<label for="phone_number_input">Phone #: </label>
+			<input id="phone_number_input" name="phone_number" placeholder="(917) 669-0190"/>
+			<label for="email_input">Email: </label>
+			<input id="email_input" name="email" placeholder="nicole.k.hedley.15@dartmouth.edu"/>
+			<input type="submit" value="Add New Contact"/>
 		</form>
 	</div>
 </div>
