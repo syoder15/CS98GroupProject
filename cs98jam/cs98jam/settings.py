@@ -26,7 +26,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 # Application definition
 
 INSTALLED_APPS = (
@@ -54,6 +54,11 @@ ROOT_URLCONF = 'cs98jam.urls'
 
 WSGI_APPLICATION = 'cs98jam.wsgi.application'
 
+TEMPLATE_DIRS = (
+	os.path.join(SITE_ROOT, 'templates'),
+)
+
+LOGIN_URL = '/login/'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
