@@ -1,0 +1,39 @@
+body {
+   background: #4166F5;
+}
+
+.title {
+	color: white;
+	font-size: 32px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.centered {
+	background-color: white;
+	display: inline-block;
+	height: 550px;
+	margin-top: 50px;
+	text-align: center;
+	width: 100%;
+}
+
+h2 {
+	color: #4166F5;
+}
+
+.fieldTitle {
+	text-align: center;
+}
+
+.profileField {
+	text-align: right;
+}
+
+.profileInfo {
+	text-align: center;
+}
+
+#profileTable {
+	display: inline;
+}
