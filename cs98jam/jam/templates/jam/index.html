@@ -2,20 +2,50 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" />
 
-<div id="overlay" class="overlay">
+<div id="contact_overlay" class="overlay">
 	<div class="modal">
 		<h2>New Contact Info</h2>
 		<form>
 			<label for="name_input">Name: </label>
-			<input id="name_input" name="name" placeholder="Nicole Hedley"/>
+			<input id="name_input" name="name" placeholder="John Smith"/>
 			<label for="phone_number_input">Phone #: </label>
-			<input id="phone_number_input" name="phone_number" placeholder="(917) 669-0190"/>
+			<input id="phone_number_input" name="phone_number" placeholder="(555) 555-5555"/>
 			<label for="email_input">Email: </label>
-			<input id="email_input" name="email" placeholder="nicole.k.hedley.15@dartmouth.edu"/>
+			<input id="email_input" name="email" placeholder="john.smith@gmail.com"/>
+			<label for="company_input">Employer: </label>
+			<input id="company_input" name="company" placeholder="Google"/>
 			<input class="button" type="submit" value="Add New Contact"/>
 		</form>
 	</div>
 </div>
+
+<div id="company_overlay" class="overlay">
+	<div class="modal">
+		<h2>New Company</h2>
+		<form>
+			<label for="name_input">Company: </label>
+			<input id="name_input" name="name" placeholder="Google"/>
+			<label for="deadline_input">Application Deadline: </label>
+			<input id="deadline_input" name="deadline" placeholder="12/31/2014"/>
+			<input class="button" type="submit" value="Add New Company"/>
+		</form>
+	</div>
+</div>
+
+<div id="event_overlay" class="overlay">
+	<div class="modal">
+		<h2>New Event</h2>
+		<form>
+			<label for="name_input">Event: </label>
+			<input id="name_input" name="name" placeholder="Google Barbecue"/>
+			<label for="date_input">Date: </label>
+			<input id="date_input" name="date" placeholder="12/31/2014"/>
+			<input class="button" type="submit" value="Add New Event"/>
+		</form>
+	</div>
+</div>
+
+
 
 <div id="pageheader">
 	<div class="title">
