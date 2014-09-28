@@ -1,5 +1,7 @@
 body {
-   background-color: #3DF500;
+   background: #4166F5;
+   /*url("images/google_campus.jpg") center center no-repeat;
+   background-size: 100% 100%;*/
 }
 
 .title, .subtitle {
@@ -21,22 +23,25 @@ body {
 }
 
 .centered {
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 160px;
-	width: 80%;
+	background-color: white;
+	display: inline-block;
+	height: 300px;
+	margin-top: 50px;
+	padding-top: 20px;
+	text-align: center;
+	width: 100%;
 }
 
 .addbox {
-	border: 2px solid white;
-	color: white;
-	display: block;
-	float: left;
+	border: 2px solid #4166F5;
+	color: #4166F5;
+	display: inline-block;
 	height: 80px;
 	margin-right: 15px;
 	overflow: hidden;
+	padding: 15px;
 	text-align: center;
-	width: 31%;
+	width: 250px;
 }
 
 li {
@@ -49,12 +54,12 @@ li {
 }
 
 li a {
-	color: white;
+	color: #4166F5;
 	text-decoration: none;
 }
 
 .add-alt a:before{
-	background: #fff;
+	background: #4166F5;
 	height: 15px;
 	left: 6px;
 	margin-top: -7px;
@@ -62,7 +67,7 @@ li a {
 }
 
 .add-alt a:after{
-	background: #fff;
+	background: #4166F5;
 	height: 5px;
 	left: 1px;
 	margin-top: -2px;
@@ -91,7 +96,7 @@ li:before, li:after, li a:before, li a:after {
 	background-color: white;
 	border-radius: 2px;
 	border: 1px solid white;
-	color: green;
+	color: #4166F5;
 	height: 300px;
 	margin-left: auto;
 	margin-right: auto;
@@ -114,4 +119,9 @@ label {
 	float: left;
 	height: 40px;
 	margin: 5px 0 0 0;
+}
+
+.button {
+	color: #4166F5;
+	background: #fff;
 }
