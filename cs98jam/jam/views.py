@@ -5,3 +5,7 @@ from django.http import HttpResponse
 def index(request):
     context = {}
     return render(request, 'jam/index.html', context)
+
+def profile(request):
+	context = {}
+	return render(request, 'jam/profile.html', context)
