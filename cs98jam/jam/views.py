@@ -9,3 +9,7 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     context = {}
     return render(request, 'jam/index.html', context)
+
+def profile(request):
+	context = {}
+	return render(request, 'jam/profile.html', context)
