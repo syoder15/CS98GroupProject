@@ -4,7 +4,7 @@ body {
    background-size: 100% 100%;*/
 }
 
-.title, .subtitle {
+.subtitle {
 	color: white;
 	margin-left: auto;
 	margin-right: auto;
@@ -14,8 +14,11 @@ body {
 }
 
 .title {
+	color: white;
 	font-size: 26px;
 	font-weight: bold;
+	display: inline;
+	margin-left: 40%; //can we generalize this more? Probably
 }
 
 .subtitle {
@@ -124,4 +127,20 @@ label {
 .button {
 	color: #4166F5;
 	background: #fff;
+}
+
+#pageheader {
+	width: 100%;
+}
+
+.profileButton {
+	color: white;
+	display: inline;
+	width: 10%;
+	float: right;
+}
+
+#userIcon {
+	width: 20%;
+	height: 5%;
 }
