@@ -5,7 +5,8 @@
 <div id="contact_overlay" class="overlay">
 	<div class="modal">
 		<h2>New Contact Info</h2>
-		<form>
+		<form class="contact_form" method="POST">
+			{% csrf_token %}
 			<label for="name_input">Name: </label>
 			<input id="name_input" name="name" placeholder="John Smith"/>
 			<label for="phone_number_input">Phone #: </label>
@@ -66,20 +67,21 @@
 </div>
 <div class="centered">
 	<div class="addbox">
-		<li id="addcompany" class="add-alt">
+		<li class="addcompany add-alt">
 			<a>Add a company</a>
 		</li>
 	</div>
 	<div class="addbox">
-		<li id="addcontact" class="add-alt">
+		<li class="addcontact add-alt">
 			<a>Add a contact</a>
 		</li>
 	</div>
 	<div class="addbox">
-		<li id="addevent" class="add-alt">
+		<li class="addevent add-alt">
 			<a>Add an event</a>
 		</li>
 	</div>
 </div>
 
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
 <script src="{% static 'jam/handlers.js' %}"></script>
