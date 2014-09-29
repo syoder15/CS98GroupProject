@@ -38,8 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'jquery',
     'south',
-    'jam', 
-    'djangular'
+    'jam'
+    # 'djangular'
 )
 
 MIDDLEWARE_CLASSES = (
