@@ -1,16 +1,28 @@
-body {
-   /*background: #4166F5;*/
-   background: url("images/google_campus.jpg") center center no-repeat;
-   background-size: 100% 100%;
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-.subtitle {
-	color: white;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 20px;
-	text-align: center;
-	width: 80%;
+li {
+	float:left;
+}
+
+#header {
+	background-color:transparent;
+	width: 100%;
+	left: 0;
+	top:0;
+	position: fixed;
+}
+
+#topBar {
+	padding: 5 10px;
+	min-height: 60px;
+	/*opacity: 0.6;
+    filter: alpha(opacity=60); /* For IE8 and earlier */*/
+    color: #4166F5;
+    background: rgba(255,255,255, .5);
 }
 
 .title {
@@ -18,18 +30,41 @@ body {
 	font-size: 26px;
 	font-weight: bold;
 	display: inline;
-	margin-left: 40%; /*can we generalize this more? Probably*/
+	padding: 5 20px;
+	/*margin-left: 40%; can we generalize this more? Probably*/
 }
 
 .subtitle {
+	color: white;
+	margin-left: 10px;
+	padding-top: 14px;
 	font-size: 18px;
 }
+
+.profileButton {
+	background-color: white;
+	display: inline;
+	width: 10%;
+	float: right;
+}
+
+#userIcon {
+	width: 18%;
+	height: 4%;
+}
+
+
+body {
+   background: url("images/google_campus.jpg") center center no-repeat;
+   background-size: 100% 100%;
+}
+
 
 .centered {
 	background-color: transparent;
 	display: inline-block;
 	height: 300px;
-	margin-top: 50px;
+	margin-top: 150px;
 	padding-top: 20px;
 	text-align: center;
 	width: 100%;
@@ -131,18 +166,3 @@ label {
 	background: #fff;
 }
 
-#pageheader {
-	width: 100%;
-}
-
-.profileButton {
-	color: white;
-	display: inline;
-	width: 10%;
-	float: right;
-}
-
-#userIcon {
-	width: 20%;
-	height: 5%;
-}
