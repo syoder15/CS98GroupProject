@@ -28,3 +28,7 @@ def new_company(request):
 def new_event(request):
 	form_data = request.POST
 	return HttpResponse()
+
+def companies(request):
+	context = {}
+	return render(request, 'jam/companies.html', context)

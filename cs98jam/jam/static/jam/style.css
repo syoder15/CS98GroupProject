@@ -8,6 +8,7 @@ li {
 	float:left;
 }
 
+
 #header {
 	background-color:transparent;
 	width: 100%;
@@ -46,6 +47,11 @@ li {
 	display: inline;
 	width: 10%;
 	float: right;
+	text-align: center;
+}
+
+a:link, a:visited {
+	color: #4166F5;
 }
 
 #userIcon {
@@ -57,6 +63,7 @@ li {
 body {
    background: url("images/google_campus.jpg") center center no-repeat;
    background-size: 100% 100%;
+   /*min-height:800px;*/
 }
 
 
