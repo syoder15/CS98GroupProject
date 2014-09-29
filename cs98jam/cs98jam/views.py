@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from cs98jam.forms import *
 
 def main_page(request):
     return render_to_response('index.html')
@@ -17,12 +18,12 @@ def logout_page(request):
 	
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserSignupForm(request.POST)
         if form.is_valid():
             new_user = form.save()
             return HttpResponseRedirect("/login/")
     else:
-        form = UserCreationForm()
+        form = UserSignupForm()
     return render(request, "registration/register.html", {
         'form': form,
     })
