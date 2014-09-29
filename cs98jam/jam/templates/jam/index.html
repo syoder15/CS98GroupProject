@@ -45,41 +45,42 @@
 	</div>
 </div>
 
+<div id="header"> 
+	<nav id="topBar">
+		<ul>
+			<li class="title"><a href="" class="title" style="float:left">JobApplicationManager</a></li>
+			<li class="subtitle">
+				Visualize your job search in a streamlined UI and get hired today!
+			</li>
+			<li class="profileButton">
+				<a href="profile">
+					<img src="../../static/jam/images/avatar.png" id="userIcon"/>
+					YourName
+				</a>
+				<a href="/logout/">Logout</a>
+			</li>
+		</ul>
+	</nav>
+</div> 
 
-
-<div id="pageheader">
-	<div class="title">
-		JobApplicationManager
+<body>
+	<div class="centered">
+		<div class="addbox">
+			<li id="addcompany" class="add-alt">
+				<a>Add a company</a>
+			</li>
+		</div>
+		<div class="addbox">
+			<li id="addcontact" class="add-alt">
+				<a>Add a contact</a>
+			</li>
+		</div>
+		<div class="addbox">
+			<li id="addevent" class="add-alt">
+				<a>Add an event</a>
+			</li>
+		</div>
 	</div>
-	<div class="profileButton">
-		<a href="profile">
-			<img src="../../static/jam/images/avatar.png" id="userIcon">
-			</img>
-			YourName
-		</a>
-		
-		<a href="/logout/">Logout</a>
-	</div>
-</div>
-<div class="subtitle">
-	Visualize your job search in a streamlined UI and get hired today!
-</div>
-<div class="centered">
-	<div class="addbox">
-		<li id="addcompany" class="add-alt">
-			<a>Add a company</a>
-		</li>
-	</div>
-	<div class="addbox">
-		<li id="addcontact" class="add-alt">
-			<a>Add a contact</a>
-		</li>
-	</div>
-	<div class="addbox">
-		<li id="addevent" class="add-alt">
-			<a>Add an event</a>
-		</li>
-	</div>
-</div>
+</body> 
 
 <script src="{% static 'jam/handlers.js' %}"></script>
