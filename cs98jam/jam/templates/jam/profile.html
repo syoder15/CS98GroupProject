@@ -1,0 +1,106 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'jam/profile.css' %}" />
+
+<div class="title">
+	Your Profile
+</div>
+
+<div class="centered">
+	<div class="contactInfo">
+		<h2>Contact Information</h2>
+		<form action='/submitProfile' method="post">
+			<table id="profileTable">
+				<tr>
+					<td class="profileField">
+						<label for="name_input">*First Name: </label>
+						<input id="first_name_input" name="first_name" placeholder="Jane"/>
+					</td>
+					<td class="profileField">
+						<label for="name_input">*Last Name: </label>
+						<input id="last_name_input" name="last_name" placeholder="Smith"/>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td class="profileField">
+						<label for="email_input">*Email: </label>
+						<input id="email_input" name="email" placeholder="jane-smith@gmail.com"/>
+					</td>
+
+					<td class="profileField">
+						<label for="phone_number_input">Phone Number: </label>
+						<input id="phone_number_input" name="phone_number" placeholder="8005550188"/>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td class="profileField">
+						<label for="street_input">Address: </label>
+						<input id="street_input" name="street" placeholder="123 Main Street"/>
+					</td>
+					<td class="profileField">
+						<label for="city_input">City: </label>
+						<input id="city_input" name="city" placeholder="Hanover"/>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td class="profileField">
+						<label for="state_input">State: </label>
+						<input id="state_input" name="state" placeholder="NH"/>
+					</td>
+					<td class="profileField">
+						<label for="zip_input">Zip Code: </label>
+						<input id="zip_input" name="zipcode" placeholder="03755"/>
+					</td>
+				</tr>
+			</table>
+	</div>
+
+	<div class="personalInfo">
+		<h2>Personal Information</h2>
+			<table id="profileTable">
+				<tr>
+					<td class="profileField">
+						<label for="gender_input">Gender: </label>
+						<input id="gender_input" type="radio" name="gender"  value="female"/>Female
+						<input id="gender_input" type="radio" name="gender"  value="male"/> Male
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td class="profileField">
+						<label for="school_input">School: </label>
+						<input id="school_input" name="school_number" placeholder="Dartmouth College"/>
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td class="fieldTitle">
+						Graduation Date
+					</td>
+				</tr>
+				<tr>
+					<td class="profileField">
+						<label for="grad_month_input">Month: </label>
+						<input id="grad_month_input" name="grad_month" placeholder="June"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="profileField">
+						<label for="grad_year_input">Year: </label>
+						<input id="grad_year_input" name="grad_year" placeholder="2015"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="profileField">
+						<input class="button" type="submit" value="Save"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
+<script src="{% static 'jam/profile.js' %}"></script>
