@@ -23,7 +23,8 @@
 <div id="company_overlay" class="overlay">
 	<div class="modal">
 		<h2>New Company</h2>
-		<form>
+		<form class="company_form" method="POST">
+			{% csrf_token %}
 			<label for="name_input">Company: </label>
 			<input id="name_input" name="name" placeholder="Google"/>
 			<label for="deadline_input">Application Deadline: </label>
@@ -36,7 +37,8 @@
 <div id="event_overlay" class="overlay">
 	<div class="modal">
 		<h2>New Event</h2>
-		<form>
+		<form class="event_form" method="POST">
+			{% csrf_token %}
 			<label for="name_input">Event: </label>
 			<input id="name_input" name="name" placeholder="Google Barbecue"/>
 			<label for="date_input">Date: </label>
