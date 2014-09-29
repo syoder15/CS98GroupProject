@@ -137,7 +137,7 @@ label {
 
 .profileButton {
 	background-color: white;
-	display: inline;
+	display: inline-block;
 	width: 10%;
 	float: right;
 }
@@ -147,10 +147,24 @@ label {
 	height: 5%;
 }
 
-#accountList li.dropdown {
+.accountList {
+	display: inline;
+	font-size: 14px;
+}
+
+.accountList li.dropdown {
     display: none;
 }
 
-#accountList li.visible {
-    display: block;
+.accountList li.visible {
+    display: inline-block;
+    float: right;
+}
+
+.profileBox {
+	display: inline;
+}
+
+.profileNameButton {
+	margin-top: 10px;
 }

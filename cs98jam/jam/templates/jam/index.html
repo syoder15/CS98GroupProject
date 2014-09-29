@@ -51,13 +51,15 @@
 		JobApplicationManager
 	</div>
 	<div class="profileButton">
-			<img src="../../static/jam/images/avatar.png" id="userIcon">
+		<a href="profile">
+			<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox">
 			</img>
+		</a>
 			<ul class="accountList">
-			<li>YourName</li>
-			<li class="dropdown"><a href="profile">My Account</a></li>
-			<li class="dropdown"><a href="logout">My Account</a></li>
-		</ul>
+				<li class="profileNameButton profileBox">Your Name</li>
+				<li class="dropdown"><a href="profile">My Account</a></li><br /><br />
+				<li class="dropdown" id="listBottom"><a href="/logout/">Logout</a></li>
+			</ul>
 	</div>
 </div>
 <div class="subtitle">
@@ -81,4 +83,5 @@
 	</div>
 </div>
 
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
 <script src="{% static 'jam/handlers.js' %}"></script>
