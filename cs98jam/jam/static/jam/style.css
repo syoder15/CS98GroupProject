@@ -46,6 +46,11 @@ li {
 	display: inline;
 	width: 10%;
 	float: right;
+	text-align: center;
+}
+
+a:link, a:visited {
+	color: #4166F5;
 }
 
 #userIcon {
