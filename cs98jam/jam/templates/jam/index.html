@@ -47,7 +47,6 @@
 		</form>
 	</div>
 </div>
-
 <div id="header"> 
 	<nav id="topBar">
 		<ul>
@@ -55,14 +54,17 @@
 			<li class="subtitle">
 				Visualize your job search in a streamlined UI and get hired today!
 			</li>
-			<li class="profileButton">
-				<a href="profile">
-					<img src="../../static/jam/images/avatar.png" id="userIcon"/>
-					YourName
-				</a>
-				<a href="/logout/">Logout</a>
-			</li>
 		</ul>
+		<div class="profileButton">
+			<a href="profile">
+				<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
+			</a>
+			<ul class="accountList">
+				<li class="profileNameButton profileBox">Your Name</li>
+				<li class="dropdown"><a href="profile">My Account</a></li><br /><br />
+				<li class="dropdown" id="listBottom"><a href="/logout/">Logout</a></li>
+			</ul>
+		</div>
 	</nav>
 </div>
 
