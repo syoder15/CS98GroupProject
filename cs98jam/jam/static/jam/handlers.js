@@ -1,7 +1,7 @@
 var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
-var contactForm = $('.contact_form');
+var profileDropDown = $('.profileNameButton');
 var companyForm = $('.contact_form');
 var eventForm = $('.contact_form');
 
@@ -18,6 +18,10 @@ addCompany.on('click', function(){
 addEvent.on('click', function(){
 	var eventOverlay = document.getElementById('event_overlay')
 	eventOverlay.style.display = "block";
+});
+
+profileDropDown.on('click', function() {
+	$('.dropdown').toggleClass('visible');
 });
 
 function getCookie(name) {
