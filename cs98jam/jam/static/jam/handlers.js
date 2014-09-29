@@ -90,7 +90,7 @@ companyForm.submit(function(event) {
 	});
 });
 
-contactForm.submit(function(event) {
+eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
   	var name = $('#name_input').val();
