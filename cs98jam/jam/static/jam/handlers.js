@@ -1,28 +1,64 @@
 var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
-var contactForm = document.getElementById('contact_form');
+var contactForm = $('.contact_form');
 
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
 	contactOverlay.style.display = "block";
-    console.log("This will create a contact!");
 });
 
 addCompany.on('click', function(){
 	var companyOverlay = document.getElementById('company_overlay')
 	companyOverlay.style.display = "block";
-    console.log("This will create a company!");
 });
 
 addEvent.on('click', function(){
 	var eventOverlay = document.getElementById('event_overlay')
 	eventOverlay.style.display = "block";
-    console.log("This will create an event!");
 });
 
-// contactForm.submit(function(event) {
-// 	debugger;
-//   	event.preventDefault();
-//   	console.log("The form has been submitted");
-// });
+contactForm.submit(function(event) {
+  	event.preventDefault();
+  	//NEED TO VALIDATE FIELDS
+  	var name = $('#name_input').val();
+  	var phone = $('#phone_number_input').val();
+  	var email = $('#email_input').val();
+  	var company = $('#company_input').val();
+
+  	function getCookie(name) {
+	    var cookieValue = null;
+	    if (document.cookie && document.cookie != '') {
+	        var cookies = document.cookie.split(';');
+	        for (var i = 0; i < cookies.length; i++) {
+	            var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+	var csrftoken = getCookie('csrftoken');
+
+  	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	    }
+	});
+  	$.ajax({
+  		type: "POST",
+		url: "new_contact/",
+		data: {
+			"name": name,
+			"phone": phone,
+			"email": email,
+			"company": company
+		}
+	}).done(function() {
+		console.log("GOT HERE");
+		$( this ).addClass( "done" );
+	});
+});
