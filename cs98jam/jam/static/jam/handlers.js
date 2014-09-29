@@ -2,6 +2,7 @@ var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
 var contactForm = document.getElementById('contact_form');
+var profileDropDown = $('.profileButton');
 
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
@@ -20,6 +21,10 @@ addEvent.on('click', function(){
 	eventOverlay.style.display = "block";
     console.log("This will create an event!");
 });
+
+profileDropDown.on('click', function() {
+	$('.dropdown').toggleClass('visible');
+})
 
 // contactForm.submit(function(event) {
 // 	debugger;

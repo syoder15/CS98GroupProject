@@ -136,7 +136,7 @@ label {
 }
 
 .profileButton {
-	color: white;
+	background-color: white;
 	display: inline;
 	width: 10%;
 	float: right;
@@ -145,4 +145,12 @@ label {
 #userIcon {
 	width: 20%;
 	height: 5%;
+}
+
+#accountList li.dropdown {
+    display: none;
+}
+
+#accountList li.visible {
+    display: block;
 }
