@@ -5,5 +5,7 @@ from jam import views
 urlpatterns = patterns('', 
     url(r'^$', views.index, name='index'),
     url(r'profile', views.profile, name='profile'),
-    url(r'new_contact/', views.new_contact, name='new_contact'), 
-    url(r'companies/', views.companies, name='companies'))
+    url(r'companies/', views.companies, name='companies'),
+    url(r'new_contact/', views.new_contact, name='new_contact'),
+    url(r'new_company/', views.new_contact, name='new_company'),
+    url(r'new_event/', views.new_contact, name='new_event'))

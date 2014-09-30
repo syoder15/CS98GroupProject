@@ -1,7 +1,10 @@
 var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
+var profileDropDown = $('.profileNameButton');
 var contactForm = $('.contact_form');
+var companyForm = $('.company_form');
+var eventForm = $('.event_form');
 
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
@@ -18,6 +21,26 @@ addEvent.on('click', function(){
 	eventOverlay.style.display = "block";
 });
 
+profileDropDown.on('click', function() {
+	$('.dropdown').toggleClass('visible');
+});
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 contactForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
@@ -25,22 +48,6 @@ contactForm.submit(function(event) {
   	var phone = $('#phone_number_input').val();
   	var email = $('#email_input').val();
   	var company = $('#company_input').val();
-
-  	function getCookie(name) {
-	    var cookieValue = null;
-	    if (document.cookie && document.cookie != '') {
-	        var cookies = document.cookie.split(';');
-	        for (var i = 0; i < cookies.length; i++) {
-	            var cookie = jQuery.trim(cookies[i]);
-	            // Does this cookie string begin with the name we want?
-	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-	                break;
-	            }
-	        }
-	    }
-	    return cookieValue;
-	}
 	var csrftoken = getCookie('csrftoken');
 
   	$.ajaxSetup({
@@ -56,6 +63,56 @@ contactForm.submit(function(event) {
 			"phone": phone,
 			"email": email,
 			"company": company
+		}
+	}).done(function() {
+		console.log("GOT HERE");
+		$( this ).addClass( "done" );
+	});
+});
+
+companyForm.submit(function(event) {
+  	event.preventDefault();
+  	//NEED TO VALIDATE FIELDS
+  	var name = $('#name_input').val();
+  	var deadline = $('#deadline_input').val();
+	var csrftoken = getCookie('csrftoken');
+
+  	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	    }
+	});
+  	$.ajax({
+  		type: "POST",
+		url: "new_company/",
+		data: {
+			"name": name,
+			"deadline": deadline,
+		}
+	}).done(function() {
+		console.log("GOT HERE");
+		$( this ).addClass( "done" );
+	});
+});
+
+eventForm.submit(function(event) {
+  	event.preventDefault();
+  	//NEED TO VALIDATE FIELDS
+  	var name = $('#name_input').val();
+  	var date = $('#date_input').val();
+	var csrftoken = getCookie('csrftoken');
+
+  	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	    }
+	});
+  	$.ajax({
+  		type: "POST",
+		url: "new_event/",
+		data: {
+			"name": name,
+			"date": date
 		}
 	}).done(function() {
 		console.log("GOT HERE");

@@ -7,6 +7,7 @@ class Company(models.Model):
         return self.name
     
     name = models.CharField(max_length=50)
+    # application_deadline = models.DateField()
 
 class Contact(models.Model):
 
@@ -15,6 +16,17 @@ class Contact(models.Model):
 
     name = models.CharField(max_length=50)
     phone_number = models.IntegerField(default=0)
+    # email = models.CharField(max_length=50)
+    # employer = models.CharField(max_length=50)
+
+
+class Event(models.Model):
+
+    def __unicode__(self):
+        return self.name
+
+    name = models.CharField(max_length=50)
+    date = models.DateField()
 
 
 class Profile(models.Model):

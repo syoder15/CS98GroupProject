@@ -27,14 +27,24 @@
 					Visualize your job search in a streamlined UI and get hired today!
 				</li>
 				<li><a href="companies">Companies</a></li>
-				<li class="profileButton">
+<!-- 				<li class="profileButton">
 					<a href="profile">
 						<img src="../../static/jam/images/avatar.png" id="userIcon"/>
 						YourName
 					</a>
 					<a href="/logout/">Logout</a>
-				</li>
+				</li> -->
 			</ul>
+			<div class="profileButton">
+				<a href="profile">
+					<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
+				</a>
+				<ul class="accountList">
+					<li class="profileNameButton profileBox">Your Name</li>
+					<li class="dropdown"><a href="profile">My Account</a></li><br /><br />
+					<li class="dropdown" id="listBottom"><a href="/logout/">Logout</a></li>
+				</ul>
+			</div>
 		</nav>
 	</div>
 
@@ -55,7 +65,7 @@
 			</li>
 		</div>
 	</div>
-		<div id="contact_overlay" class="overlay">
+	<div id="contact_overlay" class="overlay">
 		<div class="modal">
 			<h2>New Contact Info</h2>
 			<form class="contact_form" method="POST">

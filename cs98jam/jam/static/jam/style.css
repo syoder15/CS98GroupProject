@@ -173,3 +173,39 @@ label {
 	background: #fff;
 }
 
+#pageheader {
+	width: 100%;
+}
+
+.profileButton {
+	display: inline-block;
+	width: 10%;
+	float: right;
+}
+
+#userIcon {
+	width: 20%;
+	height: 5%;
+}
+
+.accountList {
+	display: inline;
+	font-size: 14px;
+}
+
+.accountList li.dropdown {
+    display: none;
+}
+
+.accountList li.visible {
+    display: inline-block;
+    float: right;
+}
+
+.profileBox {
+	display: inline;
+}
+
+.profileNameButton {
+	margin-top: 10px;
+}
