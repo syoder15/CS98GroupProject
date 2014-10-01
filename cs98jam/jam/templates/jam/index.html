@@ -8,7 +8,7 @@
 
 	{% load staticfiles %}
 	<link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" />
-	<link rel="stylesheet" type="text/css" href="{% static 'djangular/css/bootstrap3.css' %}" />
+	<!-- <link rel="stylesheet" type="text/css" href="{% static 'djangular/css/bootstrap3.css' %}" /> -->
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
 
 	<!-- <link rel="stylesheet" type="text/css" href="../../static/jam/style.css"> -->
@@ -16,21 +16,8 @@
 
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
-	<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'djangular/js/django-angular.js' %}"></script>
-	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
-	<script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script>
-	<script src="{% static 'jam/handlers.js' %}"></script>
 
-	<script>
-		var my_app = angular.module('MyApp').config(function($httpProvider) {
-		    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-		});
-		my_app.config(function($interpolateProvider) {
-		    $interpolateProvider.startSymbol('{$');
-		    $interpolateProvider.endSymbol('$}');
-		});
-	</script>
+
 
 	<title>JAM</title>
 </head>
@@ -44,13 +31,6 @@
 					Visualize your job search in a streamlined UI and get hired today!
 				</li>
 				<li><a href="companies">Companies</a></li>
-<!-- 				<li class="profileButton">
-					<a href="profile">
-						<img src="../../static/jam/images/avatar.png" id="userIcon"/>
-						YourName
-					</a>
-					<a href="/logout/">Logout</a>
-				</li> -->
 			</ul>
 			<div class="profileButton">
 				<a href="profile">
@@ -65,7 +45,7 @@
 		</nav>
 	</div>
 
-	<div class="centered">
+<!-- 	<div class="centered">
 		<div class="addbox">
 			<li class="addcompany add-alt">
 				<a>Add a company</a>
@@ -81,9 +61,143 @@
 				<a>Add an event</a>
 			</li>
 		</div>
+	</div> -->
+
+	<div class="centered">
+		<div class="addbox">
+			<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#companyModal">
+			  Add Company
+			</button>
+		</div>
+		<div class="addbox">
+			<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#contactModal">
+			  Add Contact
+			</button>
+		</div>
+		<div class="addbox">
+			<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#eventModal">
+			  Add Event
+			</button>
+		</div>
 	</div>
+
+
+	<!-- Company Modal -->
+	<div class="modal fade" id="companyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">New Company</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="company_form" method="POST">
+				{% csrf_token %}
+				<label for="company_name_input">Company: </label>
+				<input id="company_name_input" name="name" placeholder="Google"/>
+				<label for="company_deadline_input">Application Deadline: </label>
+				<input id="company_deadline_input" name="deadline" placeholder="12/31/2014"/>
+				<input class="button" type="submit" value="Add New Company"/>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<!-- Contact Modal -->
+	<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">New Contact</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="contact_form" method="POST">
+				{% csrf_token %}
+				<label for="name_input">Name: </label>
+				<input id="name_input" name="name" placeholder="John Smith"/>
+				<label for="phone_number_input">Phone #: </label>
+				<input id="phone_number_input" name="phone_number" placeholder="(555) 555-5555"/>
+				<label for="email_input">Email: </label>
+				<input id="email_input" name="email" placeholder="john.smith@gmail.com"/>
+				<label for="company_input">Employer: </label>
+				<input id="company_input" name="company" placeholder="Google"/>
+				<input class="button" type="submit" value="Add New Contact"/>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+	<!-- Event Modal -->
+	<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">New Contact</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="contact_form" method="POST">
+				{% csrf_token %}
+				<label for="name_input">Name: </label>
+				<input id="name_input" name="name" placeholder="John Smith"/>
+				<label for="phone_number_input">Phone #: </label>
+				<input id="phone_number_input" name="phone_number" placeholder="(555) 555-5555"/>
+				<label for="email_input">Email: </label>
+				<input id="email_input" name="email" placeholder="john.smith@gmail.com"/>
+				<label for="company_input">Employer: </label>
+				<input id="company_input" name="company" placeholder="Google"/>
+				<input class="button" type="submit" value="Add New Contact"/>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+	<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">New Event</h4>
+	      </div>
+	      <div class="modal-body">
+			<form class="event_form" method="POST">
+				{% csrf_token %}
+				<label for="event_name_input">Event: </label>
+				<input id="event_name_input" name="name" placeholder="Google Barbecue"/>
+				<label for="event_date_input">Date: </label>
+				<input id="event_date_input" name="date" placeholder="12/31/2014"/>
+				<input class="button" type="submit" value="Add New Event"/>
+			</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+<!-- 
 	<div id="contact_overlay" class="overlay">
-		<div class="modal">
+		ASDL;KFJASLDKJFA;LSDJFSL;KDFJ
+		<div class="1modal">
 			<h2>New Contact Info</h2>
 			<form class="contact_form" method="POST">
 				{% csrf_token %}
@@ -101,7 +215,7 @@
 	</div>
 
 	<div id="company_overlay" class="overlay">
-		<div class="modal">
+		<div class="1modal">
 			<h2>New Company</h2>
 			<form class="company_form" method="POST">
 				{% csrf_token %}
@@ -115,7 +229,7 @@
 	</div>
 
 	<div id="event_overlay" class="overlay">
-		<div class="modal">
+		<div class="1modal">
 			<h2>New Event</h2>
 			<form class="event_form" method="POST">
 				{% csrf_token %}
@@ -126,7 +240,23 @@
 				<input class="button" type="submit" value="Add New Event"/>
 			</form>
 		</div>
-	</div>
+	</div> -->
 </body>
 </html>
+
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+<!-- <script src="{% static 'djangular/js/django-angular.js' %}"></script> -->
+<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+<!-- <script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script> -->
+<script src="{% static 'jam/handlers.js' %}"></script>
+<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+<script>
+	// var my_app = angular.module('MyApp').config(function($httpProvider) {
+	//     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+	// });
+	// my_app.config(function($interpolateProvider) {
+	//     $interpolateProvider.startSymbol('{$');
+	//     $interpolateProvider.endSymbol('$}');
+	// });
+</script>
 
