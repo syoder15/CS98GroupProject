@@ -56,7 +56,7 @@ a:link, a:visited {
 }
 
 
-body {
+#backgroundImage {
    background: url("images/google_campus.jpg") center center no-repeat fixed;
    background-size: cover;
    /*min-height:800px;*/
