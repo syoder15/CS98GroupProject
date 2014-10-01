@@ -12,7 +12,6 @@
 	<link rel="stylesheet" type="text/css" href="../../static/jam/style.css">
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
-
 	<title>JAM</title>
 </head>
 
@@ -20,27 +19,20 @@
 	<div id="header"> 
 		<nav id="topBar">
 			<ul>
-				<li class="title"><a href="" class="title" style="float:left">JobApplicationManager</a></li>
+				<li class="title"><a href="" class="title">JobApplicationManager</a></li>
 				<li class="subtitle">
 					Visualize your job search in a streamlined UI and get hired today!
 				</li>
 				<li><a href="companies">Companies</a></li>
-<!-- 				<li class="profileButton">
-					<a href="profile">
-						<img src="../../static/jam/images/avatar.png" id="userIcon"/>
-						YourName
-					</a>
-					<a href="/logout/">Logout</a>
-				</li> -->
 			</ul>
 			<div class="profileButton">
 				<a href="profile">
 					<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
 				</a>
 				<ul class="accountList">
-					<li class="profileNameButton profileBox">Your Name</li>
-					<li class="dropdown"><a href="profile">My Account</a></li><br /><br />
-					<li class="dropdown" id="listBottom"><a href="/logout/">Logout</a></li>
+					<li class="profileNameButton profileBox profDropdown">Your Name</li>
+					<li class="dropdown"><a href="profile" class="profDropdown">My Account</a></li><br /><br />
+					<li class="dropdown"><a href="/logout/" class="profDropdown">Logout</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -109,5 +101,5 @@
 </body>
 </html>
 
-	<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'jam/handlers.js' %}"></script>
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+<script src="{% static 'jam/handlers.js' %}"></script>

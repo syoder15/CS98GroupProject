@@ -33,7 +33,6 @@ li {
 	display: inline;
 	padding: 5 20px;
 	float: left;
-	/*margin-left: 40%; can we generalize this more? Probably*/
 }
 
 .subtitle {
@@ -41,14 +40,6 @@ li {
 	margin-left: 10px;
 	padding-top: 14px;
 	font-size: 18px;
-}
-
-.profileButton {
-	background-color: white;
-	display: inline;
-	width: 10%;
-	float: right;
-	text-align: center;
 }
 
 a:link, a:visited {
@@ -181,17 +172,18 @@ label {
 .profileButton {
 	display: inline-block;
 	width: 10%;
-	float: right;
+	height: 60px;
+	text-align: center;
 }
 
 #userIcon {
-	width: 20%;
-	height: 5%;
+	width: 15%;
+	height: 45%;
 }
 
 .accountList {
-	display: inline;
-	font-size: 14px;
+	display: inline-block;
+	font-size: 16px;
 }
 
 .accountList li.dropdown {
@@ -201,12 +193,18 @@ label {
 .accountList li.visible {
     display: inline-block;
     float: right;
+    color: white;
 }
 
 .profileBox {
-	display: inline;
+	display: inline-block;
 }
 
 .profileNameButton {
 	margin-top: 10px;
+	color: white;
+}
+
+li a.profDropdown {
+	color: white;
 }
