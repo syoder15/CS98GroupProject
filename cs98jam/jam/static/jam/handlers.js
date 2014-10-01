@@ -1,9 +1,10 @@
 var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
+var profileDropDown = $('.profileNameButton');
 var contactForm = $('.contact_form');
-var companyForm = $('.contact_form');
-var eventForm = $('.contact_form');
+var companyForm = $('.company_form');
+var eventForm = $('.event_form');
 
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
@@ -18,6 +19,10 @@ addCompany.on('click', function(){
 addEvent.on('click', function(){
 	var eventOverlay = document.getElementById('event_overlay')
 	eventOverlay.style.display = "block";
+});
+
+profileDropDown.on('click', function() {
+	$('.dropdown').toggleClass('visible');
 });
 
 function getCookie(name) {
@@ -90,7 +95,7 @@ companyForm.submit(function(event) {
 	});
 });
 
-contactForm.submit(function(event) {
+eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
   	var name = $('#name_input').val();

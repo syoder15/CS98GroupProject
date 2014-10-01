@@ -37,3 +37,21 @@ def new_event(request):
 					  date=form_data.get('date'))
 	event.save()
 	return HttpResponse()
+
+def new_profile(request):
+	form_data = request.POST
+	profile = Profile(first_name=form_data.get('first name'),
+					  last_name=form_data.get('last name'),
+					  email=form_data.get('email'),
+					  phone_number=form_data.get('phone'),
+					  address=form_data.get('address'),
+					  city=form_data.get('city'),
+					  state=form_data.get('state'),
+					  zip_code=form_data.get('zip code'))
+	profile.save()
+	return HttpResponse()
+
+def companies(request):
+	context = {}
+	return render(request, 'jam/companies.html', context)
+

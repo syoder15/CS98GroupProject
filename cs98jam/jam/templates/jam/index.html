@@ -1,88 +1,112 @@
-{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en-US">
+	<link rel="stylesheet" type="text/css" href="../../static/jam/style.css">
 
-<link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" />
+<head>
+	<meta charset="utf-8" />
+	<meta name="keywords" content="key, words" />
+	<meta name="description" content="description" />
 
-<div id="contact_overlay" class="overlay">
-	<div class="modal">
-		<h2>New Contact Info</h2>
-		<form class="contact_form" method="POST">
-			{% csrf_token %}
-			<label for="name_input">Name: </label>
-			<input id="name_input" name="name" placeholder="John Smith"/>
-			<label for="phone_number_input">Phone #: </label>
-			<input id="phone_number_input" name="phone_number" placeholder="(555) 555-5555"/>
-			<label for="email_input">Email: </label>
-			<input id="email_input" name="email" placeholder="john.smith@gmail.com"/>
-			<label for="company_input">Employer: </label>
-			<input id="company_input" name="company" placeholder="Google"/>
-			<input class="button" type="submit" value="Add New Contact"/>
-		</form>
-	</div>
-</div>
+	<!-- {% load staticfiles %} -->
+	<!-- <link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" /> -->
+	<link rel="stylesheet" type="text/css" href="../../static/jam/style.css">
+	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
+	<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'jam/handlers.js' %}"></script>
 
-<div id="company_overlay" class="overlay">
-	<div class="modal">
-		<h2>New Company</h2>
-		<form class="company_form" method="POST">
-			{% csrf_token %}
-			<label for="name_input">Company: </label>
-			<input id="name_input" name="name" placeholder="Google"/>
-			<label for="deadline_input">Application Deadline: </label>
-			<input id="deadline_input" name="deadline" placeholder="12/31/2014"/>
-			<input class="button" type="submit" value="Add New Company"/>
-		</form>
-	</div>
-</div>
+	<title>JAM</title>
+</head>
 
-<div id="event_overlay" class="overlay">
-	<div class="modal">
-		<h2>New Event</h2>
-		<form class="event_form" method="POST">
-			{% csrf_token %}
-			<label for="name_input">Event: </label>
-			<input id="name_input" name="name" placeholder="Google Barbecue"/>
-			<label for="date_input">Date: </label>
-			<input id="date_input" name="date" placeholder="12/31/2014"/>
-			<input class="button" type="submit" value="Add New Event"/>
-		</form>
-	</div>
-</div>
-
-<div id="header"> 
-	<nav id="topBar">
-		<ul>
-			<li class="title"><a href="" class="title" style="float:left">JobApplicationManager</a></li>
-			<li class="subtitle">
-				Visualize your job search in a streamlined UI and get hired today!
-			</li>
-			<li class="profileButton">
+<body> 
+	<div id="header"> 
+		<nav id="topBar">
+			<ul>
+				<li class="title"><a href="" class="title" style="float:left">JobApplicationManager</a></li>
+				<li class="subtitle">
+					Visualize your job search in a streamlined UI and get hired today!
+				</li>
+				<li><a href="companies">Companies</a></li>
+<!-- 				<li class="profileButton">
+					<a href="profile">
+						<img src="../../static/jam/images/avatar.png" id="userIcon"/>
+						YourName
+					</a>
+					<a href="/logout/">Logout</a>
+				</li> -->
+			</ul>
+			<div class="profileButton">
 				<a href="profile">
-					<img src="../../static/jam/images/avatar.png" id="userIcon"/>
-					YourName
+					<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
 				</a>
-				<a href="/logout/">Logout</a>
+				<ul class="accountList">
+					<li class="profileNameButton profileBox">Your Name</li>
+					<li class="dropdown"><a href="profile">My Account</a></li><br /><br />
+					<li class="dropdown" id="listBottom"><a href="/logout/">Logout</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+
+	<div class="centered">
+		<div class="addbox">
+			<li class="addcompany add-alt">
+				<a>Add a company</a>
 			</li>
-		</ul>
-	</nav>
-</div>
+		</div>
+		<div class="addbox">
+			<li class="addcontact add-alt">
+				<a>Add a contact</a>
+			</li>
+		</div>
+		<div class="addbox">
+			<li class="addevent add-alt">
+				<a>Add an event</a>
+			</li>
+		</div>
+	</div>
+	<div id="contact_overlay" class="overlay">
+		<div class="modal">
+			<h2>New Contact Info</h2>
+			<form class="contact_form" method="POST">
+				{% csrf_token %}
+				<label for="name_input">Name: </label>
+				<input id="name_input" name="name" placeholder="John Smith"/>
+				<label for="phone_number_input">Phone #: </label>
+				<input id="phone_number_input" name="phone_number" placeholder="(555) 555-5555"/>
+				<label for="email_input">Email: </label>
+				<input id="email_input" name="email" placeholder="john.smith@gmail.com"/>
+				<label for="company_input">Employer: </label>
+				<input id="company_input" name="company" placeholder="Google"/>
+				<input class="button" type="submit" value="Add New Contact"/>
+			</form>
+		</div>
+	</div>
 
-<div class="centered">
-	<div class="addbox">
-		<li class="addcompany add-alt">
-			<a>Add a company</a>
-		</li>
+	<div id="company_overlay" class="overlay">
+		<div class="modal">
+			<h2>New Company</h2>
+			<form>
+				<label for="name_input">Company: </label>
+				<input id="name_input" name="name" placeholder="Google"/>
+				<label for="deadline_input">Application Deadline: </label>
+				<input id="deadline_input" name="deadline" placeholder="12/31/2014"/>
+				<input class="button" type="submit" value="Add New Company"/>
+			</form>
+		</div>
 	</div>
-	<div class="addbox">
-		<li class="addcontact add-alt">
-			<a>Add a contact</a>
-		</li>
-	</div>
-	<div class="addbox">
-		<li class="addevent add-alt">
-			<a>Add an event</a>
-		</li>
-	</div>
-</div>
 
-<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
-<script src="{% static 'jam/handlers.js' %}"></script>
+	<div id="event_overlay" class="overlay">
+		<div class="modal">
+			<h2>New Event</h2>
+			<form>
+				<label for="name_input">Event: </label>
+				<input id="name_input" name="name" placeholder="Google Barbecue"/>
+				<label for="date_input">Date: </label>
+				<input id="date_input" name="date" placeholder="12/31/2014"/>
+				<input class="button" type="submit" value="Add New Event"/>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
