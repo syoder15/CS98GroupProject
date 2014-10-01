@@ -18,7 +18,7 @@ li {
 }
 
 #topBar {
-	padding: 5 10px;
+	padding: 5px 10px;
 	min-height: 60px;
 	/*opacity: 0.6;
     filter: alpha(opacity=60); /* For IE8 and earlier */*/
@@ -31,7 +31,7 @@ li {
 	font-size: 26px;
 	font-weight: bold;
 	display: inline;
-	padding: 5 20px;
+	padding: 5px 20px;
 	/*margin-left: 40%; can we generalize this more? Probably*/
 }
 
@@ -61,8 +61,8 @@ a:link, a:visited {
 
 
 body {
-   background: url("images/google_campus.jpg") center center no-repeat;
-   background-size: 100% 100%;
+   background: url("images/google_campus.jpg") center center no-repeat fixed;
+   background-size: cover;
    /*min-height:800px;*/
 }
 
@@ -102,6 +102,7 @@ li {
 li a {
 	color: #4166F5;
 	text-decoration: none;
+	margin-left: 20px;
 }
 
 .add-alt a:before{
@@ -157,14 +158,14 @@ h2 {
 input {
 	float: right;
 	height: 40px;
-	margin: 5px 0 0 0;
+	margin: 5px 0px 0px 0px;
 	width: 50%;
 }
 
 label {
 	float: left;
 	height: 40px;
-	margin: 5px 0 0 0;
+	margin: 5px 0px 0px 0px;
 	width: 50%;
 }
 
