@@ -8,6 +8,7 @@ li {
 	float:left;
 }
 
+
 #header {
 	background-color:transparent;
 	width: 100%;
@@ -62,6 +63,7 @@ a:link, a:visited {
 body {
    background: url("images/google_campus.jpg") center center no-repeat;
    background-size: 100% 100%;
+   /*min-height:800px;*/
 }
 
 

@@ -7,9 +7,11 @@
 </div>
 
 <div class="centered">
-	<div class="contactInfo">
+	<div class="contactInfo" method="POST">
+		{% csrf_token %}
 		<h2>Contact Information</h2>
-		<form action='/submitProfile' method="post">
+		<form action='/jam/' method="POST">
+			{% csrf_token %}
 			<table id="profileTable">
 				<tr>
 					<td class="profileField">
@@ -104,3 +106,4 @@
 </div>
 
 <script src="{% static 'jam/profile.js' %}"></script>
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>

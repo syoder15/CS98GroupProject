@@ -2,8 +2,9 @@ var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
 var profileDropDown = $('.profileNameButton');
-var companyForm = $('.contact_form');
-var eventForm = $('.contact_form');
+var contactForm = $('.contact_form');
+var companyForm = $('.company_form');
+var eventForm = $('.event_form');
 
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
@@ -94,7 +95,7 @@ companyForm.submit(function(event) {
 	});
 });
 
-contactForm.submit(function(event) {
+eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
   	var name = $('#name_input').val();
