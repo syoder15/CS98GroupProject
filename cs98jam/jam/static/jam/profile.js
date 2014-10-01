@@ -11,7 +11,7 @@ contactInfo.submit(function(event) {
   	var street = $('#street_input').val();
   	var city = $('#city_input').val();
   	var state = $('#state_input').val();
-  	var zipCode = = $('#zip_input').val();
+  	var zipCode = $('#zip_input').val();
 
   	function getCookie(name) {
 	    var cookieValue = null;
