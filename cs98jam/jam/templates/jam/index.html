@@ -16,8 +16,15 @@
 
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
-
-
+	<script>
+		// var my_app = angular.module('MyApp').config(function($httpProvider) {
+		//     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+		// });
+		// my_app.config(function($interpolateProvider) {
+		//     $interpolateProvider.startSymbol('{$');
+		//     $interpolateProvider.endSymbol('$}');
+		// });
+	</script>
 
 	<title>JAM</title>
 </head>
@@ -26,7 +33,7 @@
 	<div id="header"> 
 		<nav id="topBar">
 			<ul>
-				<li class="title"><a href="" class="title" style="float:left">JobApplicationManager</a></li>
+				<li class="title"><a href="" class="title">JobApplicationManager</a></li>
 				<li class="subtitle">
 					Visualize your job search in a streamlined UI and get hired today!
 				</li>
@@ -37,9 +44,9 @@
 					<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
 				</a>
 				<ul class="accountList">
-					<li class="profileNameButton profileBox">Your Name</li>
-					<li class="dropdown"><a href="profile">My Account</a></li><br /><br />
-					<li class="dropdown" id="listBottom"><a href="/logout/">Logout</a></li>
+					<li class="profileNameButton profileBox profDropdown">Your Name</li>
+					<li class="dropdown"><a href="profile" class="profDropdown">My Account</a></li><br /><br />
+					<li class="dropdown"><a href="/logout/" class="profDropdown">Logout</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -117,7 +124,7 @@
 	        <h4 class="modal-title" id="myModalLabel">New Contact</h4>
 	      </div>
 	      <div class="modal-body">
-	        <form class="contact_form" method="POST">
+	        <form name="contact_form"class="contact_form" method="POST">
 				{% csrf_token %}
 				<label for="name_input">Name: </label>
 				<input id="name_input" name="name" placeholder="John Smith"/>
@@ -248,6 +255,7 @@
 <!-- <script src="{% static 'djangular/js/django-angular.js' %}"></script> -->
 <script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
 <!-- <script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script> -->
+<script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'jam/handlers.js' %}"></script>
 <script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
 <script>
