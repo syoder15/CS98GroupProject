@@ -32,6 +32,7 @@ li {
 	font-weight: bold;
 	display: inline;
 	padding: 5 20px;
+	float: left;
 	/*margin-left: 40%; can we generalize this more? Probably*/
 }
 
