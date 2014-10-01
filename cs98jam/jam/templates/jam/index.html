@@ -16,11 +16,7 @@
 
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
-	<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'djangular/js/django-angular.js' %}"></script>
-	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
-	<script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script>
-	<script src="{% static 'jam/handlers.js' %}"></script>
+
 
 	<script>
 		var my_app = angular.module('MyApp').config(function($httpProvider) {
@@ -44,13 +40,6 @@
 					Visualize your job search in a streamlined UI and get hired today!
 				</li>
 				<li><a href="companies">Companies</a></li>
-<!-- 				<li class="profileButton">
-					<a href="profile">
-						<img src="../../static/jam/images/avatar.png" id="userIcon"/>
-						YourName
-					</a>
-					<a href="/logout/">Logout</a>
-				</li> -->
 			</ul>
 			<div class="profileButton">
 				<a href="profile">
@@ -130,3 +119,8 @@
 </body>
 </html>
 
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+<script src="{% static 'djangular/js/django-angular.js' %}"></script>
+<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+<script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script>
+<script src="{% static 'jam/handlers.js' %}"></script>
