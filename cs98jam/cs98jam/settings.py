@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'jquery',
     # 'south',
     'jam',
-    'djangular', 
+    # 'djangular', 
     'twitter_bootstrap'
 )
 
