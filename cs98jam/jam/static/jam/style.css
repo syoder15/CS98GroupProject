@@ -4,10 +4,6 @@ ul, li {
     padding: 0;
 }
 
-li {
-	float:left;
-}
-
 
 #header {
 	background-color:transparent;
@@ -90,7 +86,7 @@ body {
 	width: 250px;
 }
 
-li {
+/*li {
 	list-style: none;
 	margin: 0 0 0.25em;
 	overflow: hidden;
@@ -104,7 +100,7 @@ li a {
 	text-decoration: none;
 	margin-left: 20px;
 }
-
+*/
 .add-alt a:before{
 	background: #4166F5;
 	height: 15px;
@@ -121,12 +117,12 @@ li a {
 	width: 15px;
 }
 
-li:before, li:after, li a:before, li a:after {
+/*li:before, li:after, li a:before, li a:after {
 	content: "";
 	left: 5px;
 	position: absolute;
 	top: 50%;
-}
+}*/
 
 .overlay {
 	background-color: rgba(0,0,0,0.5);
@@ -178,15 +174,15 @@ label {
 	width: 100%;
 }
 
-.profileButton {
+/*.profileButton {
 	display: inline-block;
 	width: 10%;
 	float: right;
-}
+}*/
 
 #userIcon {
-	width: 20%;
-	height: 5%;
+	width: 30px;
+	height: 34px;
 }
 
 .accountList {
@@ -203,10 +199,10 @@ label {
     float: right;
 }
 
-.profileBox {
+/*.profileBox {
 	display: inline;
 }
 
 .profileNameButton {
 	margin-top: 10px;
-}
+}*/

@@ -6,14 +6,31 @@
 	<meta name="keywords" content="key, words" />
 	<meta name="description" content="description" />
 
-	<!-- {% load staticfiles %} -->
-	<!-- <link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" /> -->
-	<link rel="stylesheet" type="text/css" href="../../static/jam/style.css">
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'djangular/css/bootstrap3.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
+
+	<!-- <link rel="stylesheet" type="text/css" href="../../static/jam/style.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="../../static/jam/style.css"> -->
 
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
 	<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'djangular/js/django-angular.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script>
 	<script src="{% static 'jam/handlers.js' %}"></script>
+
+	<script>
+		var my_app = angular.module('MyApp').config(function($httpProvider) {
+		    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+		});
+		my_app.config(function($interpolateProvider) {
+		    $interpolateProvider.startSymbol('{$');
+		    $interpolateProvider.endSymbol('$}');
+		});
+	</script>
 
 	<title>JAM</title>
 </head>
