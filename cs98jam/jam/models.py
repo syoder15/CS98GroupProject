@@ -43,7 +43,7 @@ class Profile(models.Model):
 	zip_code = models.CharField(max_length=6)
 
 	#An error may occur here, unsure as to what rep of radiobutton is
-	gender = models.IntegerField(blank=True)
+	gender = models.CharField(max_length=10)
 
 	school = models.CharField(max_length=50)
 
