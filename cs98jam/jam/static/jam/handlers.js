@@ -73,8 +73,8 @@ contactForm.submit(function(event) {
 companyForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
-  	var name = $('#name_input').val();
-  	var deadline = $('#deadline_input').val();
+  	var name = $('#company_name_input').val();
+  	var deadline = $('#company_deadline_input').val();
 	var csrftoken = getCookie('csrftoken');
 
   	$.ajaxSetup({
@@ -98,8 +98,8 @@ companyForm.submit(function(event) {
 eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
-  	var name = $('#name_input').val();
-  	var date = $('#date_input').val();
+  	var name = $('#event_name_input').val();
+  	var date = $('#event_date_input').val();
 	var csrftoken = getCookie('csrftoken');
 
   	$.ajaxSetup({
