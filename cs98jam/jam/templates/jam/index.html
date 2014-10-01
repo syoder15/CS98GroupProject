@@ -124,7 +124,7 @@
 	        <h4 class="modal-title" id="myModalLabel">New Contact</h4>
 	      </div>
 	      <div class="modal-body">
-	        <form class="contact_form" method="POST">
+	        <form name="contact_form"class="contact_form" method="POST">
 				{% csrf_token %}
 				<label for="name_input">Name: </label>
 				<input id="name_input" name="name" placeholder="John Smith"/>
@@ -255,6 +255,7 @@
 <!-- <script src="{% static 'djangular/js/django-angular.js' %}"></script> -->
 <script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
 <!-- <script src="{% static 'twitter_bootstrap/less/bootstrap.less' %}"></script> -->
+<script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'jam/handlers.js' %}"></script>
 <script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
 <script>
