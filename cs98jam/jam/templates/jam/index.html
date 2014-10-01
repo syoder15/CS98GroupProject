@@ -103,11 +103,12 @@
 	<div id="company_overlay" class="overlay">
 		<div class="modal">
 			<h2>New Company</h2>
-			<form>
-				<label for="name_input">Company: </label>
-				<input id="name_input" name="name" placeholder="Google"/>
-				<label for="deadline_input">Application Deadline: </label>
-				<input id="deadline_input" name="deadline" placeholder="12/31/2014"/>
+			<form class="company_form" method="POST">
+				{% csrf_token %}
+				<label for="company_name_input">Company: </label>
+				<input id="company_name_input" name="name" placeholder="Google"/>
+				<label for="company_deadline_input">Application Deadline: </label>
+				<input id="company_deadline_input" name="deadline" placeholder="12/31/2014"/>
 				<input class="button" type="submit" value="Add New Company"/>
 			</form>
 		</div>
@@ -116,14 +117,16 @@
 	<div id="event_overlay" class="overlay">
 		<div class="modal">
 			<h2>New Event</h2>
-			<form>
-				<label for="name_input">Event: </label>
-				<input id="name_input" name="name" placeholder="Google Barbecue"/>
-				<label for="date_input">Date: </label>
-				<input id="date_input" name="date" placeholder="12/31/2014"/>
+			<form class="event_form" method="POST">
+				{% csrf_token %}
+				<label for="event_name_input">Event: </label>
+				<input id="event_name_input" name="name" placeholder="Google Barbecue"/>
+				<label for="event_date_input">Date: </label>
+				<input id="event_date_input" name="date" placeholder="12/31/2014"/>
 				<input class="button" type="submit" value="Add New Event"/>
 			</form>
 		</div>
 	</div>
 </body>
 </html>
+

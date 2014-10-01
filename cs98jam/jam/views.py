@@ -18,16 +18,13 @@ def profile(request):
 def new_contact(request):
 	form_data = request.POST
 	contact = Contact(name=form_data.get('name'),
-					  phone_number=form_data.get('phone'),
-					  email=form_data.get('email'),
-					  employer=form_data.get('employer'))
+					  phone_number=form_data.get('phone'))
 	contact.save()
 	return HttpResponse()
 
 def new_company(request):
 	form_data = request.POST
-	company = Company(name=form_data.get('name'),
-					  application_deadline=form_data.get('deadline'))
+	company = Company(name=form_data.get('name'))
 	company.save()
 	return HttpResponse()
 
