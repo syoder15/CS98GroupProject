@@ -58,7 +58,8 @@ contactForm.submit(function(event) {
 
 	var formName = $('.contact_form').attr('name');
     validateEmail(formName);
-    phone = validatePhoneNumber(formName);
+    //phone = validatePhoneNumber(formName);
+    //requireField(formName, [$('#name_input'), $('#phone_number_input')])
 
   	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {

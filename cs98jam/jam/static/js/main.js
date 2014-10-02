@@ -7,3 +7,12 @@ function validateEmail(formName){
 		return false;
 	}
 }
+
+function requiredField(formName, fields){
+	for x in fields:
+		var field = document.forms[formName][fieldName].value;
+		if (field==null || field==''){
+		alert("Please fill out all Required Fields.")
+	}
+
+}
