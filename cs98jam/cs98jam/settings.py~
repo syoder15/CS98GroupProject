@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from cs98jam.local_settings import *
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -26,7 +28,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 # Application definition
 
 INSTALLED_APPS = (
@@ -36,9 +38,21 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'south',
+    'jquery',
+<<<<<<< HEAD
+    #'south',
     'jam'
+    # 'djangular'
+=======
+    # 'south',
+    'jam',
+    # 'djangular', 
+    'twitter_bootstrap'
+>>>>>>> cd24ee5944c71a52446fe4d059bb3809936ae637
 )
+
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+AUTH_PROFILE_MODULE = 'cs98jam.UserProfile'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,6 +67,11 @@ ROOT_URLCONF = 'cs98jam.urls'
 
 WSGI_APPLICATION = 'cs98jam.wsgi.application'
 
+TEMPLATE_DIRS = (
+	os.path.join(SITE_ROOT, 'templates'),
+)
+
+LOGIN_URL = '/login/'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -80,5 +99,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
+STATIC_ROOT = 'jam/static/'
 STATIC_URL = '/static/'
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )

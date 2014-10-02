@@ -2,8 +2,15 @@ var addContact = $('.addcontact');
 var addCompany = $('.addcompany');;
 var addEvent = $('.addevent');;
 var profileDropDown = $('.profileNameButton');
-var companyForm = $('.contact_form');
-var eventForm = $('.contact_form');
+var contactForm = $('.contact_form');
+var companyForm = $('.company_form');
+var eventForm = $('.event_form');
+
+function importMain(){
+    var x = document.createElement('script');
+    x.src = '../js/main.js';
+    document.getElementsByTagName("head"[0]).appendChild(x);
+}
 
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
@@ -49,6 +56,10 @@ contactForm.submit(function(event) {
   	var company = $('#company_input').val();
 	var csrftoken = getCookie('csrftoken');
 
+	var formName = $('.contact_form').attr('name');
+    validateEmail(formName);
+    phone = validatePhoneNumber(formName);
+
   	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
 		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -72,8 +83,8 @@ contactForm.submit(function(event) {
 companyForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
-  	var name = $('#name_input').val();
-  	var deadline = $('#deadline_input').val();
+  	var name = $('#company_name_input').val();
+  	var deadline = $('#company_deadline_input').val();
 	var csrftoken = getCookie('csrftoken');
 
   	$.ajaxSetup({
@@ -94,11 +105,11 @@ companyForm.submit(function(event) {
 	});
 });
 
-contactForm.submit(function(event) {
+eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
-  	var name = $('#name_input').val();
-  	var date = $('#date_input').val();
+  	var name = $('#event_name_input').val();
+  	var date = $('#event_date_input').val();
 	var csrftoken = getCookie('csrftoken');
 
   	$.ajaxSetup({

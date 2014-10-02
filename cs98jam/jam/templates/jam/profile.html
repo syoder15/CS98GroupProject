@@ -7,9 +7,11 @@
 </div>
 
 <div class="centered">
-	<div class="contactInfo">
+	<div>
+		{% csrf_token %}
 		<h2>Contact Information</h2>
-		<form action='/submitProfile' method="post">
+		<form class="contactInfo" method="POST">
+			{% csrf_token %}
 			<table id="profileTable">
 				<tr>
 					<td class="profileField">
@@ -30,14 +32,14 @@
 
 					<td class="profileField">
 						<label for="phone_number_input">Phone Number: </label>
-						<input id="phone_number_input" name="phone_number" placeholder="8005550188"/>
+						<input id="phone_number_input" name="phone" placeholder="8005550188"/>
 					</td>
 				</tr>
 				<tr><td>&nbsp;</td></tr>
 				<tr>
 					<td class="profileField">
 						<label for="street_input">Address: </label>
-						<input id="street_input" name="street" placeholder="123 Main Street"/>
+						<input id="street_input" name="address" placeholder="123 Main Street"/>
 					</td>
 					<td class="profileField">
 						<label for="city_input">City: </label>
@@ -52,55 +54,56 @@
 					</td>
 					<td class="profileField">
 						<label for="zip_input">Zip Code: </label>
-						<input id="zip_input" name="zipcode" placeholder="03755"/>
+						<input id="zip_input" name="zip_code" placeholder="03755"/>
 					</td>
 				</tr>
 			</table>
-	</div>
 
-	<div class="personalInfo">
-		<h2>Personal Information</h2>
-			<table id="profileTable">
-				<tr>
-					<td class="profileField">
-						<label for="gender_input">Gender: </label>
-						<input id="gender_input" type="radio" name="gender"  value="female"/>Female
-						<input id="gender_input" type="radio" name="gender"  value="male"/> Male
-					</td>
-				</tr>
-				<tr><td>&nbsp;</td></tr>
-				<tr>
-					<td class="profileField">
-						<label for="school_input">School: </label>
-						<input id="school_input" name="school_number" placeholder="Dartmouth College"/>
-					</td>
-				</tr>
-				<tr><td>&nbsp;</td></tr>
-				<tr>
-					<td class="fieldTitle">
-						Graduation Date
-					</td>
-				</tr>
-				<tr>
-					<td class="profileField">
-						<label for="grad_month_input">Month: </label>
-						<input id="grad_month_input" name="grad_month" placeholder="June"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="profileField">
-						<label for="grad_year_input">Year: </label>
-						<input id="grad_year_input" name="grad_year" placeholder="2015"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="profileField">
-						<input class="button" type="submit" value="Save"/>
-					</td>
-				</tr>
-			</table>
+			<div class="personalInfo">
+			<h2>Personal Information</h2>
+				<table id="profileTable">
+					<tr>
+						<td class="profileField">
+							<label for="gender_input">Gender: </label>
+							<input id="gender_input" type="radio" name="gender"  value="female"/>Female
+							<input id="gender_input" type="radio" name="gender"  value="male"/> Male
+						</td>
+					</tr>
+					<tr><td>&nbsp;</td></tr>
+					<tr>
+						<td class="profileField">
+							<label for="school_input">School: </label>
+							<input id="school_input" name="school_number" placeholder="Dartmouth College"/>
+						</td>
+					</tr>
+					<tr><td>&nbsp;</td></tr>
+					<tr>
+						<td class="fieldTitle">
+							Graduation Date
+						</td>
+					</tr>
+					<tr>
+						<td class="profileField">
+							<label for="grad_month_input">Month: </label>
+							<input id="grad_month_input" name="grad_month" placeholder="June"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="profileField">
+							<label for="grad_year_input">Year: </label>
+							<input id="grad_year_input" name="grad_year" placeholder="2015"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="profileField">
+							<input class="button" type="submit" value="Save"/>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</form>
 	</div>
 </div>
 
 <script src="{% static 'jam/profile.js' %}"></script>
+<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
