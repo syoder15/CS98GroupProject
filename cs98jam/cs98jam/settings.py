@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from cs98jam.local_settings import *
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -44,6 +46,7 @@ INSTALLED_APPS = (
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+AUTH_PROFILE_MODULE = 'cs98jam.UserProfile'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

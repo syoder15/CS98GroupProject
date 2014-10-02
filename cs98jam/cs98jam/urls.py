@@ -1,8 +1,6 @@
 from django.conf.urls import patterns, include, url
-
-from django.contrib import admin
 from cs98jam.views import *
-
+from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -19,4 +17,5 @@ urlpatterns = patterns('',
     (r'^login/$', 'django.contrib.auth.views.login'),
     (r'^logout/$', logout_page),
 	(r'^register/$', register),
+    (r'^activate/$', activate), 
 )
