@@ -5,7 +5,8 @@ class Company(models.Model):
     
     def __unicode__(self):
         return self.name
-    
+ 	class Meta:
+ 		verbose_name_plural =_('Companies')
     name = models.CharField(max_length=50)
     # application_deadline = models.DateField()
 
