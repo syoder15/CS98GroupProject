@@ -22,7 +22,10 @@ def profile(request):
 						  address=form_data.get('address'),
 						  city=form_data.get('city'),
 						  state=form_data.get('state'),
-						  zip_code=form_data.get('zip_code'))
+						  zip_code=form_data.get('zip_code'),
+						  gender=form_data.get('gender'),
+						  grad_month=form_data.get('grad_month'),
+						  grad_year=form_data.get('grad_year'))
 		profile.save()
 	return render(request, 'jam/profile.html', context)
 
@@ -56,7 +59,10 @@ def new_profile(request):
 					  address=form_data.get('address'),
 					  city=form_data.get('city'),
 					  state=form_data.get('state'),
-					  zip_code=form_data.get('zip code'))
+					  zip_code=form_data.get('zip code'),
+					  gender=form_data.get('gender'),
+					  grad_month=form_data.get('grad_month'),
+					  grad_year=form_data.get('grad_year'))
 	profile.save()
 	return HttpResponse()
 
