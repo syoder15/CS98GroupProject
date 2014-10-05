@@ -58,8 +58,7 @@ contactForm.submit(function(event) {
 
 	var formName = $('.contact_form').attr('name');
     validateEmail(formName);
-    //phone = validatePhoneNumber(formName);
-    //requireField(formName, [$('#name_input'), $('#phone_number_input')])
+    phone = validatePhoneNumber(formName);
 
   	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
@@ -110,8 +109,16 @@ eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
   	var name = $('#event_name_input').val();
+  	var location = $('#event_location_input').val();
   	var date = $('#event_date_input').val();
+  	var startTime = $('#event_start_time_input').val();
+  	var endTime = $('#event_end_time_input').val();
 	var csrftoken = getCookie('csrftoken');
+
+	if ( dateValidation(date)==false || timeValidation(startTime)==false || 
+		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		return false;
+	}
 
   	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
@@ -123,7 +130,10 @@ eventForm.submit(function(event) {
 		url: "new_event/",
 		data: {
 			"name": name,
-			"date": date
+			"location": location,
+			"date": date,
+			"startTime": startTime,
+			"endTime": endTime
 		}
 	}).done(function() {
 		console.log("GOT HERE");
