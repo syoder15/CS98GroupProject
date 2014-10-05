@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Company(models.Model):
@@ -50,3 +51,8 @@ class Profile(models.Model):
 
 	grad_month = models.CharField(max_length=10)
 	grad_year = models.IntegerField(default = 0000, max_length=5)
+
+class UserProfile(models.Model):
+	user = models.OneToOneField(User)
+	activation_key = models.CharField(max_length=40)
+	key_expires = models.DateTimeField()
