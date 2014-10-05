@@ -32,7 +32,7 @@ class Event(models.Model):
 
 class Profile(models.Model):
 	def __unicode__(self):
-		return self.name
+		return self.first_name
 
 	first_name = models.CharField(max_length=20)
 	last_name = models.CharField(max_length=50)
