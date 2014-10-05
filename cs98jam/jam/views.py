@@ -13,9 +13,11 @@ def index(request):
 
 def profile(request):
 	context = {}
+	#import pdb; pdb.set_trace()
 	form_data = request.POST
 	if form_data:
-		profile = Profile(first_name=form_data.get('first_name'),
+		profile = Profile(user=request.META.get('USER'),
+			              first_name=form_data.get('first_name'),
 						  last_name=form_data.get('last_name'),
 						  email=form_data.get('email'),
 						  phone_number=form_data.get('phone'),
@@ -24,6 +26,7 @@ def profile(request):
 						  state=form_data.get('state'),
 						  zip_code=form_data.get('zip_code'),
 						  gender=form_data.get('gender'),
+						  school=form_data.get('school_number'),
 						  grad_month=form_data.get('grad_month'),
 						  grad_year=form_data.get('grad_year'))
 		profile.save()
@@ -52,14 +55,15 @@ def new_event(request):
 def new_profile(request):
 	import pdb; pdb.set_trace()
 	form_data = request.POST
-	profile = Profile(first_name=form_data.get('first name'),
-					  last_name=form_data.get('last name'),
+	profile = Profile(user_id=0,
+		first_name=form_data.get('first_name'),
+					  last_name=form_data.get('last_name'),
 					  email=form_data.get('email'),
 					  phone_number=form_data.get('phone'),
 					  address=form_data.get('address'),
 					  city=form_data.get('city'),
 					  state=form_data.get('state'),
-					  zip_code=form_data.get('zip code'),
+					  zip_code=form_data.get('zip_code'),
 					  gender=form_data.get('gender'),
 					  grad_month=form_data.get('grad_month'),
 					  grad_year=form_data.get('grad_year'))
