@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from jam.models import Contact, Company, Event, Profile
 
 
@@ -12,24 +14,52 @@ def index(request):
     return render(request, 'jam/index.html', context)
 
 def profile(request):
-	context = {}
-	#import pdb; pdb.set_trace()
+	import pdb; 
 	form_data = request.POST
+	username = request.META.get('USERNAME')
+	#pdb.set_trace()
+	user = User.objects.get(username=username.lower())
+	if user:
+		try:
+			profile = Profile.objects.get(user=username)
+		except ObjectDoesNotExist:
+			profile = None
 	if form_data:
-		profile = Profile(user=request.META.get('USER'),
-			              first_name=form_data.get('first_name'),
-						  last_name=form_data.get('last_name'),
-						  email=form_data.get('email'),
-						  phone_number=form_data.get('phone'),
-						  address=form_data.get('address'),
-						  city=form_data.get('city'),
-						  state=form_data.get('state'),
-						  zip_code=form_data.get('zip_code'),
-						  gender=form_data.get('gender'),
-						  school=form_data.get('school_number'),
-						  grad_month=form_data.get('grad_month'),
-						  grad_year=form_data.get('grad_year'))
+		if user and profile: #already contained in DB, want to edit
+			profile.first_name=form_data.get('first_name')
+			profile.last_name=form_data.get('last_name')
+			profile.email=form_data.get('email')
+			profile.phone_number=form_data.get('phone')
+			profile.address=form_data.get('address')
+			profile.city=form_data.get('city')
+			profile.state=form_data.get('state')
+			profile.zip_code=form_data.get('zip_code')
+			profile.gender=form_data.get('gender')
+			profile.school=form_data.get('school_number')
+			profile.grad_month=form_data.get('grad_month')
+			profile.grad_year=form_data.get('grad_year')
+
+
+		else:
+			profile = Profile(user=request.META.get('USERNAME'),
+				              first_name=form_data.get('first_name'),
+							  last_name=form_data.get('last_name'),
+							  email=form_data.get('email'),
+							  phone_number=form_data.get('phone'),
+							  address=form_data.get('address'),
+							  city=form_data.get('city'),
+							  state=form_data.get('state'),
+							  zip_code=form_data.get('zip_code'),
+							  gender=form_data.get('gender'),
+							  school=form_data.get('school_number'),
+							  grad_month=form_data.get('grad_month'),
+							  grad_year=form_data.get('grad_year'))
+		
 		profile.save()
+
+		return render(request, 'jam/index.html', {})
+
+	context = {'profile': profile}
 	return render(request, 'jam/profile.html', context)
 
 def new_contact(request):
@@ -50,24 +80,6 @@ def new_event(request):
 	event = Event(name=form_data.get('name'),
 					  date=form_data.get('date'))
 	event.save()
-	return HttpResponse()
-
-def new_profile(request):
-	import pdb; pdb.set_trace()
-	form_data = request.POST
-	profile = Profile(user_id=0,
-		first_name=form_data.get('first_name'),
-					  last_name=form_data.get('last_name'),
-					  email=form_data.get('email'),
-					  phone_number=form_data.get('phone'),
-					  address=form_data.get('address'),
-					  city=form_data.get('city'),
-					  state=form_data.get('state'),
-					  zip_code=form_data.get('zip_code'),
-					  gender=form_data.get('gender'),
-					  grad_month=form_data.get('grad_month'),
-					  grad_year=form_data.get('grad_year'))
-	profile.save()
 	return HttpResponse()
 
 def companies(request):

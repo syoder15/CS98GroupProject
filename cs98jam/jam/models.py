@@ -38,16 +38,16 @@ class Profile(models.Model):
 	first_name = models.CharField(max_length=20)
 	last_name = models.CharField(max_length=50)
 	email = models.EmailField(max_length=60)
-	phone_number = models.IntegerField(default=0)
-	address = models.CharField(max_length=50)
-	city = models.CharField(max_length=40)
-	state = models.CharField(max_length=13)
-	zip_code = models.CharField(max_length=6)
+	phone_number = models.IntegerField(default=0, blank=True)
+	address = models.CharField(max_length=50, blank=True)
+	city = models.CharField(max_length=40, blank=True)
+	state = models.CharField(max_length=13, blank=True)
+	zip_code = models.CharField(max_length=6, blank=True)
 
 	#An error may occur here, unsure as to what rep of radiobutton is
-	gender = models.CharField(max_length=10)
+	gender = models.CharField(max_length=10, blank=True)
 
-	school = models.CharField(max_length=50)
+	school = models.CharField(max_length=50, blank=True)
 
-	grad_month = models.CharField(max_length=10)
-	grad_year = models.IntegerField(default = 0000, max_length=5)
+	grad_month = models.CharField(max_length=10, blank=True)
+	grad_year = models.IntegerField(default=0, blank=True)
