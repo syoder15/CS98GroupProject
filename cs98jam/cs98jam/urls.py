@@ -34,6 +34,6 @@ urlpatterns = patterns('',
 		(r'^password_change/complete/$', 
         'django.contrib.auth.views.password_reset_complete'),
 
-    (r'^activate/$', activate), 
-
+        (r'^activate/$', activate), 
+        (r'^activate/confirm/(?P<activation_key>\w+)/$',confirm),
 )

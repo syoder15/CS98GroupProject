@@ -54,7 +54,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'dartmouthjam@gmail.com'
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
-AUTH_PROFILE_MODULE = 'cs98jam.UserProfile'
+AUTH_PROFILE_MODULE = 'jam.UserProfile'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
