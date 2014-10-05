@@ -29,7 +29,6 @@ ul, li {
 	display: inline;
 	padding: 5px 20px;
 	float: left;
-	/*margin-left: 40%; can we generalize this more? Probably*/
 }
 
 .subtitle {
@@ -37,14 +36,6 @@ ul, li {
 	margin-left: 10px;
 	padding-top: 14px;
 	font-size: 18px;
-}
-
-.profileButton {
-	background-color: white;
-	display: inline;
-	width: 10%;
-	float: right;
-	text-align: center;
 }
 
 a:link, a:visited {
@@ -136,7 +127,7 @@ li a {
 	z-index: 10;
 }
 
-.modal {
+/*.1modal {
 	background-color: white;
 	border-radius: 2px;
 	border: 1px solid white;
@@ -146,7 +137,7 @@ li a {
 	margin-right: auto;
 	padding: 15px;
 	width: 400px;
-}
+}*/
 
 h2 {
 	text-align: center;
@@ -175,20 +166,14 @@ label {
 	width: 100%;
 }
 
-/*.profileButton {
-	display: inline-block;
-	width: 10%;
-	float: right;
-}*/
-
 #userIcon {
 	width: 30px;
 	height: 34px;
 }
 
 .accountList {
-	display: inline;
-	font-size: 14px;
+	display: inline-block;
+	font-size: 16px;
 }
 
 .accountList li.dropdown {
@@ -198,12 +183,18 @@ label {
 .accountList li.visible {
     display: inline-block;
     float: right;
+    color: white;
 }
 
-/*.profileBox {
-	display: inline;
+.profileBox {
+	display: inline-block;
 }
 
 .profileNameButton {
 	margin-top: 10px;
-}*/
+	color: white;
+}
+
+li a.profDropdown {
+	color: white;
+}

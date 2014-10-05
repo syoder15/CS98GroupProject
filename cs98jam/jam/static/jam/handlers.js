@@ -6,6 +6,12 @@ var contactForm = $('.contact_form');
 var companyForm = $('.company_form');
 var eventForm = $('.event_form');
 
+function importMain(){
+    var x = document.createElement('script');
+    x.src = '../js/main.js';
+    document.getElementsByTagName("head"[0]).appendChild(x);
+}
+
 addContact.on('click', function(){
 	var contactOverlay = document.getElementById('contact_overlay');
 	contactOverlay.style.display = "block";
@@ -49,6 +55,11 @@ contactForm.submit(function(event) {
   	var email = $('#email_input').val();
   	var company = $('#company_input').val();
 	var csrftoken = getCookie('csrftoken');
+
+	var formName = $('.contact_form').attr('name');
+    validateEmail(formName);
+    //phone = validatePhoneNumber(formName);
+    //requireField(formName, [$('#name_input'), $('#phone_number_input')])
 
   	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
