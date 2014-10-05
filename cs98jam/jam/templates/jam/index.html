@@ -101,7 +101,7 @@
 	        <form class="company_form" method="POST">
 				{% csrf_token %}
 				<label for="company_name_input">Company: </label>
-				<input id="company_name_input" name="name" placeholder="Google"/>
+				<input id="company_name_input" name="name" placeholder="Google" required />
 				<label for="company_deadline_input">Application Deadline: </label>
 				<input id="company_deadline_input" name="deadline" placeholder="12/31/2014"/>
 				<input class="button" type="submit" value="Add New Company"/>
@@ -188,9 +188,20 @@
 			<form class="event_form" method="POST">
 				{% csrf_token %}
 				<label for="event_name_input">Event: </label>
-				<input id="event_name_input" name="name" placeholder="Google Barbecue"/>
+				<input id="event_name_input" name="name" placeholder="Google Barbecue" required />
+				
+				<label for="event_location_input">Location: </label>
+				<input id="event_location_input" name="name" placeholder="Thayer" />
+
 				<label for="event_date_input">Date: </label>
-				<input id="event_date_input" name="date" placeholder="12/31/2014"/>
+				<input id="event_date_input" name="date" placeholder="2014-12-31" required />
+				
+				<label for="event_start_time_input">Start Time: </label>
+				<input id="event_start_time_input" name="startTime" placeholder="2:00 PM" required />
+				
+				<label for="event_end_time_input">End Time: </label>
+				<input id="event_end_time_input" name="endTime" placeholder="5:00 PM" />
+				
 				<input class="button" type="submit" value="Add New Event"/>
 			</form>
 	      </div>
