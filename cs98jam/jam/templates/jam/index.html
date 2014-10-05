@@ -127,13 +127,13 @@
 	        <form name="contact_form"class="contact_form" method="POST">
 				{% csrf_token %}
 				<label for="name_input">Name: </label>
-				<input id="name_input" name="name" placeholder="John Smith"/>
+				<input id="name_input" name="name" placeholder="John Smith" required />
 				<label for="phone_number_input">Phone #: </label>
 				<input id="phone_number_input" name="phone_number" placeholder="(555) 555-5555"/>
 				<label for="email_input">Email: </label>
 				<input id="email_input" name="email" placeholder="john.smith@gmail.com"/>
 				<label for="company_input">Employer: </label>
-				<input id="company_input" name="company" placeholder="Google"/>
+				<input id="company_input" name="company" placeholder="Google" required />
 				<input class="button" type="submit" value="Add New Contact"/>
 			</form>
 	      </div>
