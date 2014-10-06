@@ -5,11 +5,17 @@
 
 {% block head %}
   <title>JAM | Login</title>
+  
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
+  
+
 {% endblock %}
 
 {% block body %}
+  <div class="login">
   <header>
-    <h1>JAM</h1>
+    <h1 id="hi">JAM</h1>
     <h2>Login Page</h2>
   </header>
 
@@ -33,7 +39,7 @@
       {% else %}
         <input type="hidden" name="next" value="/jam/" />
       {% endif %}
-      <input type="submit" value="login" />
+      <input type="submit" value="Login" />
     </form>
   </section>
 
@@ -42,4 +48,9 @@
     Don't have an account? Get one <a href="/register">here!</a>
   </p>
 </section>
+</div>
 {% endblock %}
+
+
+
+
