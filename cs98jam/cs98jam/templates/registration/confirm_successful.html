@@ -1,7 +1,19 @@
-{% block title %}Activation successful{% endblock %}
+{% extends "base.html" %}
+{% comment %}
+	Successful account activation
+{% endcomment %}
 
-{% block content %}
+{% block head %}  
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
+  
+ {% endblock %}
+
+{% block body %}
+<div class="main">
+<h1>:)</h1>
 <p> Your account has been successfully activated! Now start using JAM! </p>
-
 Click <a href ='../../../login'>here</a> to login 
+</div>
+
 {% endblock %}
