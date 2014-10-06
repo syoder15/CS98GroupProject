@@ -1,0 +1,21 @@
+.register {
+	 margin: auto;
+	 position: absolute;
+	 top: 0; left: 0; bottom: 0; right: 0;
+	 height: 50%;
+	 width:500px;
+}
+
+.main{
+	 margin: auto;
+	 position: absolute;
+	 top: 0; left: 0; bottom: 0; right: 0;
+	 height: 50%;
+	 text-align: center;
+}
+
+body {
+	background-color: #4166F5;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: white;
+}
