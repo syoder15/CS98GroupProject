@@ -23,6 +23,8 @@ def logout_page(request):
     return HttpResponseRedirect('/')
 	
 def register(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/jam')
     if request.method == 'POST':
         form = UserSignupForm(request.POST)
         if form.is_valid():
