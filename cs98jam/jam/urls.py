@@ -9,5 +9,4 @@ urlpatterns = patterns('',
     url(r'calendar/', views.calendar, name='calendar'),
     url(r'new_contact/', views.new_contact, name='new_contact'),
     url(r'new_company/', views.new_company, name='new_company'),
-    url(r'profile/new_profile/', views.new_profile, name='new_profile'),
     url(r'new_event/', views.new_event, name='new_event'))

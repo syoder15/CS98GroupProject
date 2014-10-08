@@ -5,11 +5,18 @@
 
 {% block head %}
   <title>JAM | Login</title>
+  
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
+  <script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+  <script src="{% static 'account/login.js' %}"></script>
+  
 {% endblock %}
 
 {% block body %}
+  <div class="login">
   <header>
-    <h1>JAM</h1>
+    <h1 id="hi">JAM</h1>
     <h2>Login Page</h2>
   </header>
 
@@ -21,11 +28,11 @@
     <form method="post" action=".">
       {% csrf_token %}
       <p>
-        <label for="id_username">Username:</label>
+        <label for="id_username"></label>
         {{ form.username }}
       </p>
       <p>
-        <label for="id_password">Password:</label>
+        <label for="id_password"></label>
         {{ form.password }}
       </p>
       {% if next %}
@@ -33,7 +40,7 @@
       {% else %}
         <input type="hidden" name="next" value="/jam/" />
       {% endif %}
-      <input type="submit" value="login" />
+      <input type="submit" value="Login" />
     </form>
   </section>
 
@@ -42,4 +49,9 @@
     Don't have an account? Get one <a href="/register">here!</a>
   </p>
 </section>
+</div>
 {% endblock %}
+
+
+
+

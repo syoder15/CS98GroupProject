@@ -4,10 +4,16 @@
 {% endcomment %}
 
 {% block head %}
+  
+  {% load staticfiles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
+
   <title>JAM</title>
 {% endblock %}
 
 {% block body %}
+
+<div class="main">
   <header>
       <h1>JAM</h1>
   </header>
@@ -15,4 +21,5 @@
   <section>
       <p>Welcome to JAM. Please click <a href="/jam/">here</a> to log into our web portal.</p>
   </section>
+</div>
 {% endblock %}
