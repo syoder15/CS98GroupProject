@@ -43,7 +43,7 @@ def profile(request):
 
 
 		else:
-			profile = Profile(user=request.META.get('USERNAME'),
+			profile = Profile(user=request.user.username,
 				              first_name=form_data.get('first_name'),
 							  last_name=form_data.get('last_name'),
 							  email=form_data.get('email'),
