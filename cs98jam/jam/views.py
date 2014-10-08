@@ -10,7 +10,7 @@ from jam.models import Contact, Company, Event, Profile
 # Create your views here.
 @login_required
 def index(request):
-    context = {}
+    context = {'username': request.user.username}
     return render(request, 'jam/index.html', context)
 
 @login_required
