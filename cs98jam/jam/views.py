@@ -13,10 +13,12 @@ def index(request):
     context = {}
     return render(request, 'jam/index.html', context)
 
+@login_required
 def profile(request):
 	import pdb; 
 	form_data = request.POST
-	username = request.META.get('USERNAME')
+
+	username = request.user.username
 	#pdb.set_trace()
 	user = User.objects.get(username=username.lower())
 	if user:
@@ -41,7 +43,7 @@ def profile(request):
 
 
 		else:
-			profile = Profile(user=request.META.get('USERNAME'),
+			profile = Profile(user=request.user.username,
 				              first_name=form_data.get('first_name'),
 							  last_name=form_data.get('last_name'),
 							  email=form_data.get('email'),
