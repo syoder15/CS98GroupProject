@@ -2,7 +2,7 @@ $(document).ready(function() {
 	var uField = $("#id_username");
 	var pField = $("#id_password");
 	
-	// Add
+	// Add 'Username'/'Password' to fields
 	$(uField).val("Username");
 	$(pField).val("Password");
 	$(pField).attr('type', 'text');
