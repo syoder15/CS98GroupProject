@@ -8,8 +8,9 @@
   
   {% load staticfiles %}
   <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
+  <script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+  <script src="{% static 'account/login.js' %}"></script>
   
-
 {% endblock %}
 
 {% block body %}
@@ -27,11 +28,11 @@
     <form method="post" action=".">
       {% csrf_token %}
       <p>
-        <label for="id_username">Username:</label>
+        <label for="id_username"></label>
         {{ form.username }}
       </p>
       <p>
-        <label for="id_password">Password:</label>
+        <label for="id_password"></label>
         {{ form.password }}
       </p>
       {% if next %}

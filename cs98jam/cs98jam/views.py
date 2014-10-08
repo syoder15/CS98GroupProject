@@ -47,6 +47,8 @@ def register(request):
     return render(request, "registration/register.html", {
         'form': form,
     })
+	
+	
 
 # returns standard "activation email on the way" message
 def activate(request):
