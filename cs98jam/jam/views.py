@@ -89,3 +89,4 @@ def companies(request):
 def calendar(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
+
