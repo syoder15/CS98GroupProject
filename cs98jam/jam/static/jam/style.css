@@ -4,8 +4,11 @@ ul, li {
     padding: 0;
 }
 
+.transparent {
+	background: rgba(255,255,255, .5);
+}
 
-#header {
+/*#header {
 	background-color:transparent;
 	width: 100%;
 	left: 0;
@@ -16,11 +19,9 @@ ul, li {
 #topBar {
 	padding: 5px 10px;
 	min-height: 60px;
-	/*opacity: 0.6;
-    filter: alpha(opacity=60); /* For IE8 and earlier */*/
     color: #4166F5;
     background: rgba(255,255,255, .5);
-}
+}*/
 
 .title {
 	color: white;
@@ -43,8 +44,12 @@ a:link, a:visited {
 }
 
 #userIcon {
-	width: 18%;
-	height: 4%;
+	width: 35px;
+	height: 40px;
+}
+
+.rightMargin {
+	margin-right:100px;
 }
 
 
@@ -59,41 +64,37 @@ a:link, a:visited {
 	background-color: transparent;
 	display: inline-block;
 	height: 300px;
-	margin-top: 150px;
-	padding-top: 20px;
+	margin-top: 250px;
 	text-align: center;
 	width: 100%;
 }
 
 .addbox {
-	background: rgba(255,255,255, .9);
+	background: rgba(255,255,255, .7);
 	border: 2px solid #4166F5;
 	color: #4166F5;
 	display: inline-block;
-	height: 80px;
+	height: 150px;
 	margin-right: 15px;
 	overflow: hidden;
-	padding: 15px;
+	/*padding: 15px;*/
 	text-align: center;
 	width: 250px;
 }
 
-/*li {
-	list-style: none;
-	margin: 0 0 0.25em;
-	overflow: hidden;
-	padding: 0;
-	position: relative;
-	z-index: 1;
+.addInfoButton {
+	height:100%;
+	width: 100%;
+	border-radius:0px;
+	background: rgba(66,139,202, .9);
 }
 
-li a {
-	color: #4166F5;
-	text-decoration: none;
-	margin-left: 20px;
+.formFieldAdd {
+	width: 400px;
 }
-*/
-.add-alt a:before{
+
+
+/*.add-alt a:before{
 	background: #4166F5;
 	height: 15px;
 	left: 6px;
@@ -107,7 +108,7 @@ li a {
 	left: 1px;
 	margin-top: -2px;
 	width: 15px;
-}
+}*/
 
 /*li:before, li:after, li a:before, li a:after {
 	content: "";
@@ -116,7 +117,7 @@ li a {
 	top: 50%;
 }*/
 
-.overlay {
+/*.overlay {
 	background-color: rgba(0,0,0,0.5);
 	display: none;
 	height: 100%;
@@ -127,17 +128,6 @@ li a {
 	z-index: 10;
 }
 
-/*.1modal {
-	background-color: white;
-	border-radius: 2px;
-	border: 1px solid white;
-	color: #4166F5;
-	height: 300px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 15px;
-	width: 400px;
-}*/
 
 h2 {
 	text-align: center;
@@ -197,4 +187,4 @@ label {
 
 li a.profDropdown {
 	color: white;
-}
+}*/
