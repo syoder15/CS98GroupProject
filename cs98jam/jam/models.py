@@ -9,7 +9,8 @@ class Company(models.Model):
  	class Meta:
  		verbose_name_plural =_('Companies')
     name = models.CharField(max_length=50)
-    # application_deadline = models.DateField()
+    user = models.CharField(max_length=20)
+    application_deadline = models.DateField()
 
 class Contact(models.Model):
 
@@ -18,8 +19,9 @@ class Contact(models.Model):
 
     name = models.CharField(max_length=50)
     phone_number = models.IntegerField(default=0)
-    # email = models.CharField(max_length=50)
-    # employer = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    employer = models.CharField(max_length=50)
+    user = models.CharField(max_length=20)
 
 
 class Event(models.Model):

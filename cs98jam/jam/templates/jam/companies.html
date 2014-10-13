@@ -84,18 +84,18 @@
 	<br>
 	<br>
 	<br>
-asdfa;lskdj
+
 
 	<!-- Button trigger modal -->
-	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+<!-- 	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 	  Launch demo modal
-	</button>
+	</button> -->
 	<!-- <a href="" class="btn btn-lg btn-success"
 	   data-toggle="modal"
 	   data-target="#myModal">Click to open Modal</a>
  -->
 	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -111,10 +111,16 @@ asdfa;lskdj
 	      </div>
 	    </div>
 	  </div>
+	</div> 
+ -->
+	<div class="list-group">
+		{% for c in companies %}
+		<a href="#" class="list-group-item">
+			<h4 class="list-group-item-heading">{{ c }}</h4>
+			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
+		</a>
+		{% endfor %}
 	</div>
-
-
-	<img src="http://www.pwc.com/gx/en/audit-services/capital-market/publications/assets/image/risers-and-fallers.jpg">
 
 
 
@@ -131,5 +137,5 @@ asdfa;lskdj
 </html>
 
 	<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'jam/handlers.js' %}"></script>
+	<script src="{% static 'jam/companies.js' %}"></script>
 	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
