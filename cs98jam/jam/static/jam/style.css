@@ -52,7 +52,6 @@ a:link, a:visited {
 	margin-right:100px;
 }
 
-
 #backgroundImage {
    background: url("images/google_campus.jpg") center center no-repeat fixed;
    background-size: cover;
@@ -75,7 +74,7 @@ a:link, a:visited {
 	color: #4166F5;
 	display: inline-block;
 	height: 150px;
-	margin-right: 15px;
+	margin: 0px 10px;
 	overflow: hidden;
 	/*padding: 15px;*/
 	text-align: center;
