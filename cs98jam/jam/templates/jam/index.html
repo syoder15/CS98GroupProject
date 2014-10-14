@@ -13,15 +13,6 @@
 
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
-	<script>
-		// var my_app = angular.module('MyApp').config(function($httpProvider) {
-		//     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-		// });
-		// my_app.config(function($interpolateProvider) {
-		//     $interpolateProvider.startSymbol('{$');
-		//     $interpolateProvider.endSymbol('$}');
-		// });
-	</script>
 
 	<title>JAM</title>
 </head>
@@ -60,7 +51,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="#">JobApplicationManager</a>
+	      <a class="navbar-brand" href="/jam">JobApplicationManager</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -122,15 +113,19 @@
 	        <h4 class="modal-title" id="myModalLabel">New Company</h4>
 	      </div>
 	      <div class="modal-body">
-	        <form class="company_form" method="POST">
+	        <form class="company_form form-horizontal" method="POST">
 				{% csrf_token %}
 				<div class="form-group"> 
-					<label for="company_name_input">Company: </label>
-					<input id="company_name_input" class="form-control" name="name" placeholder="Google" required />
+					<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
+					<div class="col-sm-8"> 
+						<input id="company_name_input" class="form-control" name="name" placeholder="Google" required />
+					</div>
 				</div>
 				<div class="form-group"> 
-					<label for="company_deadline_input">Application Deadline: </label>
-					<input id="company_deadline_input" class="form-control" name="deadline" placeholder="12/31/2014"/>
+					<label for="company_deadline_input" class="col-sm-4 control-label">Application Deadline: </label>
+					<div class="col-sm-8">
+						<input id="company_deadline_input" class="form-control" name="deadline" placeholder="12/31/2014"/>
+					</div>
 				</div>
 				<input class="btn btn-default" type="submit" value="Add New Company"/>
 			</form>
@@ -152,23 +147,32 @@
 	        <h4 class="modal-title" id="myModalLabel">New Contact</h4>
 	      </div>
 	      <div class="modal-body">
-	        <form name="contact_form" class="contact_form" method="POST">
+	        <form name="contact_form" class="contact_form form-horizontal" method="POST">
 				{% csrf_token %}
+
 				<div class="form-group">
-					<label for="name_input">Name: </label>
-					<input id="name_input" class="form-control" name="name" placeholder="Name: eg. John Smith" required />
+					<label for="name_input" class="col-sm-2 control-label">Name: </label>
+					<div class="col-sm-10"> 
+						<input id="name_input" class="form-control" name="name" placeholder="Name: eg. John Smith" required />
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="phone_number_input">Phone #: </label>
-					<input id="phone_number_input" class="form-control" name="phone_number" placeholder="(555) 555-5555"/>
+					<label for="phone_number_input" class="col-sm-2 control-label">Phone #: </label>
+					<div class="col-sm-10"> 
+						<input id="phone_number_input" class="form-control" name="phone_number" placeholder="(555) 555-5555"/>
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="email_input">Email: </label>
-					<input id="email_input" class="form-control" name="email" placeholder="john.smith@gmail.com"/>
+					<label for="email_input" class="col-sm-2 control-label">Email: </label>
+					<div class="col-sm-10">
+						<input id="email_input" class="form-control" name="email" placeholder="john.smith@gmail.com"/>
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="company_input">Employer: </label>
-					<input id="company_input" class="form-control" name="company" placeholder="Google" required />
+					<label for="company_input" class="col-sm-2 control-label">Employer: </label>
+					<div class="col-sm-10">
+						<input id="company_input" class="form-control" name="company" placeholder="Google" required />
+					</div>
 				</div>
 				<input class="btn btn-default" class="form-control" type="submit" value="Add New Contact"/>
 			</form>
@@ -192,28 +196,38 @@
 	        <h4 class="modal-title" id="myModalLabel">New Event</h4>
 	      </div>
 	      <div class="modal-body">
-			<form class="event_form" method="POST">
+			<form class="event_form form-horizontal" method="POST">
 				{% csrf_token %}
 
 				<div class="form-group">
-					<label for="event_name_input">Event: </label>
-					<input id="event_name_input" class="form-control" name="name" placeholder="Google Barbecue" required />
+					<label for="event_name_input" class="col-sm-2 control-label">Event: </label>
+					<div class="col-sm-10">
+						<input id="event_name_input" class="form-control" name="name" placeholder="Google Barbecue" required />
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="event_location_input">Location: </label>
-					<input id="event_location_input" class="form-control" name="name" placeholder="Thayer" />
+					<label for="event_location_input" class="col-sm-2 control-label">Location: </label>
+					<div class="col-sm-10">
+						<input id="event_location_input" class="form-control" name="name" placeholder="Thayer" />
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="event_date_input">Date: </label>
-					<input id="event_date_input" class="form-control" name="date" placeholder="2014-12-31" required />
+					<label for="event_date_input" class="col-sm-2 control-label">Date: </label>
+					<div class="col-sm-10">
+						<input id="event_date_input" class="form-control" name="date" placeholder="2014-12-31" required />
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="event_start_time_input">Start Time: </label>
-					<input id="event_start_time_input" class="form-control" name="startTime" placeholder="2:00 PM" required />
+					<label for="event_start_time_input" class="col-sm-2 control-label">Start Time: </label>
+					<div class="col-sm-10">
+						<input id="event_start_time_input" class="form-control" name="startTime" placeholder="2:00 PM" required />
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="event_end_time_input">End Time: </label>
-					<input id="event_end_time_input" class="form-control" name="endTime" placeholder="5:00 PM" />
+					<label for="event_end_time_input" class="col-sm-2 control-label">End Time: </label>
+					<div class="col-sm-10">
+						<input id="event_end_time_input" class="form-control" name="endTime" placeholder="5:00 PM" />
+					</div>
 				</div>
 				<div class="form-group">
 				<input class="btn btn-default" type="submit" value="Add New Event"/>

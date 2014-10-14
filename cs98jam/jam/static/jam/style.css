@@ -92,6 +92,10 @@ a:link, a:visited {
 	width: 400px;
 }
 
+.container {
+	width: 60%; 
+	margin: 0% 20%;
+}
 
 /*.add-alt a:before{
 	background: #4166F5;
