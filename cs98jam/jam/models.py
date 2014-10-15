@@ -30,7 +30,18 @@ class Event(models.Model):
     name = models.CharField(max_length=50)
     date = models.DateField()
 
-
+class Channel(models.Model): 
+	def __unicode__(self):
+		return self.name
+		
+	name = models.CharField(max_length = 50)
+	moniker = models.CharField(max_length = 20)
+	description = models.CharField(max_length = 140)
+	is_public = models.BooleanField(default=False)
+	subscribers = models.ManyToManyField(User, blank=True, null=True)
+	admins = models.ManyToManyField(User, related_name="controlledChannel", blank=True, null=True)
+	
+	
 class Profile(models.Model):
 	def __unicode__(self):
 		return self.first_name
