@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from swingtime import views as swingtime
-from jam import views as jamViews
+from jam import views
 
 urlpatterns = patterns('', 
 

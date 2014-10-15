@@ -71,7 +71,8 @@ def profile(request):
 def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
-		channel = Channel(name=form_data.get('name'), moniker=form_data.get('moniker'), description=form_data.get('description'), is_public=form_data.get('is_public'))
+		channel = Channel(name=form_data.get('name'), moniker=form_data.get('moniker'), description=form_data.get('description'), is_public=(form_data.get('is_public')))
+		print form_data.get('is_public')
 		channel.save()
 		channel.subscribers.add(request.user)
 		channel.admins.add(request.user)
