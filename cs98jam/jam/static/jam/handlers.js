@@ -97,7 +97,7 @@ companyForm.submit(function(event) {
 		url: "new_company/",
 		data: {
 			"name": name,
-			"deadline": deadline,
+			"deadline": deadline
 		}
 	}).done(function() {
 		console.log("GOT HERE");
