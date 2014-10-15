@@ -4,8 +4,11 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+
 from jam.models import Contact, Company, Event, Profile, Channel
 from django.http import HttpResponseRedirect
+
+from swingtime import utils, forms
 
 # Create your views here.
 @login_required
@@ -81,13 +84,18 @@ def new_channel(request):
 def new_contact(request):
 	form_data = request.POST
 	contact = Contact(name=form_data.get('name'),
-					  phone_number=form_data.get('phone'))
+					  phone_number=form_data.get('phone'),
+					  email=form_data.get('email'),
+					  employer=form_data.get('company'),
+					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
 
 def new_company(request):
 	form_data = request.POST
-	company = Company(name=form_data.get('name'))
+	company = Company(name=form_data.get('name'),
+					  application_deadline=form_data.get('deadline'),
+					  user=request.user.username)
 	company.save()
 	return HttpResponse()
 
@@ -99,9 +107,14 @@ def new_event(request):
 	return HttpResponse()
 
 def companies(request):
-	context = {}
+	companies = Company.objects.filter(user=request.user.username)
+	for company in companies:
+		print company
+	context = {'companies': companies}
+	#context = {}
 	return render(request, 'jam/companies.html', context)
 
 def calendar(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
+

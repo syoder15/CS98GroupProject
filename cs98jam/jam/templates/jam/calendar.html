@@ -1,0 +1,22 @@
+Text
+
+<table class="month-view">
+	<thead>
+		<tr>
+			<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">Link</a></tr>
+		{% for row in calendar %}
+		<tr>
+		</tr>
+		{% endfor %}
+		<tr>
+                <th><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">{{ tm|date:"P" }}</a></th>
+                {% for cell in cells %}
+                <td{% if cell.event_class %} class="{{cell.event_class}}"{% endif %}>{{ cell }}</td>    
+                {% endfor %}
+        </tr>
+	</tbody>
+</table>
