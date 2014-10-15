@@ -1,3 +1,4 @@
+        {% csrf_token %}
         <tr><th>{{ event_form.title.label_tag }}</th>
             <td>{{ event_form.title.errors }}
                 {{ event_form.title }}</td></tr>

@@ -1,11 +1,14 @@
-        <tr><th>{{ recurrence_form.day.label_tag}}</th>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
+
+        <tr><th class="addEventTitle">{{ recurrence_form.day.label_tag}}</th>
             <td>{{ recurrence_form.day }}</td></tr>
-        <tr><th>{{ recurrence_form.start_time_delta.label_tag }}</th>
+        <tr><th class="addEventTitle">{{ recurrence_form.start_time_delta.label_tag }}</th>
             <td>{{ recurrence_form.start_time_delta }}</td></tr>
-        <tr><th>{{ recurrence_form.end_time_delta.label_tag }}</th>
+        <tr><th class="addEventTitle">{{ recurrence_form.end_time_delta.label_tag }}</th>
             <td>{{ recurrence_form.end_time_delta }}</td></tr>
 
-        <tr><th>{{ recurrence_form.repeats.label_tag }}</th>
+        <tr><th class="addEventTitle">{{ recurrence_form.repeats.label_tag }}</th>
             <td>
                 {{ recurrence_form.count.errors }}
                 <ul>
@@ -19,10 +22,11 @@
                         {{ recurrence_form.until }}</li>
                 </ul></td></tr>
 
-        <tr><th>{{ recurrence_form.freq.label_tag }}</th>
+        <tr><th class="addEventTitle">{{ recurrence_form.freq.label_tag }}</th>
             <td>
                 {{ recurrence_form.interval.errors }}
                 <div style="float: left">Every {{ recurrence_form.interval }} </div>
+                <br />
                 <ul id="recurrence-options">
                     <li><label for="id_freq_0">
                         <input type="radio" id="id_freq_0" 
@@ -51,6 +55,7 @@
                                     {{ recurrence_form.month_ordinal }}
                                     {{ recurrence_form.month_ordinal_day }}
                                 </li>
+                                <!--
                                 <li>
                                     <label for="id_month_option_1">
                                         <input checked="checked" type="radio" 
@@ -61,11 +66,11 @@
                                         {{ recurrence_form.each_month_day }}
                                     </div>
                                     <br clear="all" />
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                     </li>
-                    <li>
+                    <!--<li>
                         <label for="id_freq_3">
                             <input type="radio" id="id_freq_3" 
                                 value="0" name="freq" /> Year(s)</label>
@@ -83,7 +88,7 @@
                             {{ recurrence_form.year_month_ordinal_day }}
                             </div>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
             </td>
         </tr>
