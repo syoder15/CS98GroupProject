@@ -22,9 +22,6 @@ urlpatterns = patterns('',
     (r'^login/$', 'django.contrib.auth.views.login'),
     (r'^logout/$', logout_page),
 	(r'^register/$', register),
-
-	
-
 	
 	url(r'^password_change/reset/$', 
         'django.contrib.auth.views.password_reset', 

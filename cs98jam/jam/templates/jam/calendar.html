@@ -1,9 +1,18 @@
-	<h3>Events</h3>
-    <table class="month-view">
-        <thead>
-        	<tr><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">Add Event</a></tr>
-        	<tr><a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month%}"> Next Month &rarr;</a></tr>
-        </thead>
-    </table>
-
-    
+<!--{% extends "swingtime/base.html" %}
+{% block navigation %}{% endblock navigation %}
+{% block main_content %}-->
+<div class="container">
+    <main role="main">
+        <h2>Events</h2>
+        <nav>
+            <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}">
+                Monthly View</a> &middot; 
+            <a href="{% url 'swingtime-yearly-view' current_datetime.year %}">Yearly View</a> &middot; 
+            <a href="{% url 'swingtime-events' %}">Event Listing</a> &middot; 
+            <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">Add Event</a> &middot; 
+        	<a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month%}"> Next Month &rarr;</a>
+        </nav>
+    </main>
+    <footer role="contentinfo"></footer>
+</div>
+<!--{% endblock main_content %}-->

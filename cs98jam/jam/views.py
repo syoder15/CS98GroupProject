@@ -4,9 +4,11 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from jam.models import Contact, Company, Event, Profile
-from swingtime import utils, forms
 
+from jam.models import Contact, Company, Event, Profile, Channel
+from django.http import HttpResponseRedirect
+
+from swingtime import utils, forms
 
 
 # Create your views here.
@@ -66,6 +68,21 @@ def profile(request):
 	context = {'profile': profile}
 	return render(request, 'jam/profile.html', context)
 
+@login_required
+def new_channel(request):
+	if request.method == 'POST':
+		form_data = request.POST
+		channel = Channel(name=form_data.get('name'), moniker=form_data.get('moniker'), description=form_data.get('description'), is_public=(form_data.get('is_public')))
+		print form_data.get('is_public')
+		channel.save()
+		channel.subscribers.add(request.user)
+		channel.admins.add(request.user)
+	
+		return HttpResponseRedirect("/jam/")
+		
+	else:
+		return render(request, 'jam/new_channel.html')
+	
 def new_contact(request):
 	form_data = request.POST
 	contact = Contact(name=form_data.get('name'),

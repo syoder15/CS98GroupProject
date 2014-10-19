@@ -1,0 +1,31 @@
+<div>
+		
+	<form class="channelInfo" method="POST">
+		{% csrf_token %}
+		<p>
+		<label for="name_input">Name: </label>
+		<input id="name_input" name="name" />
+		</p>
+		
+		<p>
+		<label for="moniker_input">Nickname: </label>
+		<input id="moniker_input" name="moniker" />
+		</p>
+		
+		<p>
+		<label for="description_input">Description: </label>
+		<input id="description_input" name="description" />
+		</p>
+		
+		<p>
+			<label for="is_public_input">Public? </label>
+			<input id="is_public_input" type="radio" name="is_public" value="True" checked/>True
+			<input id="is_public_input" type="radio" name="is_public" value=""/>False
+		</p>
+		
+		<p>
+		<input class="button" type="submit" value="Save"/>
+		</p>
+	</form>
+	
+</div>
