@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -92,6 +92,18 @@ def new_contact(request):
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
+	
+def view_channel(request, channel_name):
+	channel = get_object_or_404(Channel, name=channel_name)
+	
+	
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+		'channel_description': channel.description, 'channel_status': channel.is_public}
+	
+	if request.method == 'POST':
+		channel.subscribers.add(request.user)
+	return render(request, 'jam/view_channel.html', context)
+
 
 def new_company(request):
 	form_data = request.POST
