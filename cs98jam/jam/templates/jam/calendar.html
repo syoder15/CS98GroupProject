@@ -1,8 +1,9 @@
-	<h3>Calendar/Events</h3>
+	<h3>Events</h3>
     <table class="month-view">
         <thead>
         	<tr><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">Add Event</a></tr>
-        	<tr><a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}"> 
-           title="Next Month">&rarr;</a></tr>
+        	<tr><a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month%}"> Next Month &rarr;</a></tr>
         </thead>
     </table>
+
+    
