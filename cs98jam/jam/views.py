@@ -15,7 +15,7 @@ from swingtime import utils, forms
 @login_required
 def index(request):
     context = {'username': request.user.username}
-    return render(request, 'jam/index.html', context)
+    return render(request, 'jam/index_homepage.html', context)
 
 @login_required
 def profile(request):
@@ -135,3 +135,6 @@ def calendar(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
 
+def test(request): 
+	context = {}
+	return render(request, 'jam/base_companies.html', context)
