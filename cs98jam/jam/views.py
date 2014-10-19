@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -9,6 +9,7 @@ from jam.models import Contact, Company, Event, Profile, Channel
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
+
 
 # Create your views here.
 @login_required
@@ -71,7 +72,8 @@ def profile(request):
 def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
-		channel = Channel(name=form_data.get('name'), moniker=form_data.get('moniker'), description=form_data.get('description'), is_public=form_data.get('is_public'))
+		channel = Channel(name=form_data.get('name'), moniker=form_data.get('moniker'), description=form_data.get('description'), is_public=(form_data.get('is_public')))
+		print form_data.get('is_public')
 		channel.save()
 		channel.subscribers.add(request.user)
 		channel.admins.add(request.user)
@@ -90,6 +92,21 @@ def new_contact(request):
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
+	
+def view_channel(request, channel_name):
+	channel = get_object_or_404(Channel, name=channel_name)
+	
+	is_subscriber = False
+	if request.user.channel_set.filter(name=channel_name).exists():
+		is_subscriber = True
+	
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber}
+	
+	if request.method == 'POST':
+		channel.subscribers.add(request.user)
+	return render(request, 'jam/view_channel.html', context)
+
 
 def new_company(request):
 	form_data = request.POST

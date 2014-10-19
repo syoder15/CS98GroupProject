@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'jam/profile.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'jam/css/profile.css' %}" />
 
 <!-- <div class="profile-header row">
 	<div class="banner-picture">
@@ -59,6 +59,7 @@
 		</div>
 
 		<form class="contactInfo" method="POST">
+			{% csrf_token %}
 			<table id="profileTable">
 				<tr>
 					<td class="profileField">
@@ -204,5 +205,5 @@
 	</div>
 </div>
 
-<script src="{% static 'jam/profile.js' %}"></script>
-<script src="{% static 'jam/jquery-2.1.1.min.js' %}"></script>
+<script src="{% static 'jam/js/profile.js' %}"></script>
+<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
