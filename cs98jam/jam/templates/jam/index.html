@@ -10,6 +10,7 @@
 	
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'jam/style.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'jam/homepage.css' %}" />
 
 	<!-- <link rel="alternate" title="Website Feed" href="rss.php" type="application/rss+xml" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
@@ -17,29 +18,7 @@
 	<title>JAM</title>
 </head>
 
-<body id="backgroundImage"> 
-<!-- 	<div id="header"> 
-		<nav id="topBar">
-			<ul>
-				<li class="title"><a href="" class="title">JobApplicationManager</a></li>
-				<li class="subtitle">
-					Visualize your job search in a streamlined UI and get hired today!
-				</li>
-				<li><a href="companies">Companies</a></li>
-				<li><a href="calendar">Calendar</a></li>
-			</ul>
-			<div class="profileButton">
-				<a href="profile">
-					<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
-				</a>
-				<ul class="accountList">
-					<li class="profileNameButton profileBox profDropdown">{{ username }}</li>
-					<li class="dropdown"><a href="profile" class="profDropdown">My Account</a></li><br /><br />
-					<li class="dropdown"><a href="/logout/" class="profDropdown">Logout</a></li>
-				</ul>
-			</div>
-		</nav>
-	</div> -->
+<body> 
 
 	<nav class="navbar navbar-default navbar-fixed-top transparent" role="navigation">
 	  <div class="container-fluid transparent">
@@ -85,23 +64,58 @@
 	</nav>
 
 
-	<div class="centered">
-		<div class="addbox">
-			<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#companyModal">
-			  Add Company
-			</button>
+	<section>
+		<!-- <div class="col-md-12 hover-slide text-center"> -->
+			<div class="centered">
+				<div class="addbox">
+					<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#companyModal">
+					  Add Company
+					</button>
+				</div>
+				<div class="addbox">
+					<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#contactModal">
+					  Add Contact
+					</button>
+				</div>
+				<div class="addbox">
+					<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#eventModal">
+					  Add Event
+					</button>
+				</div>
+			</div>
+		<!-- </div> -->
+
+		<div id="homepage-carousel" class="carousel slide" data-ride="carousel">
+		  <!-- Indicators -->
+		  <ol class="carousel-indicators">
+		    <li data-target="#homepage-carousel" data-slide-to="0" class="active"></li>
+		    <li data-target="#homepage-carousel" data-slide-to="1"></li>
+		    <li data-target="#homepage-carousel" data-slide-to="2"></li>
+		  </ol>
+
+		  <!-- Wrapper for slides -->
+		  <div class="carousel-inner">
+		    <div class="item active">
+		      <img src="http://www.sanfrancisco.net/pictures/san-francisco.jpg" alt="...">
+		    </div>
+		    <div class="item">
+		      <img src="http://james-brandon.com/wp-content/uploads/2012/03/spaceneedleskyline.jpg" alt="...">
+		    </div>
+		    <div class="item">
+		      <img src="http://www.cubebreaker.com/wp-content/uploads/2014/04/skyline-01-new-york-city.jpg" alt="...">
+		    </div>
+		  </div>
+
+		  <!-- Controls -->
+		  <!-- <a class="left carousel-control" href="#homepage-carousel" role="button" data-slide="prev">
+		    <span class="glyphicon glyphicon-chevron-left"></span>
+		  </a>
+		  <a class="right carousel-control" href="#homepage-carousel" role="button" data-slide="next">
+		    <span class="glyphicon glyphicon-chevron-right"></span>
+		  </a> -->
 		</div>
-		<div class="addbox">
-			<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#contactModal">
-			  Add Contact
-			</button>
-		</div>
-		<div class="addbox">
-			<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#eventModal">
-			  Add Event
-			</button>
-		</div>
-	</div>
+	</section>
+
 
 
 	<!-- Company Modal -->
@@ -184,8 +198,6 @@
 	    </div>
 	  </div>
 	</div>
-
-
 	
 	<!-- Event Modal -->
 	<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -259,4 +271,8 @@
 	//     $interpolateProvider.endSymbol('$}');
 	// });
 </script>
-
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.carousel').carousel({interval: 7000});
+  });
+</script>

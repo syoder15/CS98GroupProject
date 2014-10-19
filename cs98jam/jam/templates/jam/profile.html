@@ -3,14 +3,33 @@
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'jam/profile.css' %}" />
 
-<div class="profile-header">
+<!-- <div class="profile-header row">
 	<div class="banner-picture">
-<!-- 		<div class="profile-picture">
-		</div> -->
-		<div class="profile-picture-container">
+		<div class="profile-picture-container col-md-4">
 			<img src="http://cuteanimalpicturesandvideos.com/wp-content/uploads/super-cute-puppy-look-awww-photo.jpg" id="" class="profile-picture"></img>
 		</div>
+		<div class="col-md-8 profile-name"> 
+			Jane Doe
+		</div> 
 	</div>
+</div>
+ -->
+
+<div class="container-fluid"> 
+	<div class="banner-picture row">
+		<div class="col-sm-4">
+			<div class="profile-picture-container">
+				<img src="http://cuteanimalpicturesandvideos.com/wp-content/uploads/super-cute-puppy-look-awww-photo.jpg" id="" class="profile-picture"></img>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="profile-bar">
+				<h3 class="profile-name"> 
+					Jane Doe
+				</h3> 
+			</div>
+		</div> 
+	</div> 
 </div>
 
 <div class="centered">

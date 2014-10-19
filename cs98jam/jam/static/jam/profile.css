@@ -1,6 +1,6 @@
-body {
+/*body {
    background: #4166F5;
-}
+}*/
 
 .profile-header {
 	margin:0px;
@@ -13,17 +13,20 @@ body {
 	height:250px;
 	background: url("http://www.addcovers.com/covers/8hy3o29c04v4fc0.jpg") center no-repeat;
    	background-size: cover;
+   	position:relative;
 }
 
 .profile-picture-container {
-	position:absolute;
+	/*position:absolute;*/
 	padding:5px;
-	margin-left:200px;
-	top:130px;
+	float:right;
+	margin-top:130px;
+	/*top:130px;*/
 	width: 150px;
     height: 150px;
-    overflow: hidden;
+    overflow: hidden;   
 }
+
 .profile-picture {
 	width: 250px;
     height: 150px;
@@ -37,6 +40,18 @@ body {
    	/*background-size: cover;*/
 }
 
+.profile-bar {
+	height:290px;
+	position:relative;
+	/*background-color:red;*/
+}
+
+.profile-name {
+	/*float:left;*/
+	position:absolute;
+	bottom:0px;
+}
+
 .title {
 	color: white;
 	font-size: 32px;
@@ -47,7 +62,9 @@ body {
 .centered {
 	background-color: white;
 	display: inline-block;
-	height: 550px;
+	/*height: 550px;*/
+	height: 100%;
+
 	margin-top: 50px;
 	text-align: center;
 	width: 100%;
