@@ -1,22 +1,18 @@
-Text
-
-<table class="month-view">
-	<thead>
-		<tr>
-			<th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">Link</a></tr>
-		{% for row in calendar %}
-		<tr>
-		</tr>
-		{% endfor %}
-		<tr>
-                <th><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">{{ tm|date:"P" }}</a></th>
-                {% for cell in cells %}
-                <td{% if cell.event_class %} class="{{cell.event_class}}"{% endif %}>{{ cell }}</td>    
-                {% endfor %}
-        </tr>
-	</tbody>
-</table>
+<!--{% extends "swingtime/base.html" %}
+{% block navigation %}{% endblock navigation %}
+{% block main_content %}-->
+<div class="container">
+    <main role="main">
+        <h2>Events</h2>
+        <nav>
+            <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}">
+                Monthly View</a> &middot; 
+            <a href="{% url 'swingtime-yearly-view' current_datetime.year %}">Yearly View</a> &middot; 
+            <a href="{% url 'swingtime-events' %}">Event Listing</a> &middot; 
+            <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">Add Event</a> &middot; 
+        	<a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month%}"> Next Month &rarr;</a>
+        </nav>
+    </main>
+    <footer role="contentinfo"></footer>
+</div>
+<!--{% endblock main_content %}-->

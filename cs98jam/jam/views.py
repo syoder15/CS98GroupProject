@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
 
+
 # Create your views here.
 @login_required
 def index(request):
