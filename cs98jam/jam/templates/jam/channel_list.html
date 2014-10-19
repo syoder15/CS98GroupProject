@@ -1,0 +1,9 @@
+<h1>Channels</h1>
+<ul>
+{% for channel in channels %} 
+	<li> <a href="http://127.0.0.1:8000/jam/channels/view/{{channel.name}}"> {{ channel.name  }} </a></li>
+
+{% empty %}
+	<li>No channels yet.</li>
+{% endfor %}
+</ul>

@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
 	url(r'channels/view/(?P<channel_name>.+)/$', views.view_channel, name="view_channel"),
 	url(r'^events/add/$', swingtime.add_event, name='swingtime-add-event'),
-
+    
+    url(r'channels/list', views.channel_list, name='channel_list'),
 	(r'^swingtime/', include('swingtime.urls'))
 )

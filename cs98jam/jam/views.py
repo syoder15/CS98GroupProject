@@ -126,3 +126,8 @@ def calendar(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
 
+
+def channel_list(request):
+	channels = Channel.objects.all()
+	context={'channels': channels}
+	return render(request,'jam/channel_list.html',context)
