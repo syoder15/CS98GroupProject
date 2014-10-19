@@ -96,9 +96,12 @@ def new_contact(request):
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
 	
+	is_subscriber = False
+	if request.user.channel_set.filter(name=channel_name).exists():
+		is_subscriber = True
 	
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
-		'channel_description': channel.description, 'channel_status': channel.is_public}
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber}
 	
 	if request.method == 'POST':
 		channel.subscribers.add(request.user)
