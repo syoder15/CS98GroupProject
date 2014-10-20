@@ -1,13 +1,14 @@
 {% extends "../../jam/templates/jam/index_homepage.html" %}
 
 
-<div class="list-group">
-	{% for c in companies %}
-	<a href="#" class="list-group-item">
-		<h4 class="list-group-item-heading">{{ c }}</h4>
-		<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
-	</a>
-	{% endfor %}
-</div>
+{% block companies %}
+	<div class="list-group">
+		{% for c in companies %}
+		<a href="#" class="list-group-item">
+			<h4 class="list-group-item-heading">{{ c }}</h4>
+			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
+		</a>
+		{% endfor %}
+	</div>
 
-
+{% endblock %}
