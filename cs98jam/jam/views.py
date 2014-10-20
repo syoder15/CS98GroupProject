@@ -92,7 +92,8 @@ def new_contact(request):
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
-	
+
+@login_required
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
 	
@@ -100,14 +101,41 @@ def view_channel(request, channel_name):
 	if request.user.channel_set.filter(name=channel_name).exists():
 		is_subscriber = True
 	
+	is_admin = False
+	if request.user.controlledChannels.filter(name=channel_name).exists():
+		is_admin = True
+	
+	
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
-		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber}
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber,
+		'is_admin': is_admin}
 	
 	if request.method == 'POST':
 		channel.subscribers.add(request.user)
 	return render(request, 'jam/view_channel.html', context)
 
-
+@login_required
+def view_channel_as_admin(request, channel_name):
+	channel = get_object_or_404(Channel, name=channel_name) 
+	
+	is_admin = False
+	if request.user.controlledChannels.filter(name=channel_name).exists():
+		is_admin = True
+	
+	if is_admin and request.method == 'POST':
+		for key in request.POST:
+			user = User.objects.filter(username=key).first()
+			if user is not None and (user.controlledChannels.filter(name=channel_name).exists() == False or user == request.user):
+				channel.subscribers.remove(User.objects.filter(username=key).first())
+					
+	
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+		'channel_description': channel.description, 'channel_status': channel.is_public,
+		'is_admin': is_admin, 'subscribers': channel.subscribers}	
+		
+	return render(request, 'jam/view_channel_as_admin.html', context)
+	
+	
 def new_company(request):
 	form_data = request.POST
 	company = Company(name=form_data.get('name'),

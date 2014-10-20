@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 	url(r'channels/create/', views.new_channel, name='new_channel'),
 
 	url(r'channels/view/(?P<channel_name>.+)/$', views.view_channel, name="view_channel"),
+	url(r'channels/view_as_admin/(?P<channel_name>.+)/$', views.view_channel_as_admin, name="view_channel_as_admin"),
 	url(r'^events/add/$', swingtime.add_event, name='swingtime-add-event'),
     #url(r'^events/monthly/$', swingtime.month_view, name='swingtime-monthly-view'),
 
