@@ -96,7 +96,7 @@ def new_contact(request):
 
 
 @login_required
-	def activate_subscriber(request, channel_name, user_name):
+def activate_subscriber(request, channel_name, user_name):
 	channel = get_object_or_404(Channel, name=channel_name)
 	
 	# assume invalid until proven otherwise... 
