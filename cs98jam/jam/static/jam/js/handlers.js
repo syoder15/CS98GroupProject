@@ -50,6 +50,7 @@ function getCookie(name) {
 contactForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
+  	$('#contactModal').modal('hide');
   	var name = $('#name_input').val();
   	var phone = $('#phone_number_input').val();
   	var email = $('#email_input').val();
@@ -83,6 +84,7 @@ contactForm.submit(function(event) {
 companyForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
+  	$('#companyModal').modal('hide');
   	var name = $('#company_name_input').val();
   	var deadline = $('#company_deadline_input').val();
 	var csrftoken = getCookie('csrftoken');
@@ -108,6 +110,7 @@ companyForm.submit(function(event) {
 eventForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
+  	$('#eventModal').modal('hide');
   	var name = $('#event_name_input').val();
   	var location = $('#event_location_input').val();
   	var date = $('#event_date_input').val();
