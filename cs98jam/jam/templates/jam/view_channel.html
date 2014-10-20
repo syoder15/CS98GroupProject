@@ -1,4 +1,24 @@
 <div>
-	{{ channel_name }}
+	<p>Name: {{ channel_name }} </p>
+	<p>Nickname: {{ channel_nickname }} </p>
+	<p>Description: {{ channel_description }} </p>
 	
+	{% if channel_status %}
+		<p>Status: Public </p>
+	{% else %}
+		<p>Status: Private </p>
+	{% endif %}
+	
+	<form class="joinChannel" method="POST">
+		{% csrf_token %}
+		
+		{% if is_subscriber %}
+			<p>You are subscribed to this channel!</p>
+			
+		{% elif channel_status %}
+			<p>
+				<input class="button" type="submit" value="Join Channel"/>
+			</p>
+		{% endif %}	
+	</form>
 </div>

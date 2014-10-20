@@ -15,7 +15,7 @@ from swingtime import utils, forms
 @login_required
 def index(request):
     context = {'username': request.user.username}
-    return render(request, 'jam/index.html', context)
+    return render(request, 'jam/index_homepage.html', context)
 
 @login_required
 def profile(request):
@@ -95,7 +95,16 @@ def new_contact(request):
 	
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
-	context = {'channel_name': channel.name}
+	
+	is_subscriber = False
+	if request.user.channel_set.filter(name=channel_name).exists():
+		is_subscriber = True
+	
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber}
+	
+	if request.method == 'POST':
+		channel.subscribers.add(request.user)
 	return render(request, 'jam/view_channel.html', context)
 
 
@@ -122,7 +131,10 @@ def companies(request):
 	#context = {}
 	return render(request, 'jam/companies.html', context)
 
-def calendar(request):
+def events(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
 
+def test(request): 
+	context = {}
+	return render(request, 'jam/base_companies.html', context)

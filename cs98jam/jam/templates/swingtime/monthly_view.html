@@ -1,7 +1,4 @@
-<!--{% load url from future %}
-{% block title %}Monthly View{% endblock %}
-{% block main_content %}-->
-    <h3>Monthly View</h3>
+<h3>Monthly View</h3>
     <h4>
         <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
            title="Last Month">&larr;</a>
@@ -44,4 +41,3 @@
             {% endfor %}
         </tbody>
     </table>
-<!--{% endblock %}-->
