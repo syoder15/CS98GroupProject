@@ -131,7 +131,7 @@ def companies(request):
 	#context = {}
 	return render(request, 'jam/companies.html', context)
 
-def calendar(request):
+def events(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
 
