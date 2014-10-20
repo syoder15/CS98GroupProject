@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url, include
-from django.core.urlresolvers import reverse
+#from django.core.urlresolvers import reverse
 from swingtime import views as swingtime
 from jam import views
 
@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
 	url(r'channels/view/(?P<channel_name>.+)/$', views.view_channel, name="view_channel"),
 	url(r'^events/add/$', swingtime.add_event, name='swingtime-add-event'),
+    #url(r'^events/monthly/$', swingtime.month_view, name='swingtime-monthly-view'),
 
 	(r'^swingtime/', include('swingtime.urls'))
 )
