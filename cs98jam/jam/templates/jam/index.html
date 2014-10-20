@@ -17,29 +17,7 @@
 	<title>JAM</title>
 </head>
 
-<body id="backgroundImage"> 
-<!-- 	<div id="header"> 
-		<nav id="topBar">
-			<ul>
-				<li class="title"><a href="" class="title">JobApplicationManager</a></li>
-				<li class="subtitle">
-					Visualize your job search in a streamlined UI and get hired today!
-				</li>
-				<li><a href="companies">Companies</a></li>
-				<li><a href="calendar">Calendar</a></li>
-			</ul>
-			<div class="profileButton">
-				<a href="profile">
-					<img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
-				</a>
-				<ul class="accountList">
-					<li class="profileNameButton profileBox profDropdown">{{ username }}</li>
-					<li class="dropdown"><a href="profile" class="profDropdown">My Account</a></li><br /><br />
-					<li class="dropdown"><a href="/logout/" class="profDropdown">Logout</a></li>
-				</ul>
-			</div>
-		</nav>
-	</div> -->
+<body> 
 
 	<nav class="navbar navbar-default navbar-fixed-top transparent" role="navigation">
 	  <div class="container-fluid transparent">
@@ -59,7 +37,7 @@
 	      <ul class="nav navbar-nav">
 	        <li><a href="companies">Companies</a></li>
 	        <li><a href="#">Contacts</a></li>
-	        <li><a href="calendar">Events</a></li>
+	        <li><a href="cal">Events</a></li>
 	      </ul>
 	      <form class="navbar-form navbar-left" role="search">
 	        <div class="form-group">
@@ -72,7 +50,7 @@
 	        <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 	          	
-	          	  <img src="{% static 'jam/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
+	          	  <img src="{% static 'jam/css/images/avatar.png' %}" id="userIcon" class="profileBox"></img>
 					{{ username }}
 
 		          <ul class="dropdown-menu" role="menu">
@@ -86,159 +64,6 @@
 	  </div><!-- /.container-fluid -->
 	</nav>
 
-
-	<div class="centered">
-		<div class="addbox">
-			<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#companyModal">
-			  Add Company
-			</button>
-		</div>
-		<div class="addbox">
-			<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#contactModal">
-			  Add Contact
-			</button>
-		</div>
-		<div class="addbox">
-			<button class="btn btn-primary btn-lg addInfoButton" data-toggle="modal" data-target="#eventModal">
-			  Add Event
-			</button>
-		</div>
-	</div>
-
-
-	<!-- Company Modal -->
-	<div class="modal fade" id="companyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	        <h4 class="modal-title" id="myModalLabel">New Company</h4>
-	      </div>
-	      <div class="modal-body">
-	        <form class="company_form form-horizontal" method="POST">
-				{% csrf_token %}
-				<div class="form-group"> 
-					<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
-					<div class="col-sm-8"> 
-						<input id="company_name_input" class="form-control" name="name" placeholder="Google" required />
-					</div>
-				</div>
-				<div class="form-group"> 
-					<label for="company_deadline_input" class="col-sm-4 control-label">Application Deadline: </label>
-					<div class="col-sm-8">
-						<input id="company_deadline_input" class="form-control" name="deadline" placeholder="YYYY-MM-DD"/>
-					</div>
-				</div>
-				<div class="modal-footer">
-	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<input class="btn btn-primary" type="submit" value="Add New Company"/>
-	      		</div>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
-	<!-- Contact Modal -->
-	<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	        <h4 class="modal-title" id="myModalLabel">New Contact</h4>
-	      </div>
-	      <div class="modal-body">
-	        <form name="contact_form" class="contact_form form-horizontal" method="POST">
-				{% csrf_token %}
-
-				<div class="form-group">
-					<label for="name_input" class="col-sm-2 control-label">Name: </label>
-					<div class="col-sm-10"> 
-						<input id="name_input" class="form-control" name="name" placeholder="Name: eg. John Smith" required />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="phone_number_input" class="col-sm-2 control-label">Phone #: </label>
-					<div class="col-sm-10"> 
-						<input id="phone_number_input" class="form-control" name="phone_number" placeholder="(555) 555-5555"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="email_input" class="col-sm-2 control-label">Email: </label>
-					<div class="col-sm-10">
-						<input id="email_input" class="form-control" name="email" placeholder="john.smith@gmail.com"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="company_input" class="col-sm-2 control-label">Employer: </label>
-					<div class="col-sm-10">
-						<input id="company_input" class="form-control" name="company" placeholder="Google" required />
-					</div>
-				</div>
-				<div class="modal-footer">
-	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<input class="btn btn-primary" type="submit" value="Add New Contact"/>
-	      		</div>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
-
-	
-	<!-- Event Modal -->
-	<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	        <h4 class="modal-title" id="myModalLabel">New Event</h4>
-	      </div>
-	      <div class="modal-body">
-			<form class="event_form form-horizontal" method="POST">
-				{% csrf_token %}
-
-				<div class="form-group">
-					<label for="event_name_input" class="col-sm-2 control-label">Event: </label>
-					<div class="col-sm-10">
-						<input id="event_name_input" class="form-control" name="name" placeholder="Google Barbecue" required />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="event_location_input" class="col-sm-2 control-label">Location: </label>
-					<div class="col-sm-10">
-						<input id="event_location_input" class="form-control" name="name" placeholder="Thayer" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="event_date_input" class="col-sm-2 control-label">Date: </label>
-					<div class="col-sm-10">
-						<input id="event_date_input" class="form-control" name="date" placeholder="2014-12-31" required />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="event_start_time_input" class="col-sm-2 control-label">Start Time: </label>
-					<div class="col-sm-10">
-						<input id="event_start_time_input" class="form-control" name="startTime" placeholder="2:00 PM" required />
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="event_end_time_input" class="col-sm-2 control-label">End Time: </label>
-					<div class="col-sm-10">
-						<input id="event_end_time_input" class="form-control" name="endTime" placeholder="5:00 PM" />
-					</div>
-				</div>
-				<div class="form-group">
-				<div class="modal-footer">
-	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<input class="btn btn-primary" type="submit" value="Add New Event"/>
-	      		</div>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-	</div>
 
 </body>
 </html>
@@ -258,4 +83,8 @@
 	//     $interpolateProvider.endSymbol('$}');
 	// });
 </script>
-
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.carousel').carousel({interval: 7000});
+  });
+</script>
