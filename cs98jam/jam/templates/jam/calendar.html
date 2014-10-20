@@ -2,6 +2,7 @@
     <main role="main">
         <h2>Events</h2>
         <nav>
+            <a href="{% url 'swingtime-today' %}">Daily View</a> &middot; 
             <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}">
                 Monthly View</a> &middot; 
             <a href="{% url 'swingtime-yearly-view' current_datetime.year %}">Yearly View</a> &middot; 
