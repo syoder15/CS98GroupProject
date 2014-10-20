@@ -1,3 +1,5 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
 <h3>Monthly View</h3>
     <h4>
         <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
@@ -18,13 +20,14 @@
             {% for row in calendar %}
             <tr>
                 {% for day,items in row  %}
-                <td{% ifequal day today.day  %} class="today"{% endifequal %}>
+                <td{% ifequal day today.day %}{% ifequal this_month.month today.month %} class="today"{% endifequal %}{% endifequal %}>
                 {% if day %}
                     <div class="day-ordinal">
-                        <a href="{% url 'swingtime-daily-view' this_month.year this_month.month day %}">{{ day }}</a>
+                        <!--<a href="{% url 'swingtime-daily-view' this_month.year this_month.month day %}">-->
+                        {{ day }}<!--</a>-->
                     </div>
                     {% if items %}
-                    <ul>
+                    <ul class="eventBullet">
                         {% for item in items %}
                         <li>
                             <a href="{{ item.get_absolute_url }}">

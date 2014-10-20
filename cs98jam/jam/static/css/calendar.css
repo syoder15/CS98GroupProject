@@ -5,3 +5,25 @@
 .addEventTitle {
 	vertical-align: top;
 }
+
+table {
+	border-collapse: collapse;
+}
+.month-view { width: 80%; }
+.month-view td { 
+	vertical-align: top; 
+	height: 7em; 
+	border: 1px solid black;
+	padding: 3px;
+	}
+    .month-view td, .month-view th { width: 14.285%; }
+    .month-view .day-ordinal { font-weight: bold; font-size: 1.1em; text-align: right; }
+    .month-view ul { margin: 1px 2px; padding: 0; padding-left: 1em; }
+    .month-view li { font-size: .9em; }
+    .month-view .today { background-color: #E0B1B3; }
+    .month-view .event-times {  }
+.month-divider th, .month-divider td { border-top: 3px solid #8e8f80; }
+
+ul.eventBullet {
+ list-style-type: none;
+ }
