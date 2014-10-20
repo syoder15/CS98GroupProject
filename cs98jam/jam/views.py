@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
 
 from jam.models import Contact, Company, Event, Profile, Channel
 from django.http import HttpResponseRedirect
@@ -93,9 +94,38 @@ def new_contact(request):
 	contact.save()
 	return HttpResponse()
 	
+def activate_subscriber(request, channel_name, user_name):
+	channel = get_object_or_404(Channel, name=channel_name)
+	
+	# assume invalid until proven otherwise... 
+	# only add new subscriber if this person is REALLY an admin ;)
+	is_admin = False
+	if request.user in channel.admins.all():
+		is_admin = True
+		user = get_object_or_404(User, username=user_name)
+		channel.subscribers.add(user)
+
+	# pass the appropriate context to populate generic activation view
+	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin}
+	return render(request, 'jam/activate_subscriber.html', context)
+
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
-	context = {'channel_name': channel.name}
+	
+	
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+		'channel_description': channel.description, 'channel_status': channel.is_public}
+	
+	if request.method == 'POST':
+		if(channel.is_public):	
+			channel.subscribers.add(request.user)
+		else: 
+			link = "http://127.0.0.01:8000/jam/channels/activate/" + channel.name + "/" + request.user.username
+			for admin in channel.admins.all():
+				subject = channel.name + " Suscriber request!"
+				body = request.user.username + " would like to join your channel! Click this link to let them in :)\n" + link
+				send_mail(subject,body,'dartmouthjam@gmail.com', [admin.email], fail_silently=False)
+
 	return render(request, 'jam/view_channel.html', context)
 
 
