@@ -1,0 +1,24 @@
+<div>	
+	{% if is_admin %}
+		<p>Name: {{ channel_name }} </p>
+		<p>Nickname: {{ channel_nickname }} </p>
+		<p>Description: {{ channel_description }} </p>
+		
+		{% if channel_status %}
+			<p>Status: Public </p>
+		{% else %}
+			<p>Status: Private </p>
+		{% endif %}
+		
+		{% for subscriber in subscribers.all %}
+			<p> {{ subscriber.username }} 
+			<form class="channelInfo" method="POST">{% csrf_token %}
+				<input class="button" name="{{ subscriber.username }}" type="submit" value="-"/>
+			</form>
+			</p>
+		{% endfor %}
+		
+	{% else %}
+		Sorry, according to our records, you are not an admin for this channel.
+	{% endif %}
+</div>

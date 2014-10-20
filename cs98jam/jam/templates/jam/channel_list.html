@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
+
+</head>
+
+<body>
+<div class="main">
+<h1>Channels</h1>
+{% for channel in channels %} 
+	<p> <a href ="http://127.0.0.1:8000/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+
+{% empty %}
+	<p>No channels yet.</p>
+{% endfor %}
+</div>
+</body>
+</html>
