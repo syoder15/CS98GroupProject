@@ -41,7 +41,7 @@ class Channel(models.Model):
 	description = models.CharField(max_length = 140)
 	is_public = models.BooleanField(default=False)
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
-	admins = models.ManyToManyField(User, related_name="controlledChannel", blank=True, null=True)
+	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
 	
 	
 class Profile(models.Model):

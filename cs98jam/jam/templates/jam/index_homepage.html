@@ -1,5 +1,6 @@
 {% extends "../../jam/templates/jam/index.html" %}
 
+{% block content %}
 <section>
 	<div class="centered">
 		<div class="addbox">
@@ -50,40 +51,38 @@
 	</div>
 </section>
 
-
-
 <!-- Company Modal -->
-<div class="modal fade" id="companyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">New Company</h4>
-      </div>
-      <div class="modal-body">
-        <form class="company_form form-horizontal" method="POST">
-			{% csrf_token %}
-			<div class="form-group"> 
-				<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
-				<div class="col-sm-8"> 
-					<input id="company_name_input" class="form-control" name="name" placeholder="Google" required />
+	<div class="modal fade" id="companyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="myModalLabel">New Company</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="company_form form-horizontal" method="POST">
+				{% csrf_token %}
+				<div class="form-group"> 
+					<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
+					<div class="col-sm-8"> 
+						<input id="company_name_input" class="form-control" name="name" placeholder="Google" required />
+					</div>
 				</div>
-			</div>
-			<div class="form-group"> 
-				<label for="company_deadline_input" class="col-sm-4 control-label">Application Deadline: </label>
-				<div class="col-sm-8">
-					<input id="company_deadline_input" class="form-control" name="deadline" placeholder="YYYY-MM-DD"/>
+				<div class="form-group"> 
+					<label for="company_deadline_input" class="col-sm-4 control-label">Application Deadline: </label>
+					<div class="col-sm-8">
+						<input id="company_deadline_input" class="form-control" name="deadline" placeholder="YYYY-MM-DD"/>
+					</div>
 				</div>
-			</div>
-			<div class="modal-footer">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<input class="btn btn-primary" type="submit" value="Add New Company"/>
-      		</div>
-		</form>
-      </div>
-    </div>
-  </div>
-</div>
+				<div class="modal-footer">
+	        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<input class="btn btn-primary" type="submit" value="Add New Company"/>
+	      		</div>
+			</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 <!-- Contact Modal -->
 <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -130,6 +129,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Event Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -183,3 +183,4 @@
     </div>
   </div>
 </div>
+{% endblock %}

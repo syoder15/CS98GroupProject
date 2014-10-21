@@ -13,6 +13,9 @@
 	 height: 50%;
 	 text-align: center;
 }
+.channel_link {
+	color:white;
+}
 
 body {
 	background-color: #4166F5;

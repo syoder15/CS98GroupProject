@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^jam/', include('jam.urls')),
 	
+	# password change
 	(r'^password_change/new/$', 'django.contrib.auth.views.password_change', {'post_change_redirect' : '/password_change/new/done'},),
 	(r'^password_change/new/done/$', 'django.contrib.auth.views.password_change_done'),
 	

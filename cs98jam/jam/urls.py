@@ -12,10 +12,12 @@ urlpatterns = patterns('',
     url(r'new_company/', views.new_company, name='new_company'),
     url(r'new_event/', views.new_event, name='new_event'),
 	url(r'channels/create/', views.new_channel, name='new_channel'),
-
+    url(r'channels/activate/(?P<channel_name>.+)/(?P<user_name>.+)/$', views.activate_subscriber, name='activate_subscriber'),
 	url(r'channels/view/(?P<channel_name>.+)/$', views.view_channel, name="view_channel"),
+	url(r'channels/view_as_admin/(?P<channel_name>.+)/$', views.view_channel_as_admin, name="view_channel_as_admin"),
 	url(r'^events/add/$', swingtime.add_event, name='swingtime-add-event'),
     #url(r'^events/monthly/$', swingtime.month_view, name='swingtime-monthly-view'),
 
+    url(r'channels/list', views.channel_list, name='channel_list'),
 	(r'^swingtime/', include('swingtime.urls'))
 )

@@ -1,4 +1,9 @@
 <div>
+	{% if is_admin %}
+		<a href="../../view_as_admin/{{ channel_name }}">Switch to Administrator View</a>
+	
+	{% endif %}
+	
 	<p>Name: {{ channel_name }} </p>
 	<p>Nickname: {{ channel_nickname }} </p>
 	<p>Description: {{ channel_description }} </p>
@@ -19,6 +24,11 @@
 			<p>
 				<input class="button" type="submit" value="Join Channel"/>
 			</p>
+		{% else %}
+			<p>
+				<input class="button" type="submit" value="Request to join"/>
+			</p>
 		{% endif %}	
+
 	</form>
 </div>
