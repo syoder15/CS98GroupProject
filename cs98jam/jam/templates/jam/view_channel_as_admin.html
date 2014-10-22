@@ -1,8 +1,20 @@
 <div>	
 	{% if is_admin %}
-		<p>Name: {{ channel_name }} </p>
-		<p>Nickname: {{ channel_nickname }} </p>
-		<p>Description: {{ channel_description }} </p>
+		<p>
+			Name: {{ channel_name }} 
+		</p>
+		<form class="channelInfo" method="POST">
+			{% csrf_token %}
+			<p>
+				<label for="nickname_input">Nickname: </label>
+				<input id="nickname_input" name="nickname" value="{{ channel_nickname }}" />
+			</p>
+			<p>
+				<label for="description_input">Description: </label>
+				<input id="description_input" name="description" value="{{ channel_description }}" /> 
+			</p>
+			<input class="button" type="submit" value="Submit Changes"/>
+		</form>
 		
 		{% if channel_status %}
 			<p>Status: Public </p>
@@ -12,7 +24,7 @@
 		
 		{% for subscriber in subscribers.all %}
 			<p> {{ subscriber.username }} 
-			<form class="channelInfo" method="POST">{% csrf_token %}
+			<form class="removeSubs" method="POST">{% csrf_token %}
 				<input class="button" name="{{ subscriber.username }}" type="submit" value="-"/>
 			</form>
 			</p>

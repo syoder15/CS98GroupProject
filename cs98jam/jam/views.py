@@ -111,6 +111,11 @@ def activate_subscriber(request, channel_name, user_name):
 	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin}
 	return render(request, 'jam/activate_subscriber.html', context)
 
+
+# Shows the details of a channel. View differs based on whether the channel is public
+# or private and the user's status within the channel.
+#
+# Inputs: request, channel_name (name of the channel to be viewed)	
 @login_required
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
@@ -129,7 +134,9 @@ def view_channel(request, channel_name):
 		'is_admin': is_admin}
 	
 	if request.method == 'POST':
-		if(channel.is_public):	
+		if 'Unsubscribe' in request.POST:	
+			channel.subscribers.remove(request.user)
+		elif channel.is_public and 'Subscribe' in request.POST:
 			channel.subscribers.add(request.user)
 		else: 
 			link = "http://127.0.0.01:8000/jam/channels/activate/" + channel.name + "/" + request.user.username
@@ -137,9 +144,14 @@ def view_channel(request, channel_name):
 				subject = channel.name + " Suscriber request!"
 				body = request.user.username + " would like to join your channel! Click this link to let them in :)\n" + link
 				send_mail(subject,body,'dartmouthjam@gmail.com', [admin.email], fail_silently=False)
+		return HttpResponseRedirect("/jam/channels/view/" + channel.name)		
 
 	return render(request, 'jam/view_channel.html', context)
 
+	
+# Administrative view for a channel. Allows for removal of subscribers.
+#
+# Inputs: request, channel_name (name of the channel to be viewed)	
 @login_required
 def view_channel_as_admin(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name) 
@@ -153,8 +165,15 @@ def view_channel_as_admin(request, channel_name):
 			user = User.objects.filter(username=key).first()
 			if user is not None and (user.controlledChannels.filter(name=channel_name).exists() == False or user == request.user):
 				channel.subscribers.remove(User.objects.filter(username=key).first())
-					
-	
+		
+		if 'nickname' in request.POST:
+			channel.moniker = request.POST.get('nickname')
+		if 'description' in request.POST:
+			channel.description = request.POST.get('description')
+		channel.save()
+		
+		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)		
+						
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
 		'channel_description': channel.description, 'channel_status': channel.is_public,
 		'is_admin': is_admin, 'subscribers': channel.subscribers}	

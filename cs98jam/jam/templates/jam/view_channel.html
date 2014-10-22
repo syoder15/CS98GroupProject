@@ -19,10 +19,11 @@
 		
 		{% if is_subscriber %}
 			<p>You are subscribed to this channel!</p>
+			<input class="button" name="Unsubscribe" type="submit" value="Unsubscribe"/>
 			
 		{% elif channel_status %}
 			<p>
-				<input class="button" type="submit" value="Join Channel"/>
+				<input class="button" name="Subscribe" type="submit" value="Subscribe"/>
 			</p>
 		{% else %}
 			<p>
