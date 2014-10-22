@@ -32,13 +32,14 @@
 		      </button>
 		      <a class="navbar-brand" href="/jam">JobApplicationManager</a>
 		    </div>
-
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav">
 		        <li><a href="companies">Companies</a></li>
 		        <li><a href="#">Contacts</a></li>
-		        <li><a href="cal">Events</a></li>
+		        <!--<li><a href="cal">Events</a></li>-->
+	        <li><a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}">
+                Events</a></li>
 		      </ul>
 		      <form class="navbar-form navbar-left" role="search">
 		        <div class="form-group">
