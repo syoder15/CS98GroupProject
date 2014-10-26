@@ -26,8 +26,15 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+LOCAL_TEST = False
+DOMAIN = 'http://dartmouthjam.pythonanywhere.com/'
 
+if(LOCAL_TEST):
+    DOMAIN = 'http:127.0.0.1:8000/'
+
+ALLOWED_HOSTS = ['http://dartmouthjam.pythonanywhere.com/']
+
+#SITE_ROOT = 'home/dartmouthjam/CS98GroupProject/cs98jam/jam/static'
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
 # Application definition
 
@@ -41,7 +48,7 @@ INSTALLED_APPS = (
     'jquery',
     # 'south',
     'jam',
-    # 'djangular', 
+    # 'djangular',
     'twitter_bootstrap',
     'swingtime'
 )
@@ -71,6 +78,7 @@ ROOT_URLCONF = 'cs98jam.urls'
 WSGI_APPLICATION = 'cs98jam.wsgi.application'
 
 TEMPLATE_DIRS = (
+    #os.path.join('home/dartmouthjam/CS98GroupProject/cs98jam/cs98jam','templates'),
 	os.path.join(SITE_ROOT, 'templates'),
 )
 

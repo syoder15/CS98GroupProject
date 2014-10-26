@@ -1,11 +1,7 @@
-/*.calContainer {
-	background-color: white;
+.monthlyTitle {
+	/*text-align: center;*/
 	width: 80%;
 	margin: auto;
-}*/
-
-.monthlyTitle {
-	text-align: center;
 }
 
 .errorMessage {
@@ -18,7 +14,6 @@
 
 .eventsHeader {
 	display: inline; 
-	/*color: white;*/
 	padding: 5px 5px 5px 5px;
 }
 
@@ -26,15 +21,14 @@
 	margin-left: 68%;
 }
 
-/*.calLink {
-	color: white;
-}*/
-
 table.month-view {
 	border-collapse: collapse;
 	margin: auto;
 }
-.month-view { width: 80%; }
+.month-view { 
+	width: 80%; 
+	color: #2D30E3;
+}
 .month-view td { 
 	vertical-align: top; 
 	height: 6em; 
@@ -49,6 +43,46 @@ table.month-view {
     .month-view .event-times {  }
 .month-divider th, .month-divider td { border-top: 3px solid #8e8f80; }
 
+.monthlyViewButton {
+	background-color: gray;
+	color: white;
+}
+
+.yearlyViewButton {
+	background-color: gray;
+	color: white;
+}
+
+.addEventButton {
+	background-color: gray;
+	color: white;
+}
+
+.eventListButton {
+	background-color: gray;
+	color: white;
+}
+
+.table-body {
+	color: #2D30E3;
+
+}
+
 ul.eventBullet {
  list-style-type: none;
  }
+
+button {
+	background-color:#2D30E3;
+	border:0px solid #29668f;
+	display:block;
+	color:#ffffff;
+	font-size:10px;
+	font-weight:bold;
+	padding:6px 15px;
+	float:right;
+}
+button:hover {
+	background-color:#1E90FF;
+}
+

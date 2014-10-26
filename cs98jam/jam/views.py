@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from jam.forms import UploadFileForm
+from jam.input import read_from_file
+from django.conf import settings
 
 from jam.models import Contact, Company, Event, Profile, Channel, ChannelAdminNote
 from django.http import HttpResponseRedirect
@@ -16,11 +19,14 @@ from swingtime import utils, forms
 @login_required
 def index(request):
     context = {'username': request.user.username}
+    if request.method == "GET":
+		form = UploadFileForm()
+		context = {'username': request.user.username, 'form': form}
     return render(request, 'jam/index_homepage.html', context)
 
 @login_required
 def profile(request):
-	import pdb; 
+	import pdb;
 	form_data = request.POST
 
 	username = request.user.username
@@ -61,7 +67,7 @@ def profile(request):
 							  school=form_data.get('school_number'),
 							  grad_month=form_data.get('grad_month'),
 							  grad_year=form_data.get('grad_year'))
-		
+
 		profile.save()
 
 		return render(request, 'jam/index.html', {})
@@ -78,12 +84,12 @@ def new_channel(request):
 		channel.save()
 		channel.subscribers.add(request.user)
 		channel.admins.add(request.user)
-	
+
 		return HttpResponseRedirect("/jam/")
-		
+
 	else:
 		return render(request, 'jam/new_channel.html')
-	
+
 def new_contact(request):
 	form_data = request.POST
 	contact = Contact(name=form_data.get('name'),
@@ -98,8 +104,8 @@ def new_contact(request):
 @login_required
 def activate_subscriber(request, channel_name, user_name):
 	channel = get_object_or_404(Channel, name=channel_name)
-	
-	# assume invalid until proven otherwise... 
+
+	# assume invalid until proven otherwise...
 	# only add new subscriber if this person is REALLY an admin ;)
 	is_admin = False
 	if request.user in channel.admins.all():
@@ -115,57 +121,58 @@ def activate_subscriber(request, channel_name, user_name):
 # Shows the details of a channel. View differs based on whether the channel is public
 # or private and the user's status within the channel.
 #
-# Inputs: request, channel_name (name of the channel to be viewed)	
+# Inputs: request, channel_name (name of the channel to be viewed)
 @login_required
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
-	
+
 	is_subscriber = False
 	if request.user.channel_set.filter(name=channel_name).exists():
 		is_subscriber = True
-	
+
 	is_admin = False
 	if request.user.controlledChannels.filter(name=channel_name).exists():
 		is_admin = True
-	
-	
-	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+
+
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber,
 		'is_admin': is_admin}
-	
+
 	if request.method == 'POST':
-		if 'Unsubscribe' in request.POST:	
+		if 'Unsubscribe' in request.POST:
 			channel.subscribers.remove(request.user)
 		elif channel.is_public and 'Subscribe' in request.POST:
 			channel.subscribers.add(request.user)
-		else: 
-			link = "http://127.0.0.01:8000/jam/channels/activate/" + channel.name + "/" + request.user.username
-			for admin in channel.admins.all():
+		else:
+		    site = settings.DOMAIN
+		    link = site + "/jam/channels/activate/" + channel.name + "/" + request.user.username
+		    for admin in channel.admins.all():
 				subject = channel.name + " Suscriber request!"
 				body = request.user.username + " would like to join your channel! Click this link to let them in :)\n" + link
 				send_mail(subject,body,'dartmouthjam@gmail.com', [admin.email], fail_silently=False)
-		return HttpResponseRedirect("/jam/channels/view/" + channel.name)		
+		return HttpResponseRedirect("/jam/channels/view/" + channel.name)
 
 	return render(request, 'jam/view_channel.html', context)
 
-	
+
 # Administrative view for a channel. Allows for removal of subscribers.
 #
-# Inputs: request, channel_name (name of the channel to be viewed)	
+# Inputs: request, channel_name (name of the channel to be viewed)
 @login_required
 def view_channel_as_admin(request, channel_name):
-	channel = get_object_or_404(Channel, name=channel_name) 
-	
+	channel = get_object_or_404(Channel, name=channel_name)
+
 	is_admin = False
 	if request.user.controlledChannels.filter(name=channel_name).exists():
 		is_admin = True
-	
+
 	if is_admin and request.method == 'POST':
 		for key in request.POST:
 			user = User.objects.filter(username=key).first()
 			if user is not None and (user.controlledChannels.filter(name=channel_name).exists() == False or user == request.user):
 				channel.subscribers.remove(User.objects.filter(username=key).first())
-		
+
 		if 'nickname' in request.POST:
 			channel.moniker = request.POST.get('nickname')
 		if 'description' in request.POST:
@@ -173,23 +180,29 @@ def view_channel_as_admin(request, channel_name):
 		if 'newAdminNote' in request.POST:
 			channel.adminNotes.add(ChannelAdminNote(home_channel=channel, text = request.POST.get('newAdminNote'), author=request.user))
 		channel.save()
-		
-		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)		
-						
-	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+
+		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)
+
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
 		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes}	
 		
+
 	return render(request, 'jam/view_channel_as_admin.html', context)
-	
-	
+
+
 def new_company(request):
-	form_data = request.POST
-	company = Company(name=form_data.get('name'),
-					  application_deadline=form_data.get('deadline'),
-					  user=request.user.username)
-	company.save()
-	return HttpResponse()
+	if request.method == "POST" and request.FILES:
+		form = UploadFileForm(request.FILES)
+		read_from_file(request.user.username, request.FILES['filep'])
+	if request.method == "POST":
+		form_data = request.POST
+		company = Company(name=form_data.get('name'),
+						  application_deadline=form_data.get('deadline'),
+						  user=request.user.username)
+		company.save()
+	context = {'username': request.user.username}
+	return render(request, 'jam/index_homepage.html', context)
 
 def new_event(request):
 	form_data = request.POST
@@ -222,6 +235,6 @@ def channel_list(request):
 	channels = Channel.objects.all()
 	context={'channels': channels}
 	return render(request,'jam/channel_list.html',context)
-def test(request): 
+def test(request):
 	context = {}
 	return render(request, 'jam/base_companies.html', context)
