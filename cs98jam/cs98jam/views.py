@@ -10,7 +10,7 @@ from django.contrib.auth import *
 from django.http import *
 from jam.models import UserProfile
 from django.utils import timezone
-
+from django.conf import settings
 
 def main_page(request):
     return render_to_response('index.html')
@@ -21,7 +21,7 @@ def logout_page(request):
     """
     logout(request)
     return HttpResponseRedirect('/')
-	
+
 def register(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/jam')
@@ -49,8 +49,8 @@ def register(request):
     return render(request, "registration/register.html", {
         'form': form,
     })
-	
-	
+
+
 
 # returns standard "activation email on the way" message
 def activate(request):
@@ -59,11 +59,12 @@ def activate(request):
 # send activation email with appropriate link
 def send_activation_email(user,new_profile):
     # eventually replace with real site address!!!!!!!
-    site = 'http://dartmouthjam.pythonanywhere.com'
+    site = settings.DOMAIN
+    'http://dartmouthjam.pythonanywhere.com'
     email_subject = 'JobApplicationManager Account Confirmation'
     activation_link =  site + '/activate/confirm/' + new_profile.activation_key
 
-    email_body = "Howdy!\n\nYou're receiving this email since you recently signed up for a JAM account! If you're receiving this email in error, please ignore it. Otherwise, click here: " + activation_link + " to activate your account within the next 7 days!\n" 
+    email_body = "Howdy!\n\nYou're receiving this email since you recently signed up for a JAM account! If you're receiving this email in error, please ignore it. Otherwise, click here: " + activation_link + " to activate your account within the next 7 days!\n"
     send_mail(email_subject, email_body, 'no-reply@gmail.com', [user.email], fail_silently =False)
 
 # confirm that activation link's parameter matches user profile's activation key
