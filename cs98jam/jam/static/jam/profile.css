@@ -59,12 +59,12 @@
 	text-align: center;
 }
 
-.centered {
+.centeredProfile {
 	background-color: white;
 	display: inline-block;
 	/*height: 550px;*/
 	height: 100%;
-	margin-top: 50px;
+	margin-top: 350px;
 	text-align: center;
 	width: 100%;
 }
