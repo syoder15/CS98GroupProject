@@ -208,8 +208,20 @@ def new_event(request):
 
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
+
+	#if (output) : #if we want to output this as text file:
+	f = open("testing.txt", "w")
+	print f
+
 	for company in companies:
-		print company
+		f.write(str(company) + ", " + str(company.application_deadline) + "\n")
+	f.close()
+	f = open("testing.txt", "r")
+	f.read()
+	f.close()
+	#if (output) : #if we want to output this as text file:
+
+
 	context = {'companies': companies}
 	#context = {}
 	return render(request, 'jam/companies.html', context)
