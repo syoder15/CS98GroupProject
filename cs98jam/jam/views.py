@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from jam.forms import UploadFileForm
+from jam.input import read_from_file
 
 from jam.models import Contact, Company, Event, Profile, Channel
 from django.http import HttpResponseRedirect
@@ -16,6 +18,9 @@ from swingtime import utils, forms
 @login_required
 def index(request):
     context = {'username': request.user.username}
+    if request.method == "GET":
+		form = UploadFileForm()
+		context = {'username': request.user.username, 'form': form}
     return render(request, 'jam/index_homepage.html', context)
 
 @login_required
@@ -182,12 +187,17 @@ def view_channel_as_admin(request, channel_name):
 	
 	
 def new_company(request):
-	form_data = request.POST
-	company = Company(name=form_data.get('name'),
-					  application_deadline=form_data.get('deadline'),
-					  user=request.user.username)
-	company.save()
-	return HttpResponse()
+	if request.method == "POST" and request.FILES:
+		form = UploadFileForm(request.FILES)
+		read_from_file(request.user.username, request.FILES['filep'])
+	if request.method == "POST":
+		form_data = request.POST
+		company = Company(name=form_data.get('name'),
+						  application_deadline=form_data.get('deadline'),
+						  user=request.user.username)
+		company.save()
+	context = {'username': request.user.username}
+	return render(request, 'jam/index_homepage.html', context)
 
 def new_event(request):
 	form_data = request.POST
