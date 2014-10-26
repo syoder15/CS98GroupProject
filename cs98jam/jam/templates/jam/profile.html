@@ -1,24 +1,18 @@
-{% load staticfiles %}
+{% extends "../../jam/templates/jam/index.html" %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'jam/css/profile.css' %}" />
 
-<!-- <div class="profile-header row">
-	<div class="banner-picture">
-		<div class="profile-picture-container col-md-4">
-			<img src="http://cuteanimalpicturesandvideos.com/wp-content/uploads/super-cute-puppy-look-awww-photo.jpg" id="" class="profile-picture"></img>
-		</div>
-		<div class="col-md-8 profile-name"> 
-			Jane Doe
-		</div> 
-	</div>
-</div>
- -->
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'jam/css/profile.css' %}" />
+{% endblock %}
 
+
+{% block content %}
 <div class="container-fluid"> 
 	<div class="banner-picture row">
 		<div class="col-sm-4">
-			<div class="profile-picture-container">
+			<div class="profile-picture-container" style="border:1px black solid;">
 				<img src="http://cuteanimalpicturesandvideos.com/wp-content/uploads/super-cute-puppy-look-awww-photo.jpg" id="" class="profile-picture"></img>
 			</div>
 		</div>
@@ -32,31 +26,29 @@
 	</div> 
 </div>
 
+<div class="container">
+	<div class="row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-10">
+			<div>Number:  </div>
+			<div>Email:  </div>
+			<div>Address: 
+				<div> 
+					XXXX Hinman 
+					Dartmouth College
+				</div>
+			</div> 
+		</div>
+	</div>	
+</div>
+
+
 <div class="centered">
 	<div>
 		{% csrf_token %}
 		<h2>Contact Information</h2>
-<!-- 		<div class="container">
-			<form class="form-horizontal" method="POST">
-				{% csrf_token %}
-				<div class="form-group">
-				    <label for="name_input" class="col-sm-2 control-label">First Name: </label>
-				    <div class="col-sm-10">
-				    	{% if profile %}
-							<input id="first_name_input" class="form-control" name="first_name" value='{{profile.first_name}}'/>
-						{% else %}
-							<input id="first_name_input" class="form-control" name="first_name" placeholder="Jane" required/>
-						{% endif %}
-				    </div>
-				</div>
-				<div class="form-group">
-				    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-				    <div class="col-sm-10">
-				      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-				    </div>
-				</div>
-			</form>
-		</div> -->
 
 		<form class="contactInfo" method="POST">
 			{% csrf_token %}
@@ -205,5 +197,9 @@
 	</div>
 </div>
 
-<script src="{% static 'jam/js/profile.js' %}"></script>
-<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<script src="{% static 'jam/js/profile.js' %}"></script>
+{% endblock %}
