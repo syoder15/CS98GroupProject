@@ -22,6 +22,19 @@
 			<p>Status: Private </p>
 		{% endif %}
 		
+		<form class="postAdminNote" method="POST">
+			{% csrf_token %}
+			<p>
+				<label for="adminNote_input">New Note: </label>
+				<input id="adminNote_input" name="newAdminNote"/>
+				<input class="button" type="submit" value="Post"/>
+			</p>
+		</form>
+		
+		{% for note in adminNotes.all %}
+			<p>{{ note.text }} - {{ note.author }} @ {{ note.created_at }}</p>
+		{% endfor %}
+		
 		{% for subscriber in subscribers.all %}
 			<p> {{ subscriber.username }} 
 			<form class="removeSubs" method="POST">{% csrf_token %}
@@ -29,6 +42,8 @@
 			</form>
 			</p>
 		{% endfor %}
+		
+		
 		
 	{% else %}
 		Sorry, according to our records, you are not an admin for this channel.

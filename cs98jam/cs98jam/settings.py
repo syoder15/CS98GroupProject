@@ -26,6 +26,12 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+LOCAL_TEST = False
+DOMAIN = 'http://dartmouthjam.pythonanywhere.com/'
+
+if(LOCAL_TEST):
+    DOMAIN = 'http:127.0.0.1:8000/'
+
 ALLOWED_HOSTS = ['http://dartmouthjam.pythonanywhere.com/']
 
 #SITE_ROOT = 'home/dartmouthjam/CS98GroupProject/cs98jam/jam/static'
