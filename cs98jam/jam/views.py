@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 
-from jam.models import Contact, Company, Event, Profile, Channel
+from jam.models import Contact, Company, Event, Profile, Channel, ChannelAdminNote
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -170,13 +170,15 @@ def view_channel_as_admin(request, channel_name):
 			channel.moniker = request.POST.get('nickname')
 		if 'description' in request.POST:
 			channel.description = request.POST.get('description')
+		if 'newAdminNote' in request.POST:
+			channel.adminNotes.add(ChannelAdminNote(home_channel=channel, text = request.POST.get('newAdminNote'), author=request.user))
 		channel.save()
 		
 		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)		
 						
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
 		'channel_description': channel.description, 'channel_status': channel.is_public,
-		'is_admin': is_admin, 'subscribers': channel.subscribers}	
+		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes}	
 		
 	return render(request, 'jam/view_channel_as_admin.html', context)
 	
