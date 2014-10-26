@@ -59,7 +59,7 @@ def activate(request):
 # send activation email with appropriate link
 def send_activation_email(user,new_profile):
     # eventually replace with real site address!!!!!!!
-    site = 'http://127.0.0.1:8000'
+    site = 'http://dartmouthjam.pythonanywhere.com'
     email_subject = 'JobApplicationManager Account Confirmation'
     activation_link =  site + '/activate/confirm/' + new_profile.activation_key
 

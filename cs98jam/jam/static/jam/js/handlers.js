@@ -5,6 +5,7 @@ var profileDropDown = $('.profileNameButton');
 var contactForm = $('.contact_form');
 var companyForm = $('.company_form');
 var eventForm = $('.event_form');
+var uploadFileButton = $('.upload-file');
 
 function importMain(){
     var x = document.createElement('script');
@@ -74,32 +75,6 @@ contactForm.submit(function(event) {
 			"phone": phone,
 			"email": email,
 			"company": company
-		}
-	}).done(function() {
-		console.log("GOT HERE");
-		$( this ).addClass( "done" );
-	});
-});
-
-companyForm.submit(function(event) {
-  	event.preventDefault();
-  	//NEED TO VALIDATE FIELDS
-  	$('#companyModal').modal('hide');
-  	var name = $('#company_name_input').val();
-  	var deadline = $('#company_deadline_input').val();
-	var csrftoken = getCookie('csrftoken');
-
-  	$.ajaxSetup({
-	    beforeSend: function(xhr, settings) {
-		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-	    }
-	});
-  	$.ajax({
-  		type: "POST",
-		url: "new_company/",
-		data: {
-			"name": name,
-			"deadline": deadline
 		}
 	}).done(function() {
 		console.log("GOT HERE");
