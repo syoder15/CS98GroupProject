@@ -11,6 +11,17 @@
 {% block content %}
     <div class="menuBar"></div>
     
+    <div class="eventSidebar">
+        <h3 id="filterTitle"> Filters </h3>
+        <form>
+            <input type="checkbox" name="Interviews" value="true" checked="true"> Interviews</input> <br />
+            <input type="checkbox" name="Career Fairs" value="true" checked="true"> Career Fairs</input> <br />
+            <input type="checkbox" name="Info Sessions" value="true" checked="true"> Info Sessions</input> <br />
+            <input type="checkbox" name="Other" value="true" checked="true"> Other</input> <br />
+            <input value="Update" type="submit" />
+        </form>
+    </div>
+
     <div class="backgroundCalendar">
         <div class="calHeader">
             <h4 class="monthlyTitle"> 
