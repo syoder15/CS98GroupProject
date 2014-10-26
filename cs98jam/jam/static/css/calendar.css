@@ -1,11 +1,7 @@
-/*.calContainer {
-	background-color: white;
+.monthlyTitle {
+	/*text-align: center;*/
 	width: 80%;
 	margin: auto;
-}*/
-
-.monthlyTitle {
-	text-align: center;
 }
 
 .errorMessage {
@@ -18,7 +14,6 @@
 
 .eventsHeader {
 	display: inline; 
-	/*color: white;*/
 	padding: 5px 5px 5px 5px;
 }
 
@@ -26,17 +21,13 @@
 	margin-left: 68%;
 }
 
-/*.calLink {
-	color: white;
-}*/
-
 table.month-view {
 	border-collapse: collapse;
 	margin: auto;
 }
 .month-view { 
 	width: 80%; 
-		color: #2D30E3;
+	color: #2D30E3;
 
 }
 .month-view td { 
