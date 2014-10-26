@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 # Create your models here.
 class Company(models.Model):
@@ -43,6 +45,15 @@ class Channel(models.Model):
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
 	
+	
+	
+class ChannelAdminNote(models.Model):
+	def __unicode__(self):
+		return self.text
+	created_at = models.DateTimeField(default=timezone.now)
+	home_channel = models.ForeignKey(Channel, related_name="adminNotes")
+	text = models.CharField(max_length = 1000)
+	author =  models.ForeignKey(User)
 	
 class Profile(models.Model):
 	def __unicode__(self):

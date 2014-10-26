@@ -11,11 +11,11 @@
 {% block content %}
 <div class="menuBar"></div>
 <div>
-            <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}" class="firstLink calLink">
-                <button>Monthly View</button>
-            </a>
             <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">
                 <button class="yearlyViewButton">Yearly View</button>
+            </a>
+             <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}" class="firstLink calLink">
+                <button>Monthly View</button>
             </a>
             <a href="{% url 'swingtime-events' %}" class="calLink">
                 <button>Event Listing</button>

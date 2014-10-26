@@ -85,6 +85,17 @@ ul.eventBullet {
  list-style-type: none;
  }
 
- .activeButton {
- 	color: black;
- }
+button {
+	background-color:#2D30E3;
+	border:0px solid #29668f;
+	display:block;
+	color:#ffffff;
+	font-size:10px;
+	font-weight:bold;
+	padding:6px 15px;
+	float:right;
+}
+button:hover {
+	background-color:#1E90FF;
+}
+
