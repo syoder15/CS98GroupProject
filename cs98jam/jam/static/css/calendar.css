@@ -28,7 +28,6 @@ table.month-view {
 .month-view { 
 	width: 80%; 
 	color: #2D30E3;
-
 }
 .month-view td { 
 	vertical-align: top; 
@@ -43,6 +42,26 @@ table.month-view {
     .month-view .today { background-color: #E0B1B3; }
     .month-view .event-times {  }
 .month-divider th, .month-divider td { border-top: 3px solid #8e8f80; }
+
+.monthlyViewButton {
+	background-color: gray;
+	color: white;
+}
+
+.yearlyViewButton {
+	background-color: gray;
+	color: white;
+}
+
+.addEventButton {
+	background-color: gray;
+	color: white;
+}
+
+.eventListButton {
+	background-color: gray;
+	color: white;
+}
 
 .table-body {
 	color: #2D30E3;
@@ -66,3 +85,4 @@ button {
 button:hover {
 	background-color:#1E90FF;
 }
+
