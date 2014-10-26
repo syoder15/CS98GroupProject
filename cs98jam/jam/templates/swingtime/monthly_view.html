@@ -1,61 +1,73 @@
-{% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
-<div class="backgroundCalendar">
-    <div class="container">
-        <nav>
-         <h2 class="eventsHeader">Events</h2>
-            <!--<a href="{% url 'swingtime-today' %}">Daily View</a> &middot; -->
-            <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}" class="firstLink calLink">
-                Monthly View</a> &middot; 
-            <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">Yearly View</a> &middot; 
-            <a href="{% url 'swingtime-events' %}" class="calLink">Event Listing</a> &middot; 
-            <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}" class="calLink">Add Event</a>
-        </nav>
-    </div>
-    <div class="calContainer">
-    <h3 class="monthlyTitle">Monthly View</h3>
-        <h4 class="monthlyTitle"> 
-            <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
-               title="Last Month">&larr;</a>
-            {{ this_month|date:"F" }}
-            <a title="View {{ this_month.year}}" href="{% url 'swingtime-yearly-view' this_month.year %}">
-                {{ this_month|date:"Y" }}</a>
-            <a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}" 
-               title="Next Month">&rarr;</a>
-        </h4>
-        <table class="month-view">
-            <thead>
-                <tr>
-                    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in calendar %}
-                <tr>
-                    {% for day,items in row  %}
-                    <td{% ifequal day today.day %}{% ifequal this_month.month today.month %} class="today"{% endifequal %}{% endifequal %}>
-                    {% if day %}
-                        <div class="day-ordinal">
-                            <!--<a href="{% url 'swingtime-daily-view' this_month.year this_month.month day %}">-->
-                            {{ day }}<!--</a>-->
-                        </div>
-                        {% if items %}
-                        <ul class="eventBullet">
-                            {% for item in items %}
-                            <li>
-                                <a href="{{ item.get_absolute_url }}">
-                                    <span class="event-times">{{ item.start_time|time }}</span>
-                                    {{ item.title }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
+{% extends "../../jam/templates/jam/index.html" %}
+
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+    <div class="menuBar"></div>
+    
+    <div class="backgroundCalendar">
+        <div class="container">
+            <nav>
+             <h2 class="eventsHeader">Events</h2>
+                <!--<a href="{% url 'swingtime-today' %}">Daily View</a> &middot; -->
+                <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}" class="firstLink calLink">
+                    Monthly View</a> &middot; 
+                <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">Yearly View</a> &middot; 
+                <a href="{% url 'swingtime-events' %}" class="calLink">Event Listing</a> &middot; 
+                <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}" class="calLink">Add Event</a>
+            </nav>
+        </div>
+        <div class="calContainer">
+        <h3 class="monthlyTitle">Monthly View</h3>
+            <h4 class="monthlyTitle"> 
+                <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
+                   title="Last Month">&larr;</a>
+                {{ this_month|date:"F" }}
+                <a title="View {{ this_month.year}}" href="{% url 'swingtime-yearly-view' this_month.year %}">
+                    {{ this_month|date:"Y" }}</a>
+                <a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}" 
+                   title="Next Month">&rarr;</a>
+            </h4>
+            <table class="month-view">
+                <thead>
+                    <tr>
+                        <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in calendar %}
+                    <tr>
+                        {% for day,items in row  %}
+                        <td{% ifequal day today.day %}{% ifequal this_month.month today.month %} class="today"{% endifequal %}{% endifequal %}>
+                        {% if day %}
+                            <div class="day-ordinal">
+                                <!--<a href="{% url 'swingtime-daily-view' this_month.year this_month.month day %}">-->
+                                {{ day }}<!--</a>-->
+                            </div>
+                            {% if items %}
+                            <ul class="eventBullet">
+                                {% for item in items %}
+                                <li>
+                                    <a href="{{ item.get_absolute_url }}">
+                                        <span class="event-times">{{ item.start_time|time }}</span>
+                                        {{ item.title }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                    </td>
+                        </td>
+                        {% endfor %}
+                    </tr>
                     {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+{% endblock %}
