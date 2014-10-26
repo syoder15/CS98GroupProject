@@ -185,6 +185,14 @@ def companies(request):
 	#context = {}
 	return render(request, 'jam/companies.html', context)
 
+def contacts(request):
+	# contacts = Contacts.objects.filter(user=request.user.username)
+	# for contact in contacts:
+	# 	print contact
+	context = {'contact': contacts}
+	#context = {}
+	return render(request, 'jam/contacts.html', context)
+
 def cal(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
