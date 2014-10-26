@@ -10,11 +10,12 @@
         <tr>
             <th>Time</th>
             <th>Details</th>
-            <th colspan="2">Private 4</th>
+            <th colspan="2">Event Name</th>
         </tr>
     </thead>
     <tbody>
         {% for tm,cells in timeslots %}
+        {% if }
         <tr>
             <th><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">{{ tm|date:"P" }}</a></th>
             {% for cell in cells %}

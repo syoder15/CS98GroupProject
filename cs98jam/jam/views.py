@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
 
 from jam.models import Contact, Company, Event, Profile, Channel
 from django.http import HttpResponseRedirect
@@ -92,7 +93,30 @@ def new_contact(request):
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
+
+
+@login_required
+def activate_subscriber(request, channel_name, user_name):
+	channel = get_object_or_404(Channel, name=channel_name)
 	
+	# assume invalid until proven otherwise... 
+	# only add new subscriber if this person is REALLY an admin ;)
+	is_admin = False
+	if request.user in channel.admins.all():
+		is_admin = True
+		user = get_object_or_404(User, username=user_name)
+		channel.subscribers.add(user)
+
+	# pass the appropriate context to populate generic activation view
+	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin}
+	return render(request, 'jam/activate_subscriber.html', context)
+
+
+# Shows the details of a channel. View differs based on whether the channel is public
+# or private and the user's status within the channel.
+#
+# Inputs: request, channel_name (name of the channel to be viewed)	
+@login_required
 def view_channel(request, channel_name):
 	channel = get_object_or_404(Channel, name=channel_name)
 	
@@ -100,14 +124,63 @@ def view_channel(request, channel_name):
 	if request.user.channel_set.filter(name=channel_name).exists():
 		is_subscriber = True
 	
+	is_admin = False
+	if request.user.controlledChannels.filter(name=channel_name).exists():
+		is_admin = True
+	
+	
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
-		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber}
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber,
+		'is_admin': is_admin}
 	
 	if request.method == 'POST':
-		channel.subscribers.add(request.user)
+		if 'Unsubscribe' in request.POST:	
+			channel.subscribers.remove(request.user)
+		elif channel.is_public and 'Subscribe' in request.POST:
+			channel.subscribers.add(request.user)
+		else: 
+			link = "http://127.0.0.01:8000/jam/channels/activate/" + channel.name + "/" + request.user.username
+			for admin in channel.admins.all():
+				subject = channel.name + " Suscriber request!"
+				body = request.user.username + " would like to join your channel! Click this link to let them in :)\n" + link
+				send_mail(subject,body,'dartmouthjam@gmail.com', [admin.email], fail_silently=False)
+		return HttpResponseRedirect("/jam/channels/view/" + channel.name)		
+
 	return render(request, 'jam/view_channel.html', context)
 
-
+	
+# Administrative view for a channel. Allows for removal of subscribers.
+#
+# Inputs: request, channel_name (name of the channel to be viewed)	
+@login_required
+def view_channel_as_admin(request, channel_name):
+	channel = get_object_or_404(Channel, name=channel_name) 
+	
+	is_admin = False
+	if request.user.controlledChannels.filter(name=channel_name).exists():
+		is_admin = True
+	
+	if is_admin and request.method == 'POST':
+		for key in request.POST:
+			user = User.objects.filter(username=key).first()
+			if user is not None and (user.controlledChannels.filter(name=channel_name).exists() == False or user == request.user):
+				channel.subscribers.remove(User.objects.filter(username=key).first())
+		
+		if 'nickname' in request.POST:
+			channel.moniker = request.POST.get('nickname')
+		if 'description' in request.POST:
+			channel.description = request.POST.get('description')
+		channel.save()
+		
+		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)		
+						
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 
+		'channel_description': channel.description, 'channel_status': channel.is_public,
+		'is_admin': is_admin, 'subscribers': channel.subscribers}	
+		
+	return render(request, 'jam/view_channel_as_admin.html', context)
+	
+	
 def new_company(request):
 	form_data = request.POST
 	company = Company(name=form_data.get('name'),
@@ -131,10 +204,22 @@ def companies(request):
 	#context = {}
 	return render(request, 'jam/companies.html', context)
 
+def contacts(request):
+	# contacts = Contacts.objects.filter(user=request.user.username)
+	# for contact in contacts:
+	# 	print contact
+	context = {'contact': contacts}
+	#context = {}
+	return render(request, 'jam/contacts.html', context)
+
 def cal(request):
 	context = {}
 	return render(request, 'jam/calendar.html', context)
 
+def channel_list(request):
+	channels = Channel.objects.all()
+	context={'channels': channels}
+	return render(request,'jam/channel_list.html',context)
 def test(request): 
 	context = {}
 	return render(request, 'jam/base_companies.html', context)
