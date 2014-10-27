@@ -15,10 +15,9 @@ html,body, section {
 	margin: 0 auto -45px;
 }
 
-.footer {
+.push, .footer {
 	height:45px;
 }
-
 
 .transparent {
 	background: rgba(255,255,255, .5);
@@ -159,6 +158,18 @@ a:link, a:visited {
 
 .menuBar{
 	height:70px;
+}
+
+.newsfeed-bar {
+	position: fixed; 
+	z-index: 100;
+	overflow:hidden;
+}
+
+.newsfeed-scroll {
+	overflow:scroll;
+	height:100%;
+	width:100%;
 }
 
 .divider {

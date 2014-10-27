@@ -2,16 +2,32 @@
 
 {% load staticfiles %}
 
+{% block side_col %}
+	<!-- <div class="navbar navbar-fixed-top"> -->
+    <h2>Channels</h2>
+    <!-- </div> -->
+	<div class="list-group">
+		{% for c in channels %}
+		<a href="#" class="list-group-item">
+			<h4 class="list-group-item-heading">{{ c }}</h4>
+		</a>
+		{% endfor %}
+	</div>
+{% endblock %}
+
 {% block main_col %}
 	<section class="page-wrap">
-		<h2>Newsfeed</h2>
-		<h5>Upcoming event</h5>
-		
-
-		{% include "jam/carousel.html" %}
+		<div class="navbar newsfeed-bar">
+			<h2>Newsfeed</h2>
+		</div>
+		<div class="newsfeed-scroll">
+			<h5>Upcoming event</h5>
+			{% include "jam/carousel.html" %}
+		</div>
+		<!-- <div class="push"></div> -->
 	</section>
 
-	<div class="footer ">
+	<div class="footer">
 		<div class="buttons-bottom-align">
 			<div class="round-button" style="float:right;">
 				<a data-toggle="modal" data-target="#contactModal">
