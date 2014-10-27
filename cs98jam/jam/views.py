@@ -197,7 +197,7 @@ def new_company(request):
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user.username, request.FILES['filep'])
-	if request.method == "POST":
+	elif request.method == "POST":
 		form_data = request.POST
 		company = Company(name=form_data.get('name'),
 						  application_deadline=form_data.get('deadline'),
