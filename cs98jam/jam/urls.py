@@ -18,7 +18,7 @@ urlpatterns = patterns('',
 	url(r'channels/view_as_admin/(?P<channel_name>.+)/$', views.view_channel_as_admin, name="view_channel_as_admin"),
 	url(r'^events/add/$', swingtime.add_event, name='swingtime-add-event'),
     #url(r'^events/monthly/$', swingtime.month_view, name='swingtime-monthly-view'),
-
+    url(r'^account_management', views.manage_account, name='manage_account'),
     url(r'channels/list', views.channel_list, name='channel_list'),
 	(r'^swingtime/', include('swingtime.urls'))
 )

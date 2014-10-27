@@ -9,7 +9,7 @@ from jam.forms import UploadFileForm
 from jam.input import read_from_file
 from django.conf import settings
 
-from jam.models import Contact, Company, Event, Profile, Channel, ChannelAdminNote
+from jam.models import Contact, Company, Event, Profile, Channel, ChannelAdminNote, UserProfile
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -247,6 +247,34 @@ def channel_list(request):
 	channels = Channel.objects.all()
 	context={'channels': channels}
 	return render(request,'jam/channel_list.html',context)
+
 def test(request):
 	context = {}
 	return render(request, 'jam/base_companies.html', context)
+
+'''account management page
+link to reset password, update email,
+and change notification frequency'''
+def manage_account(request):
+	form_data = request.POST
+
+	site = settings.DOMAIN
+	user_profile = UserProfile.objects.filter(user=request.user)
+
+	user = request.user
+	context ={'site': site, 'profile': user_profile, 'email': user.email}
+
+	if form_data:
+		user.email = form_data.get('new_email')
+		user.save()
+		freq = form_data.get('notif_freq')
+		# figure out notification val
+		notifs = 0
+		if(freq == "notif_four"):
+			notifs = 42
+		elif(freq == "notif_daily"):
+			notifs = 7
+		elif(freq == "notif_weekly"):
+			notifs = 1
+		user_profile.notification_frequency = notifs
+	return render(request, 'jam/manage_account.html', context)
