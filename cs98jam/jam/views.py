@@ -16,7 +16,7 @@ from swingtime import utils, forms
 @login_required
 def index(request):
     context = {'username': request.user.username}
-    return render(request, 'jam/index_homepage.html', context)
+    return render(request, 'jam/index_landing_home.html', context)
 
 @login_required
 def profile(request):

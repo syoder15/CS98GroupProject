@@ -1,0 +1,40 @@
+{% extends "../../jam/templates/jam/index_landing.html" %}
+
+{% load staticfiles %}
+
+{% block main_col %}
+	<section class="page-wrap">
+		<h2>Newsfeed</h2>
+		<h5>Upcoming event</h5>
+		
+
+		{% include "jam/carousel.html" %}
+	</section>
+
+	<div class="footer ">
+		<div class="buttons-bottom-align">
+			<div class="round-button" style="float:right;">
+				<a data-toggle="modal" data-target="#contactModal">
+				  <!-- Add Event -->
+				  <img src="{% static 'admin/img/icon_addEvent.svg' %}" alt="Home" />
+				</a>
+			</div>
+			<div class="round-button" style="float:right;">
+				<a data-toggle="modal" data-target="#contactModal">
+				  <!-- Add Contact -->
+				  <img src="{% static 'admin/img/icon_addContact.svg' %}" alt="Home" />
+				</a>
+			</div>
+			<div class="round-button" style="float:right;">
+				<a data-toggle="modal" data-target="#companyModal">
+				  <!-- Add Company -->
+				  <img src="{% static 'admin/img/icon_addCompany.svg' %}" alt="Home" />
+				</a>
+			</div>
+		</div>
+	</div>
+
+	{% include "jam/modal_add_company.html" %}
+	{% include "jam/modal_add_contact.html" %}
+	{% include "jam/modal_add_event.html" %}
+{% endblock %}
