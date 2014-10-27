@@ -9,21 +9,20 @@
 
 
 {% block content %}
+    
+    <div class="eventSidebar">
+        <h3 id="filterTitle"> Filters </h3>
+        <form>
+            <input type="checkbox" name="Interviews" value="true" checked="true"> Interviews</input> <br />
+            <input type="checkbox" name="Career Fairs" value="true" checked="true"> Career Fairs</input> <br />
+            <input type="checkbox" name="Info Sessions" value="true" checked="true"> Info Sessions</input> <br />
+            <input type="checkbox" name="Other" value="true" checked="true"> Other</input> <br />
+            <input value="Update" type="submit" />
+        </form>
+    </div>
 
     <div class="backgroundCalendar">
-        <div class="container">
-            <nav>
-             <h2 class="eventsHeader">Events</h2>
-                <!--<a href="{% url 'swingtime-today' %}">Daily View</a> &middot; -->
-                <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}" class="firstLink calLink">
-                    Monthly View</a> &middot; 
-                <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">Yearly View</a> &middot; 
-                <a href="{% url 'swingtime-events' %}" class="calLink">Event Listing</a> &middot; 
-                <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}" class="calLink">Add Event</a>
-            </nav>
-        </div>
-        <div class="calContainer">
-        <h3 class="monthlyTitle">Monthly View</h3>
+        <div class="calHeader">
             <h4 class="monthlyTitle"> 
                 <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
                    title="Last Month">&larr;</a>
@@ -33,6 +32,21 @@
                 <a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}" 
                    title="Next Month">&rarr;</a>
             </h4>
+
+            <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">
+                <button>Yearly View</button>
+            </a>
+             <a href="{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}" class="firstLink calLink">
+                <button class="monthlyViewButton">Monthly View</button>
+            </a>
+            <a href="{% url 'swingtime-events' %}" class="calLink">
+                <button>Event Listing</button>
+            </a> 
+            <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}" class="calLink">
+                <button>Add Event</button>
+            </a>
+        </div>
+
             <table class="month-view">
                 <thead>
                     <tr>
@@ -67,6 +81,10 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+<script src="{% static 'js/events.js' %}"></script>
 {% endblock %}

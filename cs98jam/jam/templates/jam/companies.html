@@ -2,6 +2,9 @@
 
 
 {% block content %}
+	<div>
+		<button type="button" class="btn btn-primary company-export">Export my companies</button>
+	</div>
 	<div class="list-group">
 		{% for c in companies %}
 		<a href="#" class="list-group-item">
@@ -10,5 +13,4 @@
 		</a>
 		{% endfor %}
 	</div>
-
 {% endblock %}

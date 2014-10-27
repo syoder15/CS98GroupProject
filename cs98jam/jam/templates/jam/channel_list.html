@@ -11,8 +11,8 @@
 <body>
 <div class="main">
 <h1>Channels</h1>
-{% for channel in channels %} 
-	<p> <a href ="http://127.0.0.1:8000/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+{% for channel in channels %}
+	<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
 
 {% empty %}
 	<p>No channels yet.</p>
