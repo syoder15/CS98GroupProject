@@ -1,0 +1,42 @@
+{% extends "../../jam/templates/jam/index.html" %}
+
+{% block content %}
+	<div> 
+		<h1>Manage My Account</h1>
+
+		<h2><a href='../../password_change/new/'>Reset Password</a></h2>
+
+		<h2>Update Email Address and Notification Frequency</h2>
+		<form method="post">{% csrf_token %}
+		{{ form.as_p }}
+		<input type="text" placeholder= {{ email }} name="new_email">
+		<h2>Notification Frequency</h2>
+
+		{% if profile and profile.notification_frequency == 42 %}
+		<input type="radio" name="notif_freq" value="notif_four" checked>4-hour feed<br>
+		<input type="radio" name="notif_freq" value="notif_daily">Daily Digest<br>
+		<input type = "radio" name="notif_freq" value="notif_weekly">Week in Review<br><br>
+
+		{% elif profile and profile.notification_frequency == 7 %}
+		<input type="radio" name="notif_freq" value="notif_four">4-hour feed<br>
+		<input type="radio" name="notif_freq" value="notif_daily" checked>Daily Digest<br>
+		<input type = "radio" name="notif_freq" value="notif_weekly">Week in Review<br><br>
+
+		{% elif profile and profile.notification_frequency == 1 %}
+		<input type="radio" name="notif_freq" value="notif_four">4-hour feed<br>
+		<input type="radio" name="notif_freq" value="notif_daily" >Daily Digest<br>
+		<input type = "radio" name="notif_freq" value="notif_weekly" checked>Week in Review<br><br>
+
+		{% else %}
+		<input type="radio" name="notif_freq" value="notif_four">4-hour feed<br>
+		<input type="radio" name="notif_freq" value="notif_daily">Daily Digest<br>
+		<input type = "radio" name="notif_freq" value="notif_weekly">Week in Review<br><br>
+
+
+		{% endif %}
+
+		<input type="submit" value = "Save">
+		</form>
+
+	</div>
+{% endblock %}
