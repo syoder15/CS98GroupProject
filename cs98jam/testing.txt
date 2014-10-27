@@ -1,2 +1,23 @@
-ISIS, 1111-11-11
-ISIS, 2014-09-11
+Pinterest, 2014-10-15
+Pinterest, 2014-10-15
+Google, 2014-10-31
+Pinterest, 2014-10-15
+Facebook, 2014-09-22
+Apple, 2014-12-03
+Uber, 2014-12-15
+Google, 2014-10-31
+Pinterest, 2014-10-15
+Facebook, 2014-09-22
+Apple, 2014-12-03
+Uber, 2014-12-15
+Lyft, 2014-10-31
+Adobe, 2013-03-03
+Adobe, 2014-03-03
+Google, 2014-10-31
+Pinterest, 2014-10-15
+Facebook, 2014-09-22
+Apple, 2014-12-03
+Uber, 2014-12-15
+Lyft, 2014-10-31
+Square, 2014-09-09
+Another company, 2018-09-09

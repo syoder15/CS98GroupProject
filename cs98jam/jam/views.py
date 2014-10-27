@@ -214,7 +214,9 @@ def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
 	if (data and data["export"]) : #if we want to output this as text file:
-		f = open("testing.txt", "w")
+		import os
+		path_name = os.path.abspath("~/downloads/%s.txt" % "companies")
+		f = open(path_name, "w")
 
 		for company in companies:
 			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
