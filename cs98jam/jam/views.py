@@ -114,7 +114,7 @@ def activate_subscriber(request, channel_name, user_name):
 		channel.subscribers.add(user)
 
 	# pass the appropriate context to populate generic activation view
-	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin}
+	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin, 'site': settings.DOMAIN}
 	return render(request, 'jam/activate_subscriber.html', context)
 
 
@@ -213,8 +213,20 @@ def new_event(request):
 
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
+
+	#if (output) : #if we want to output this as text file:
+	f = open("testing.txt", "w")
+	print f
+
 	for company in companies:
-		print company
+		f.write(str(company) + ", " + str(company.application_deadline) + "\n")
+	f.close()
+	f = open("testing.txt", "r")
+	f.read()
+	f.close()
+	#if (output) : #if we want to output this as text file:
+
+
 	context = {'companies': companies}
 	#context = {}
 	return render(request, 'jam/companies.html', context)
