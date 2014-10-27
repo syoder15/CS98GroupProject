@@ -2,8 +2,8 @@
 
 
 {% block content %}
-	<div class="menuBar">
-
+	<div>
+		<button type="button" class="btn btn-primary company-export">Export my companies</button>
 	</div>
 	<div class="list-group">
 		{% for c in companies %}
@@ -13,5 +13,4 @@
 		</a>
 		{% endfor %}
 	</div>
-
 {% endblock %}

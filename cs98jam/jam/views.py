@@ -22,7 +22,7 @@ def index(request):
     if request.method == "GET":
 		form = UploadFileForm()
 		context = {'username': request.user.username, 'form': form}
-    return render(request, 'jam/index_homepage.html', context)
+    return render(request, 'jam/index_landing_home.html', context)
 
 @login_required
 def profile(request):
@@ -189,8 +189,7 @@ def view_channel_as_admin(request, channel_name):
 		
 
 	return render(request, 'jam/view_channel_as_admin.html', context)
-
-
+	
 def new_company(request):
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
@@ -213,22 +212,18 @@ def new_event(request):
 
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
+	data = request.POST
+	if (data and data["export"]) : #if we want to output this as text file:
+		import os
+		path_name = os.path.abspath("~/downloads/%s.txt" % "companies")
+		f = open(path_name, "w")
 
-	#if (output) : #if we want to output this as text file:
-	f = open("testing.txt", "w")
-	print f
-
-	for company in companies:
-		f.write(str(company) + ", " + str(company.application_deadline) + "\n")
-	f.close()
-	f = open("testing.txt", "r")
-	f.read()
-	f.close()
-	#if (output) : #if we want to output this as text file:
+		for company in companies:
+			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
+		f.close()
 
 
 	context = {'companies': companies}
-	#context = {}
 	return render(request, 'jam/companies.html', context)
 
 def contacts(request):
