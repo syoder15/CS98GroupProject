@@ -22,7 +22,9 @@ def index(request):
     context = {'username': request.user.username}
     if request.method == "GET":
 		form = UploadFileForm()
-		context = {'username': request.user.username, 'form': form}
+		channels = Channel.objects.all()
+		site = settings.DOMAIN
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels}
     return render(request, 'jam/index_landing_home.html', context)
 
 @login_required

@@ -112,9 +112,9 @@ a:link, a:visited {
 }
 
 .buttons-bottom-align {
-	position:absolute;
-	margin-bottom: 10px;
-	right:10px;
+/*	position:absolute;
+	margin-bottom: 10px;*/
+	margin-right:20px;
 }
 
 .round-button {
@@ -161,7 +161,7 @@ a:link, a:visited {
 }
 
 .newsfeed-bar {
-	position: fixed; 
+	/*position: fixed; */
 	z-index: 100;
 	overflow:hidden;
 }
