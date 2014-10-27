@@ -114,7 +114,7 @@ def activate_subscriber(request, channel_name, user_name):
 		channel.subscribers.add(user)
 
 	# pass the appropriate context to populate generic activation view
-	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin}
+	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin, 'site': settings.DOMAIN}
 	return render(request, 'jam/activate_subscriber.html', context)
 
 
