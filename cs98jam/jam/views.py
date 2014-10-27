@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from jam.forms import UploadFileForm
 from jam.input import read_from_file
 from django.conf import settings
+import os
 
 from jam.models import Contact, Company, Event, Profile, Channel, ChannelAdminNote
 from django.http import HttpResponseRedirect
@@ -214,9 +215,9 @@ def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
 	if (data and data["export"]) : #if we want to output this as text file:
-		import os
-		path_name = os.path.abspath("~/downloads/%s.txt" % "companies")
-		f = open(path_name, "w")
+		user = request.META['USER']
+		path_name = "/Users/%s/Downloads/" % user
+		f = open(os.path.join(path_name, "companies.txt"), "w")
 
 		for company in companies:
 			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
