@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from jam.forms import UploadFileForm
 from jam.input import read_from_file
 from django.conf import settings
+import os
 
 from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile
 from django.http import HttpResponseRedirect
@@ -34,8 +35,10 @@ def index(request):
     context = {'username': request.user.username}
     if request.method == "GET":
 		form = UploadFileForm()
-		context = {'username': request.user.username, 'form': form}
-    return render(request, 'jam/index_homepage.html', context)
+		channels = Channel.objects.all()
+		site = settings.DOMAIN
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels}
+    return render(request, 'jam/index_landing_home.html', context)
 
 @login_required
 def profile(request):
@@ -202,13 +205,12 @@ def view_channel_as_admin(request, channel_name):
 		
 
 	return render(request, 'jam/view_channel_as_admin.html', context)
-
-
+	
 def new_company(request):
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user.username, request.FILES['filep'])
-	if request.method == "POST":
+	elif request.method == "POST":
 		form_data = request.POST
 		company = Company(name=form_data.get('name'),
 						  application_deadline=form_data.get('deadline'),
@@ -226,22 +228,18 @@ def new_event(request):
 
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
+	data = request.POST
+	if (data and data["export"]) : #if we want to output this as text file:
+		user = request.META['USER']
+		path_name = "/Users/%s/Downloads/" % user
+		f = open(os.path.join(path_name, "companies.txt"), "w")
 
-	#if (output) : #if we want to output this as text file:
-	f = open("testing.txt", "w")
-	print f
-
-	for company in companies:
-		f.write(str(company) + ", " + str(company.application_deadline) + "\n")
-	f.close()
-	f = open("testing.txt", "r")
-	f.read()
-	f.close()
-	#if (output) : #if we want to output this as text file:
+		for company in companies:
+			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
+		f.close()
 
 
 	context = {'companies': companies}
-	#context = {}
 	return render(request, 'jam/companies.html', context)
 
 def contacts(request):
@@ -470,3 +468,30 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 #########################################################################################################
 # End to swingtime edits!
 #########################################################################################################        
+
+'''account management page
+link to reset password, update email,
+and change notification frequency'''
+def manage_account(request):
+	form_data = request.POST
+
+	site = settings.DOMAIN
+	user_profile = UserProfile.objects.filter(user=request.user)
+
+	user = request.user
+	context ={'site': site, 'profile': user_profile, 'email': user.email}
+
+	if form_data:
+		user.email = form_data.get('new_email')
+		user.save()
+		freq = form_data.get('notif_freq')
+		# figure out notification val
+		notifs = 0
+		if(freq == "notif_four"):
+			notifs = 42
+		elif(freq == "notif_daily"):
+			notifs = 7
+		elif(freq == "notif_weekly"):
+			notifs = 1
+		user_profile.notification_frequency = notifs
+	return render(request, 'jam/manage_account.html', context)
