@@ -10,10 +10,23 @@ from jam.input import read_from_file
 from django.conf import settings
 import os
 
-from jam.models import Contact, Company, Event, Profile, Channel, ChannelAdminNote, UserProfile
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
+from dateutil import parser
+from datetime import datetime
+from django import http
+import calendar
+from datetime import datetime, timedelta, time
+from swingtime.models import Occurrence
+from itertools import chain, groupby
+from django.db import models
+
+
+
+
+
 
 
 # Create your views here.
@@ -277,6 +290,212 @@ def channel_list(request):
 def test(request):
 	context = {}
 	return render(request, 'jam/base_companies.html', context)
+
+######################################################################################
+# The following views were taken from django swingtime: https://github.com/dakrauth/django-swingtime
+# We made slight edits which include comments below. These edits were made in order to allow user-specific 
+# calendars for our Events page
+######################################################################################
+def add_event(
+    request, 
+    template='swingtime/add_event.html',
+    event_form_class=forms.EventForm,
+    recurrence_form_class=forms.MultipleOccurrenceForm
+):
+    '''
+    Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
+    
+    Context parameters:
+    
+    dtstart
+        a datetime.datetime object representing the GET request value if present,
+        otherwise None
+    
+    event_form
+        a form object for updating the event
+
+    recurrence_form
+        a form object for adding occurrences
+    
+    '''
+    dtstart = None
+    if request.method == 'POST':
+        event_form = event_form_class(request.POST)
+        recurrence_form = recurrence_form_class(request.POST)
+        if event_form.is_valid() and recurrence_form.is_valid():
+            event = event_form.save()
+            user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+            user_profile.events.add(event) #associate the current event with a user's profile
+            recurrence_form.save(event)
+            return http.HttpResponseRedirect(event.get_absolute_url())
+    else:
+        if 'dtstart' in request.GET:
+            try:
+                dtstart = parser.parse(request.GET['dtstart'])
+            except:
+                # TODO A badly formatted date is passed to add_event
+                pass
+        
+        dtstart = dtstart or datetime.now()
+        event_form = event_form_class()
+        recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
+            
+    return render(
+        request,
+        template,
+        {'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
+    )
+    
+   ####FROM SWINGWIMG ADD COMENTS
+   
+def event_listing(
+    request, 
+    template='swingtime/event_list.html',
+    events=None,
+    **extra_context
+):
+    '''
+    View all ``events``. 
+    
+    If ``events`` is a queryset, clone it. If ``None`` default to all ``Event``s.
+    
+    Context parameters:
+    
+    events
+        an iterable of ``Event`` objects
+        
+    ???
+        all values passed in via **extra_context
+    '''
+    return render(
+        request,
+        template,
+        dict(extra_context, events=events or request.user.profile.events.all())
+        #changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
+    )         
+
+
+def month_view(
+    request, 
+    year, 
+    month, 
+    template='swingtime/monthly_view.html',
+    queryset=None
+):
+    '''
+    Render a tradional calendar grid view with temporal navigation variables.
+
+    Context parameters:
+    
+    today
+        the current datetime.datetime value
+        
+    calendar
+        a list of rows containing (day, items) cells, where day is the day of
+        the month integer and items is a (potentially empty) list of occurrence
+        for the day
+        
+    this_month
+        a datetime.datetime representing the first day of the month
+    
+    next_month
+        this_month + 1 month
+    
+    last_month
+        this_month - 1 month
+    
+    '''
+    year, month = int(year), int(month)
+    cal         = calendar.monthcalendar(year, month)
+    dtstart     = datetime(year, month, 1)
+    last_day    = max(cal[-1])
+   # dtend       = datetime(year, month, last_day)
+
+    # TODO Whether to include those occurrences that started in the previous
+    # month but end in this month?
+    my_events = request.user.profile.events.all() #access all of the uers events 
+    
+    for event in my_events: #loop through the users events and create a queryset of all of the occurances
+    	if queryset == None:
+    		queryset = event.occurrence_set.all()
+    	else:
+    		queryset = queryset | event.occurrence_set.all()
+
+    #queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
+    # this line was replaced by our for loop
+    
+    occurrences = queryset.filter(start_time__year=year, start_time__month=month)
+
+    def start_day(o):
+        return o.start_time.day
+    
+    by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
+    data = {
+        'today':      datetime.now(),
+        'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal], 
+        'this_month': dtstart,
+        'next_month': dtstart + timedelta(days=+last_day),
+        'last_month': dtstart + timedelta(days=-1),
+    }
+
+    return render(request, template, data)
+
+def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
+    '''
+
+    Context parameters:
+    
+    year
+        an integer value for the year in questin
+        
+    next_year
+        year + 1
+        
+    last_year
+        year - 1
+        
+    by_month
+        a sorted list of (month, occurrences) tuples where month is a 
+        datetime.datetime object for the first day of a month and occurrences
+        is a (potentially empty) list of values for that month. Only months 
+        which have at least 1 occurrence is represented in the list
+        
+    '''
+    year = int(year)
+    #queryset = queryset._clone() if queryset else Occurrence.objects.select_related()
+    # replace this line with for loop below to only get users occurances
+
+    my_events = request.user.profile.events.all() #access all of the uers events
+
+    for event in my_events:  #access all of the uers events 
+    	if queryset == None:
+    		queryset = event.occurrence_set.all()
+    	else:
+    		#queryset = chain(queryset, event.occurrence_set.all())
+    		queryset = queryset | event.occurrence_set.all()
+
+  	occurrences = queryset.filter(
+    	models.Q(start_time__year=year) |
+    	models.Q(end_time__year=year)
+    )
+
+    def group_key(o):
+        return datetime(
+            year,
+            o.start_time.month if o.start_time.year == year else o.end_time.month,
+            1
+        )
+
+    return render(request, template, {
+        'year': year,
+        'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
+        'next_year': year + 1,
+        'last_year': year - 1
+    })
+
+#########################################################################################################
+# End to swingtime edits!
+#########################################################################################################        
 
 '''account management page
 link to reset password, update email,
