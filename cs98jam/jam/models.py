@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from swingtime.models import Event as SwingtimeEvent
 
 
 # Create your models here.
@@ -26,13 +27,13 @@ class Contact(models.Model):
     user = models.CharField(max_length=20)
 
 
-class Event(models.Model):
+# class Event(models.Model):
 
-    def __unicode__(self):
-        return self.name
+#     def __unicode__(self):
+#         return self.name
 
-    name = models.CharField(max_length=50)
-    date = models.DateField()
+#     name = models.CharField(max_length=50)
+#     date = models.DateField()
 
 class Channel(models.Model): 
 	def __unicode__(self):
@@ -78,6 +79,7 @@ class Profile(models.Model):
 	grad_year = models.IntegerField(default=0, blank=True)
 
 class UserProfile(models.Model):
-	user = models.OneToOneField(User)
+	user = models.OneToOneField(User, related_name="profile")
 	activation_key = models.CharField(max_length=40)
 	key_expires = models.DateTimeField()
+	events = models.ManyToManyField(SwingtimeEvent)
