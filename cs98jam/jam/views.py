@@ -58,7 +58,7 @@ def index(request):
 
     	# if user clicked go home, show main homepage
     	go_home = form_data.get('back_home')
-    	if( go_home == ("Go home!")):
+    	if( go_home == ("Go home, Roger!")):
     		show_feed = False
     		context = {'username': request.user.username, 'channels': channels,'show': show_feed}
     	# otherwise, showing clicked channel feed
