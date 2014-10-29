@@ -20,11 +20,40 @@ from swingtime import utils, forms
 @login_required
 def index(request):
     context = {'username': request.user.username}
+
+    # show only channels in sidebar that user is subscribed to
+    all_channels = Channel.objects.all()
+    channels = []
+    for c in all_channels: 
+    	if request.user.channel_set.filter(name=c.name).exists(): 
+    		channels.append(c)
+
+    show_feed = False    # if true, show newsfeed. else, show regular homepage
+
     if request.method == "GET":
-		form = UploadFileForm()
-		channels = Channel.objects.all()
-		site = settings.DOMAIN
-		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels}
+    	form = UploadFileForm()
+    	site = settings.DOMAIN
+    	c_name = ""
+    	context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed}
+
+    #post request can mean 2 things.
+    #either a request to see a channel's newsfeed
+    #or a request to main homepage view
+    else:
+    	show_feed = True
+    	form_data = request.POST
+
+    	# if user clicked go home, show main homepage
+    	go_home = form_data.get('back_home')
+    	if( go_home == ("Go home!")):
+    		show_feed = False
+    		context = {'username': request.user.username, 'channels': channels,'show': show_feed}
+    	# otherwise, showing clicked channel feed
+    	else:
+    		c_name = form_data.get('channel_name')
+    		channel = get_object_or_404(Channel, name=c_name)
+    		context = {'username': request.user.username, 'channels': channels, 'channel_name': c_name, 
+    		'channel_nickname': channel.moniker,'channel_description': channel.description, 'show': show_feed,}
     return render(request, 'jam/index_landing_home.html', context)
 
 @login_required
@@ -136,7 +165,6 @@ def view_channel(request, channel_name):
 	is_admin = False
 	if request.user.controlledChannels.filter(name=channel_name).exists():
 		is_admin = True
-
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber,

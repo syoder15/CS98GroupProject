@@ -8,9 +8,14 @@
     <!-- </div> -->
 	<div class="list-group">
 		{% for c in channels %}
-		<a href="{{ site }}jam/channels/view/{{ c.name }}/" class="list-group-item">
+		<form action="" method="post">
+		{% csrf_token %}
+		<!--<a href="{{ site }}jam/channels/view/{{ c.name }}/" class="list-group-item">
 			<h4 class="list-group-item-heading">{{ c.name }}</h4>
 		</a>
+		-->
+			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
+		</form>
 		{% endfor %}
 	</div>
 {% endblock %}
@@ -21,8 +26,18 @@
 			<h2>Newsfeed</h2>
 		</div>
 		<div class="newsfeed-scroll">
-			<h5>Upcoming event</h5>
-			{% include "jam/carousel.html" %}
+			{% if show %}
+				{% include "jam/channel_feed.html" %}
+				<form class="goHome" method="POST" action="">
+				{% csrf_token %}
+				<p>
+					<input class="button" name="back_home" type="submit" value="Go home, Roger!"/>
+				</p>
+				</form>
+			{% else %}
+				{% include "jam/carousel.html" %}
+			{% endif %}
+
 		</div>
 		<!-- <div class="push"></div> -->
 	</section>
