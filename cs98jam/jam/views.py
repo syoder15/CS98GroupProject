@@ -37,8 +37,8 @@ def index(request):
     # show only channels in sidebar that user is subscribed to
     all_channels = Channel.objects.all()
     channels = []
-    for c in all_channels: 
-    	if request.user.channel_set.filter(name=c.name).exists(): 
+    for c in all_channels:
+    	if request.user.channel_set.filter(name=c.name).exists():
     		channels.append(c)
 
     show_feed = False    # if true, show newsfeed. else, show regular homepage
@@ -58,14 +58,14 @@ def index(request):
 
     	# if user clicked go home, show main homepage
     	go_home = form_data.get('back_home')
-    	if( go_home == ("Go home!")):
+    	if( go_home == ("Go home, Roger!")):
     		show_feed = False
     		context = {'username': request.user.username, 'channels': channels,'show': show_feed}
     	# otherwise, showing clicked channel feed
     	else:
     		c_name = form_data.get('channel_name')
     		channel = get_object_or_404(Channel, name=c_name)
-    		context = {'username': request.user.username, 'channels': channels, 'channel_name': c_name, 
+    		context = {'username': request.user.username, 'channels': channels, 'channel_name': c_name,
     		'channel_nickname': channel.moniker,'channel_description': channel.description, 'show': show_feed,}
     return render(request, 'jam/index_landing_home.html', context)
 
@@ -229,11 +229,11 @@ def view_channel_as_admin(request, channel_name):
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
-		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes}	
-		
+		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes}
+
 
 	return render(request, 'jam/view_channel_as_admin.html', context)
-	
+
 def new_company(request):
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
@@ -293,30 +293,30 @@ def test(request):
 
 ######################################################################################
 # The following views were taken from django swingtime: https://github.com/dakrauth/django-swingtime
-# We made slight edits which include comments below. These edits were made in order to allow user-specific 
+# We made slight edits which include comments below. These edits were made in order to allow user-specific
 # calendars for our Events page
 ######################################################################################
 def add_event(
-    request, 
+    request,
     template='swingtime/add_event.html',
     event_form_class=forms.EventForm,
     recurrence_form_class=forms.MultipleOccurrenceForm
 ):
     '''
     Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
-    
+
     Context parameters:
-    
+
     dtstart
         a datetime.datetime object representing the GET request value if present,
         otherwise None
-    
+
     event_form
         a form object for updating the event
 
     recurrence_form
         a form object for adding occurrences
-    
+
     '''
     dtstart = None
     if request.method == 'POST':
@@ -335,35 +335,35 @@ def add_event(
             except:
                 # TODO A badly formatted date is passed to add_event
                 pass
-        
+
         dtstart = dtstart or datetime.now()
         event_form = event_form_class()
         recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
-            
+
     return render(
         request,
         template,
         {'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
     )
-    
+
    ####FROM SWINGWIMG ADD COMENTS
-   
+
 def event_listing(
-    request, 
+    request,
     template='swingtime/event_list.html',
     events=None,
     **extra_context
 ):
     '''
-    View all ``events``. 
-    
+    View all ``events``.
+
     If ``events`` is a queryset, clone it. If ``None`` default to all ``Event``s.
-    
+
     Context parameters:
-    
+
     events
         an iterable of ``Event`` objects
-        
+
     ???
         all values passed in via **extra_context
     '''
@@ -372,13 +372,13 @@ def event_listing(
         template,
         dict(extra_context, events=events or request.user.profile.events.all())
         #changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
-    )         
+    )
 
 
 def month_view(
-    request, 
-    year, 
-    month, 
+    request,
+    year,
+    month,
     template='swingtime/monthly_view.html',
     queryset=None
 ):
@@ -386,24 +386,24 @@ def month_view(
     Render a tradional calendar grid view with temporal navigation variables.
 
     Context parameters:
-    
+
     today
         the current datetime.datetime value
-        
+
     calendar
         a list of rows containing (day, items) cells, where day is the day of
         the month integer and items is a (potentially empty) list of occurrence
         for the day
-        
+
     this_month
         a datetime.datetime representing the first day of the month
-    
+
     next_month
         this_month + 1 month
-    
+
     last_month
         this_month - 1 month
-    
+
     '''
     year, month = int(year), int(month)
     cal         = calendar.monthcalendar(year, month)
@@ -413,8 +413,8 @@ def month_view(
 
     # TODO Whether to include those occurrences that started in the previous
     # month but end in this month?
-    my_events = request.user.profile.events.all() #access all of the uers events 
-    
+    my_events = request.user.profile.events.all() #access all of the uers events
+
     for event in my_events: #loop through the users events and create a queryset of all of the occurances
     	if queryset == None:
     		queryset = event.occurrence_set.all()
@@ -423,16 +423,16 @@ def month_view(
 
     #queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
     # this line was replaced by our for loop
-    
+
     occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
     def start_day(o):
         return o.start_time.day
-    
+
     by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
     data = {
         'today':      datetime.now(),
-        'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal], 
+        'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
         'this_month': dtstart,
         'next_month': dtstart + timedelta(days=+last_day),
         'last_month': dtstart + timedelta(days=-1),
@@ -444,22 +444,22 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
     '''
 
     Context parameters:
-    
+
     year
         an integer value for the year in questin
-        
+
     next_year
         year + 1
-        
+
     last_year
         year - 1
-        
+
     by_month
-        a sorted list of (month, occurrences) tuples where month is a 
+        a sorted list of (month, occurrences) tuples where month is a
         datetime.datetime object for the first day of a month and occurrences
-        is a (potentially empty) list of values for that month. Only months 
+        is a (potentially empty) list of values for that month. Only months
         which have at least 1 occurrence is represented in the list
-        
+
     '''
     year = int(year)
     #queryset = queryset._clone() if queryset else Occurrence.objects.select_related()
@@ -467,7 +467,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 
     my_events = request.user.profile.events.all() #access all of the uers events
 
-    for event in my_events:  #access all of the uers events 
+    for event in my_events:  #access all of the uers events
     	if queryset == None:
     		queryset = event.occurrence_set.all()
     	else:
@@ -495,7 +495,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 
 #########################################################################################################
 # End to swingtime edits!
-#########################################################################################################        
+#########################################################################################################
 
 '''account management page
 link to reset password, update email,
