@@ -11,6 +11,8 @@
 			<h4 class="list-group-item-heading">{{ c }}</h4>
 			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
 		</a>
+		{% empty %}
+			<h5> You haven't entered any companies.</h5>
 		{% endfor %}
 	</div>
 {% endblock %}

@@ -16,6 +16,8 @@
 		-->
 			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
 		</form>
+		{% empty %}
+			<h5> You currently don't have any channels. Add one <a href="{% url 'new_channel' %}">here</a>. </h5>
 		{% endfor %}
 	</div>
 {% endblock %}

@@ -78,6 +78,8 @@
                         </td>
                         {% endfor %}
                     </tr>
+                    {% empty %}
+                        <p> You don't have any events. </p>
                     {% endfor %}
                 </tbody>
             </table>
