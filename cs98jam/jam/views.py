@@ -22,31 +22,25 @@ from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 
-
-
-
-
-
-
 # Create your views here.
 @login_required
 def index(request):
     context = {'username': request.user.username}
 
-    # show only channels in sidebar that user is subscribed to
-    all_channels = Channel.objects.all()
-    channels = []
-    for c in all_channels:
-    	if request.user.channel_set.filter(name=c.name).exists():
-    		channels.append(c)
+	# show only channels in sidebar that user is subscribed to
+	all_channels = Channel.objects.all()
+	channels = []
+	for c in all_channels:
+		if request.user.channel_set.filter(name=c.name).exists():
+			channels.append(c)
 
-    show_feed = False    # if true, show newsfeed. else, show regular homepage
+	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
-    if request.method == "GET":
-    	form = UploadFileForm()
-    	site = settings.DOMAIN
-    	c_name = ""
-    	context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed}
+	if request.method == "GET":
+		form = UploadFileForm()
+		site = settings.DOMAIN
+		c_name = ""
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed}
 
     #post request can mean 2 things.
     #either a request to see a channel's newsfeed
@@ -75,6 +69,7 @@ def index(request):
             
 
     return render(request, 'jam/index_landing_home.html', context)
+
 
 @login_required
 def profile(request):
@@ -107,7 +102,7 @@ def profile(request):
 
 		else:
 			profile = Profile(user=request.user.username,
-				              first_name=form_data.get('first_name'),
+							  first_name=form_data.get('first_name'),
 							  last_name=form_data.get('last_name'),
 							  email=form_data.get('email'),
 							  phone_number=form_data.get('phone'),
@@ -131,9 +126,15 @@ def profile(request):
 def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
-		channel = Channel(name=form_data.get('name'), moniker=form_data.get('moniker'), description=form_data.get('description'), is_public=(form_data.get('is_public')))
+		channel = Channel(name=form_data.get('name'), 
+			moniker=form_data.get('moniker'), 
+			description=form_data.get('description'), 
+			is_public=(form_data.get('is_public')), 
+			categories="technology")
 		print form_data.get('is_public')
 		channel.save()
+		channel.categories
+		channel.get_categories_display()
 		channel.subscribers.add(request.user)
 		channel.admins.add(request.user)
 
@@ -151,7 +152,6 @@ def new_contact(request):
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
-
 
 @login_required
 def activate_subscriber(request, channel_name, user_name):
@@ -196,9 +196,9 @@ def view_channel(request, channel_name):
 		elif channel.is_public and 'Subscribe' in request.POST:
 			channel.subscribers.add(request.user)
 		else:
-		    site = settings.DOMAIN
-		    link = site + "/jam/channels/activate/" + channel.name + "/" + request.user.username
-		    for admin in channel.admins.all():
+			site = settings.DOMAIN
+			link = site + "/jam/channels/activate/" + channel.name + "/" + request.user.username
+			for admin in channel.admins.all():
 				subject = channel.name + " Suscriber request!"
 				body = request.user.username + " would like to join your channel! Click this link to let them in :)\n" + link
 				send_mail(subject,body,'dartmouthjam@gmail.com', [admin.email], fail_silently=False)
@@ -277,6 +277,13 @@ def companies(request):
 	context = {'companies': companies}
 	return render(request, 'jam/companies.html', context)
 
+def company_page(request, company_name):
+	company = get_object_or_404(Company, name=company_name,user=request.user.username)
+	contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
+	events = request.user.profile.events.all()
+	context = {'company': company, 'contacts': contacts, 'events': events}
+	return render(request, 'jam/company_page.html', context)
+
 def contacts(request):
 	contacts = Contact.objects.filter(user=request.user.username)
 	data = request.POST
@@ -298,8 +305,14 @@ def cal(request):
 	return render(request, 'jam/calendar.html', context)
 
 def channel_list(request):
+	CHANNEL_CATEGORIES = ('Technology', 
+		'Business', 
+		'Law', 
+		'Medicine', 
+		'Women'
+	)
 	channels = Channel.objects.all()
-	context={'channels': channels}
+	context={'channels': channels, 'categories': CHANNEL_CATEGORIES}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
@@ -312,206 +325,208 @@ def test(request):
 # calendars for our Events page
 ######################################################################################
 def add_event(
-    request,
-    template='swingtime/add_event.html',
-    event_form_class=forms.EventForm,
-    recurrence_form_class=forms.MultipleOccurrenceForm
+	request,
+	template='swingtime/add_event.html',
+	event_form_class=forms.EventForm,
+	recurrence_form_class=forms.MultipleOccurrenceForm
 ):
-    '''
-    Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
+	'''
+	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
 
-    Context parameters:
+	Context parameters:
 
-    dtstart
-        a datetime.datetime object representing the GET request value if present,
-        otherwise None
+	dtstart
+		a datetime.datetime object representing the GET request value if present,
+		otherwise None
 
-    event_form
-        a form object for updating the event
+	event_form
+		a form object for updating the event
 
-    recurrence_form
-        a form object for adding occurrences
+	recurrence_form
+		a form object for adding occurrences
 
-    '''
-    dtstart = None
-    if request.method == 'POST':
-        event_form = event_form_class(request.POST)
-        recurrence_form = recurrence_form_class(request.POST)
-        if event_form.is_valid() and recurrence_form.is_valid():
-            event = event_form.save()
-            user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-            user_profile.events.add(event) #associate the current event with a user's profile
-            recurrence_form.save(event)
-            return http.HttpResponseRedirect(event.get_absolute_url())
-    else:
-        if 'dtstart' in request.GET:
-            try:
-                dtstart = parser.parse(request.GET['dtstart'])
-            except:
-                # TODO A badly formatted date is passed to add_event
-                pass
+	'''
+	dtstart = None
+	if request.method == 'POST':
+		event_form = event_form_class(request.POST)
+		recurrence_form = recurrence_form_class(request.POST)
+		if event_form.is_valid() and recurrence_form.is_valid():
+			event = event_form.save()
+			user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+			user_profile.events.add(event) #associate the current event with a user's profile
+			recurrence_form.save(event)
+			return http.HttpResponseRedirect(event.get_absolute_url())
+	else:
+		if 'dtstart' in request.GET:
+			try:
+				dtstart = parser.parse(request.GET['dtstart'])
+			except:
+				# TODO A badly formatted date is passed to add_event
+				pass
 
-        dtstart = dtstart or datetime.now()
-        event_form = event_form_class()
-        recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
+		dtstart = dtstart or datetime.now()
+		event_form = event_form_class()
+		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
 
-    return render(
-        request,
-        template,
-        {'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
-    )
+	return render(
+		request,
+		template,
+		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
+	)
 
    ####FROM SWINGWIMG ADD COMENTS
 
 def event_listing(
-    request,
-    template='swingtime/event_list.html',
-    events=None,
-    **extra_context
+	request,
+	template='swingtime/event_list.html',
+	events=None,
+	**extra_context
 ):
-    '''
-    View all ``events``.
+	'''
+	View all ``events``.
 
-    If ``events`` is a queryset, clone it. If ``None`` default to all ``Event``s.
+	If ``events`` is a queryset, clone it. If ``None`` default to all ``Event``s.
 
-    Context parameters:
+	Context parameters:
 
-    events
-        an iterable of ``Event`` objects
+	events
+		an iterable of ``Event`` objects
 
-    ???
-        all values passed in via **extra_context
-    '''
-    return render(
-        request,
-        template,
-        dict(extra_context, events=events or request.user.profile.events.all())
-        #changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
-    )
+	???
+		all values passed in via **extra_context
+	'''
+	return render(
+		request,
+		template,
+		dict(extra_context, events=events or request.user.profile.events.all())
+		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
+	)
 
 
 def month_view(
-    request,
-    year,
-    month,
-    template='swingtime/monthly_view.html',
-    queryset=None
+	request,
+	year,
+	month,
+	template='swingtime/monthly_view.html',
+	queryset=None
 ):
-    '''
-    Render a tradional calendar grid view with temporal navigation variables.
+	'''
+	Render a tradional calendar grid view with temporal navigation variables.
 
-    Context parameters:
+	Context parameters:
 
-    today
-        the current datetime.datetime value
+	today
+		the current datetime.datetime value
 
-    calendar
-        a list of rows containing (day, items) cells, where day is the day of
-        the month integer and items is a (potentially empty) list of occurrence
-        for the day
+	calendar
+		a list of rows containing (day, items) cells, where day is the day of
+		the month integer and items is a (potentially empty) list of occurrence
+		for the day
 
-    this_month
-        a datetime.datetime representing the first day of the month
+	this_month
+		a datetime.datetime representing the first day of the month
 
-    next_month
-        this_month + 1 month
+	next_month
+		this_month + 1 month
 
-    last_month
-        this_month - 1 month
+	last_month
+		this_month - 1 month
 
-    '''
-    year, month = int(year), int(month)
-    cal         = calendar.monthcalendar(year, month)
-    dtstart     = datetime(year, month, 1)
-    last_day    = max(cal[-1])
+	'''
+	year, month = int(year), int(month)
+	cal         = calendar.monthcalendar(year, month)
+	dtstart     = datetime(year, month, 1)
+	last_day    = max(cal[-1])
    # dtend       = datetime(year, month, last_day)
 
-    # TODO Whether to include those occurrences that started in the previous
-    # month but end in this month?
-    my_events = request.user.profile.events.all() #access all of the uers events
+	# TODO Whether to include those occurrences that started in the previous
+	# month but end in this month?
+	my_events = request.user.profile.events.all() #access all of the uers events
+	
+	
+	for event in my_events: #loop through the users events and create a queryset of all of the occurances
+		if queryset == None:
+			queryset = event.occurrence_set.all()
+		else:
+			queryset = queryset | event.occurrence_set.all()
+	
+	if queryset == None:
+		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+	
+	#queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
+	# this line was replaced by our for loop
 
-    
-    
-    for event in my_events: #loop through the users events and create a queryset of all of the occurances
-    	if queryset == None:
-    		queryset = event.occurrence_set.all()
-    	else:
-    		queryset = queryset | event.occurrence_set.all()
-    
-    if queryset == None:
-        queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
-    
-    #queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
-    # this line was replaced by our for loop
 
-    occurrences = queryset.filter(start_time__year=year, start_time__month=month)
+	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
-    def start_day(o):
-        return o.start_time.day
+	def start_day(o):
+		return o.start_time.day
 
-    by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
-    data = {
-        'today':      datetime.now(),
-        'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-        'this_month': dtstart,
-        'next_month': dtstart + timedelta(days=+last_day),
-        'last_month': dtstart + timedelta(days=-1),
-    }
+	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
+	data = {
+		'today':      datetime.now(),
+		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
+		'this_month': dtstart,
+		'next_month': dtstart + timedelta(days=+last_day),
+		'last_month': dtstart + timedelta(days=-1),
+	}
 
-    return render(request, template, data)
+	return render(request, template, data)
 
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
-    '''
+	'''
 
-    Context parameters:
 
-    year
-        an integer value for the year in questin
+	Context parameters:
 
-    next_year
-        year + 1
+	year
+		an integer value for the year in question
 
-    last_year
-        year - 1
+	next_year
+		year + 1
 
-    by_month
-        a sorted list of (month, occurrences) tuples where month is a
-        datetime.datetime object for the first day of a month and occurrences
-        is a (potentially empty) list of values for that month. Only months
-        which have at least 1 occurrence is represented in the list
+	last_year
+		year - 1
 
-    '''
-    year = int(year)
 
-    my_events = request.user.profile.events.all() #access all of the uers events
+	by_month
+		a sorted list of (month, occurrences) tuples where month is a
+		datetime.datetime object for the first day of a month and occurrences
+		is a (potentially empty) list of values for that month. Only months
+		which have at least 1 occurrence is represented in the list
 
-    for event in my_events:  #access all of the uers events
-    	if queryset == None:
-    		queryset = event.occurrence_set.all()
-    	else:
-    		queryset = queryset | event.occurrence_set.all()
+	'''
 
-    if queryset == None:
-        queryset = Occurrence.objects.filter(start_time = "1970-01-01 00:00")        
-              
-    occurrences = queryset.filter(
-        models.Q(start_time__year=year) |
-        models.Q(end_time__year=year)
-    )
-    
-    def group_key(o):
-        return datetime(
-            year,
-            o.start_time.month if o.start_time.year == year else o.end_time.month,
-            1
-        )
+	year = int(year)
 
-    return render(request, template, {
-        'year': year,
-        'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
-        'next_year': year + 1,
-        'last_year': year - 1
-    })
+	for event in my_events:  #access all of the uers events
+		if queryset == None:
+			queryset = event.occurrence_set.all()
+		else:
+			queryset = queryset | event.occurrence_set.all()
+
+	if queryset == None:
+		queryset = Occurrence.objects.filter(start_time = "1970-01-01 00:00")        
+			  
+	occurrences = queryset.filter(
+		models.Q(start_time__year=year) |
+		models.Q(end_time__year=year)
+	)
+	
+	def group_key(o):
+		return datetime(
+			year,
+			o.start_time.month if o.start_time.year == year else o.end_time.month,
+			1
+		)
+
+	return render(request, template, {
+		'year': year,
+		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
+		'next_year': year + 1,
+		'last_year': year - 1
+	})
+
 
 #########################################################################################################
 # End to swingtime edits!

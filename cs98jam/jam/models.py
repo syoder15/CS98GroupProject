@@ -47,7 +47,6 @@ class Channel(models.Model):
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
 	
 	
-	
 class ChannelAdminNote(models.Model):
 	def __unicode__(self):
 		return self.text

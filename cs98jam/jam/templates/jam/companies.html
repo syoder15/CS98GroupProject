@@ -7,9 +7,11 @@
 	</div>
 	<div class="list-group">
 		{% for c in companies %}
-		<a href="#" class="list-group-item">
+		<a href="{% url 'company_page' c.name %}"> 
+			<!--<div class="list-group-item">-->
 			<h4 class="list-group-item-heading">{{ c }} </h4>
 			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
+			<!--</div>-->
 		</a>
 		<button type="button" class="btn btn-primary company-delete" name="{{ c.name }}">Delete Company</button>
 		{% empty %}
