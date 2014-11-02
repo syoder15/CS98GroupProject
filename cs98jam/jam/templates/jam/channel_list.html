@@ -9,9 +9,14 @@
 
 {% block side_col %}
 	<h2>Browse</h2>
+
 	{% for category in categories %} 
-		{{ category.name }}
+		<p>
+			{{ category }}
+		</p>
+
 	{% endfor %}
+
 
 	<h2>Search</h2>
 	<form class="navbar-form navbar-left" role="search">
@@ -39,7 +44,7 @@
 
 	        <div class="col-sm-4">
 	            <h2>My Channels</h2>
-	            
+
 	        </div>
 	    </div>
     <section>
