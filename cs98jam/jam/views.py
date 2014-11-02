@@ -145,7 +145,6 @@ def new_contact(request):
 	contact.save()
 	return HttpResponse()
 
-
 @login_required
 def activate_subscriber(request, channel_name, user_name):
 	channel = get_object_or_404(Channel, name=channel_name)
@@ -269,6 +268,13 @@ def companies(request):
  
 	context = {'companies': companies}
 	return render(request, 'jam/companies.html', context)
+
+def company_page(request, company_name):
+    company = get_object_or_404(Company, name=company_name,user=request.user.username)
+    #events = UserProfile.events.filter(user=request.user.username)
+    events = request.user.profile.events.all()
+    context = {'company': company, 'events': events}
+    return render(request, 'jam/company_page.html', context)
 
 def contacts(request):
 	contacts = Contact.objects.filter(user=request.user.username)
@@ -454,7 +460,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
     Context parameters:
 
     year
-        an integer value for the year in questin
+        an integer value for the year in question
 
     next_year
         year + 1
