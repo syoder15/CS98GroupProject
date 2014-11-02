@@ -3,10 +3,9 @@
 
 {% block content %}
 	<div class="list-group">
-		{% for c in companies %}
+		{% for c in contacts %}
 		<a href="#" class="list-group-item">
 			<h4 class="list-group-item-heading">{{ c }}</h4>
-			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
 		</a>
 		{% endfor %}
 	</div>
