@@ -259,26 +259,31 @@ def companies(request):
 	data = request.POST
 
 	if (data and data["export"]) : #if we want to output this as text file:
-		user = request.META['USER']
+		user = request.META['LOGNAME']
 		path_name = "/Users/%s/Downloads/" % user
 		f = open(os.path.join(path_name, "companies.txt"), "w")
 		for company in companies:
 			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 		f.close() 
-   # elif(data and data["delete"]):
-    #    c = Company.objects.filter(name=data["delete"].name)
-    #    c.delete()
+
  
 	context = {'companies': companies}
 	return render(request, 'jam/companies.html', context)
 
 def contacts(request):
 	contacts = Contact.objects.filter(user=request.user.username)
-	
-    # for contact in contacts:
-	# 	print contact
+	data = request.POST
+
+	if (data and data["export"]) : #if we want to output this as text file:
+		#import pdb; pdb.set_trace()
+		user = request.META['LOGNAME']
+		path_name = "/Users/%s/Downloads/" % user
+		f = open(os.path.join(path_name, "contacts.txt"), "w")
+		for contact in contacts:
+			f.write(str(contact) + ", " + str(contact.employer) + "\n")
+		f.close()
+
 	context = {'contacts': contacts}
-	#context = {}
 	return render(request, 'jam/contacts.html', context)
 
 def cal(request):
