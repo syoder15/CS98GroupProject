@@ -62,10 +62,18 @@ def index(request):
     		context = {'username': request.user.username, 'channels': channels,'show': show_feed}
     	# otherwise, showing clicked channel feed
     	else:
-    		c_name = form_data.get('channel_name')
-    		channel = get_object_or_404(Channel, name=c_name)
-    		context = {'username': request.user.username, 'channels': channels, 'channel_name': c_name,
-    		'channel_nickname': channel.moniker,'channel_description': channel.description, 'show': show_feed,}
+			c_name = form_data.get('channel_name')
+			channel = get_object_or_404(Channel, name=c_name)
+    		
+			is_admin = False
+			if request.user.controlledChannels.filter(name=channel.name).exists():
+				is_admin = True
+
+			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
+                'channel_description': channel.description, 'channel_status': channel.is_public, 
+                'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, "adminNotes": channel.adminNotes}
+            
+
     return render(request, 'jam/index_landing_home.html', context)
 
 @login_required

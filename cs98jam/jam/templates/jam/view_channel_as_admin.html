@@ -39,7 +39,6 @@
 			<p> {{ subscriber.username }} 
 			<form class="removeSubs" method="POST">{% csrf_token %}
 				<input class="button" name="{{ subscriber.username }}" type="submit" value="-"/>
-				<input class="button" name="back_home" type="submit" value="-"/>
 			</form>
 			</p>
 		{% endfor %}
