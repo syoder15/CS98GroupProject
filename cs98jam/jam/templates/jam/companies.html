@@ -12,6 +12,8 @@
 			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
 		</a>
 		<button type="button" class="btn btn-primary company-delete" name="{{ c.name }}">Delete Company</button>
+		{% empty %}
+			<h5> You haven't entered any companies.</h5>
 		{% endfor %}
 	</div>
 {% endblock %}
