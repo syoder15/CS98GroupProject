@@ -15,11 +15,10 @@ from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
 from dateutil import parser
-from datetime import datetime
 from django import http
 import calendar
 from datetime import datetime, timedelta, time
-from swingtime.models import Occurrence
+from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 
@@ -429,12 +428,17 @@ def month_view(
     # month but end in this month?
     my_events = request.user.profile.events.all() #access all of the uers events
 
+    
+    
     for event in my_events: #loop through the users events and create a queryset of all of the occurances
     	if queryset == None:
     		queryset = event.occurrence_set.all()
     	else:
     		queryset = queryset | event.occurrence_set.all()
-
+    
+    if queryset == None:
+        queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+    
     #queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
     # this line was replaced by our for loop
 
@@ -476,8 +480,6 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 
     '''
     year = int(year)
-    #queryset = queryset._clone() if queryset else Occurrence.objects.select_related()
-    # replace this line with for loop below to only get users occurances
 
     my_events = request.user.profile.events.all() #access all of the uers events
 
@@ -485,14 +487,16 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
     	if queryset == None:
     		queryset = event.occurrence_set.all()
     	else:
-    		#queryset = chain(queryset, event.occurrence_set.all())
     		queryset = queryset | event.occurrence_set.all()
 
-  	occurrences = queryset.filter(
-    	models.Q(start_time__year=year) |
-    	models.Q(end_time__year=year)
+    if queryset == None:
+        queryset = Occurrence.objects.filter(start_time = "1970-01-01 00:00")        
+              
+    occurrences = queryset.filter(
+        models.Q(start_time__year=year) |
+        models.Q(end_time__year=year)
     )
-
+    
     def group_key(o):
         return datetime(
             year,
