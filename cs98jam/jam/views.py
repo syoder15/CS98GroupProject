@@ -245,7 +245,7 @@ def new_company(request):
 						  user=request.user.username)
 		company.save()
 	context = {'username': request.user.username}
-	return render(request, 'jam/index_homepage.html', context)
+	return render(request, 'jam/index_landing_home.html', context)
 
 def new_event(request):
 	form_data = request.POST
@@ -257,24 +257,27 @@ def new_event(request):
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
+
 	if (data and data["export"]) : #if we want to output this as text file:
 		user = request.META['USER']
 		path_name = "/Users/%s/Downloads/" % user
 		f = open(os.path.join(path_name, "companies.txt"), "w")
-
 		for company in companies:
 			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
-		f.close()
-
-
+		f.close() 
+   # elif(data and data["delete"]):
+    #    c = Company.objects.filter(name=data["delete"].name)
+    #    c.delete()
+ 
 	context = {'companies': companies}
 	return render(request, 'jam/companies.html', context)
 
 def contacts(request):
-	# contacts = Contacts.objects.filter(user=request.user.username)
-	# for contact in contacts:
+	contacts = Contact.objects.filter(user=request.user.username)
+	
+    # for contact in contacts:
 	# 	print contact
-	context = {'contact': contacts}
+	context = {'contacts': contacts}
 	#context = {}
 	return render(request, 'jam/contacts.html', context)
 
