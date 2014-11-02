@@ -81,7 +81,7 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name="profile")
 	activation_key = models.CharField(max_length=40)
 	key_expires = models.DateTimeField()
-	events = models.ManyToManyField(SwingtimeEvent)
+	events = models.ManyToManyField(SwingtimeEvent, blank=True)
 	# notification freq, defined as how many emails sent per week
 	# 42 means 4-hour feed, 7 means daily digest, and 1 means week in review 
 	notification_frequency = models.IntegerField(default=0)

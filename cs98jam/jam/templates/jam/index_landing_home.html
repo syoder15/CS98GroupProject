@@ -16,6 +16,8 @@
 		-->
 			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
 		</form>
+		{% empty %}
+			<h5> You currently don't have any channels. Add one <a href="{% url 'new_channel' %}">here</a>. </h5>
 		{% endfor %}
 	</div>
 {% endblock %}
@@ -45,7 +47,8 @@
 	<div class="navbar navbar-fixed-bottom">
 		<div class="buttons-bottom-align">
 			<div class="round-button" style="float:right;">
-				<a data-toggle="modal" data-target="#contactModal">
+				<!--<a data-toggle="modal" data-target="#contactModal">-->
+				<a href="{% url 'swingtime-add-event' %}">
 				  <!-- Add Event -->
 				  <img src="{% static 'admin/img/icon_addEvent.svg' %}" alt="Home" />
 				</a>

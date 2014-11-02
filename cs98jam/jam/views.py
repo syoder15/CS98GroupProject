@@ -15,11 +15,10 @@ from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
 from dateutil import parser
-from datetime import datetime
 from django import http
 import calendar
 from datetime import datetime, timedelta, time
-from swingtime.models import Occurrence
+from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 
@@ -151,7 +150,6 @@ def new_contact(request):
 	contact.save()
 	return HttpResponse()
 
-
 @login_required
 def activate_subscriber(request, channel_name, user_name):
 	channel = get_object_or_404(Channel, name=channel_name)
@@ -251,7 +249,7 @@ def new_company(request):
 						  user=request.user.username)
 		company.save()
 	context = {'username': request.user.username}
-	return render(request, 'jam/index_homepage.html', context)
+	return render(request, 'jam/index_landing_home.html', context)
 
 def new_event(request):
 	form_data = request.POST
@@ -263,25 +261,40 @@ def new_event(request):
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
+
 	if (data and data["export"]) : #if we want to output this as text file:
-		user = request.META['USER']
+		user = request.META['LOGNAME']
 		path_name = "/Users/%s/Downloads/" % user
 		f = open(os.path.join(path_name, "companies.txt"), "w")
-
 		for company in companies:
 			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
-		f.close()
+		f.close() 
 
-
+ 
 	context = {'companies': companies}
 	return render(request, 'jam/companies.html', context)
 
+def company_page(request, company_name):
+    company = get_object_or_404(Company, name=company_name,user=request.user.username)
+    contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
+    events = request.user.profile.events.all()
+    context = {'company': company, 'contacts': contacts, 'events': events}
+    return render(request, 'jam/company_page.html', context)
+
 def contacts(request):
-	# contacts = Contacts.objects.filter(user=request.user.username)
-	# for contact in contacts:
-	# 	print contact
-	context = {'contact': contacts}
-	#context = {}
+	contacts = Contact.objects.filter(user=request.user.username)
+	data = request.POST
+
+	if (data and data["export"]) : #if we want to output this as text file:
+		#import pdb; pdb.set_trace()
+		user = request.META['LOGNAME']
+		path_name = "/Users/%s/Downloads/" % user
+		f = open(os.path.join(path_name, "contacts.txt"), "w")
+		for contact in contacts:
+			f.write(str(contact) + ", " + str(contact.employer) + "\n")
+		f.close()
+
+	context = {'contacts': contacts}
 	return render(request, 'jam/contacts.html', context)
 
 def cal(request):
@@ -426,15 +439,20 @@ def month_view(
 	# TODO Whether to include those occurrences that started in the previous
 	# month but end in this month?
 	my_events = request.user.profile.events.all() #access all of the uers events
+    
+    
+    for event in my_events: #loop through the users events and create a queryset of all of the occurances
+    	if queryset == None:
+    		queryset = event.occurrence_set.all()
+    	else:
+    		queryset = queryset | event.occurrence_set.all()
+    
+    if queryset == None:
+        queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+    
+    #queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
+    # this line was replaced by our for loop
 
-	for event in my_events: #loop through the users events and create a queryset of all of the occurances
-		if queryset == None:
-			queryset = event.occurrence_set.all()
-		else:
-			queryset = queryset | event.occurrence_set.all()
-
-	#queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
-	# this line was replaced by our for loop
 
 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
@@ -455,10 +473,11 @@ def month_view(
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''
 
+
 	Context parameters:
 
-	year
-		an integer value for the year in questin
+    year
+        an integer value for the year in question
 
 	next_year
 		year + 1
@@ -466,44 +485,45 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 	last_year
 		year - 1
 
+
 	by_month
 		a sorted list of (month, occurrences) tuples where month is a
 		datetime.datetime object for the first day of a month and occurrences
 		is a (potentially empty) list of values for that month. Only months
 		which have at least 1 occurrence is represented in the list
 
-	'''
+    '''
+
 	year = int(year)
-	#queryset = queryset._clone() if queryset else Occurrence.objects.select_related()
-	# replace this line with for loop below to only get users occurances
 
-	my_events = request.user.profile.events.all() #access all of the uers events
+    for event in my_events:  #access all of the uers events
+    	if queryset == None:
+    		queryset = event.occurrence_set.all()
+    	else:
+    		queryset = queryset | event.occurrence_set.all()
 
-	for event in my_events:  #access all of the uers events
-		if queryset == None:
-			queryset = event.occurrence_set.all()
-		else:
-			#queryset = chain(queryset, event.occurrence_set.all())
-			queryset = queryset | event.occurrence_set.all()
+    if queryset == None:
+        queryset = Occurrence.objects.filter(start_time = "1970-01-01 00:00")        
+              
+    occurrences = queryset.filter(
+        models.Q(start_time__year=year) |
+        models.Q(end_time__year=year)
+    )
+    
+    def group_key(o):
+        return datetime(
+            year,
+            o.start_time.month if o.start_time.year == year else o.end_time.month,
+            1
+        )
 
-	occurrences = queryset.filter(
-		models.Q(start_time__year=year) |
-		models.Q(end_time__year=year)
-	)
+    return render(request, template, {
+        'year': year,
+        'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
+        'next_year': year + 1,
+        'last_year': year - 1
+    })
 
-	def group_key(o):
-		return datetime(
-			year,
-			o.start_time.month if o.start_time.year == year else o.end_time.month,
-			1
-		)
-
-	return render(request, template, {
-		'year': year,
-		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
-		'next_year': year + 1,
-		'last_year': year - 1
-	})
 
 #########################################################################################################
 # End to swingtime edits!

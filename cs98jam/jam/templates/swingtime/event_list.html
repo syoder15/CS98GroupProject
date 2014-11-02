@@ -28,6 +28,9 @@
 <h3>All Events</h3>
 <ul>{% for e in events %}
 <li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+
+{% empty %}
+<p> You haven't entered any events. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
 {% endfor %}</ul>
 <form action="" method="post">
     <input type="button" onclick="history.back();" value="Back">

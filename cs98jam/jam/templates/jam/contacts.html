@@ -2,13 +2,18 @@
 
 
 {% block content %}
+	<div>
+		<button type="button" class="btn btn-primary contact-export">Export my contacts</button>
+	</div>
 	<div class="list-group">
-		{% for c in companies %}
+		{% for c in contacts %}
 		<a href="#" class="list-group-item">
 			<h4 class="list-group-item-heading">{{ c }}</h4>
-			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
+			<p class="list-group-item-text hidden">Email is: {{ c.email }}</p>
 		</a>
+		{% empty %}
+			<h5> You haven't entered any contacts. Add one <a data-toggle="modal" data-target="#contactModal">here</a>.</h5>
 		{% endfor %}
 	</div>
-
+	{% include "jam/modal_add_contact.html" %}
 {% endblock %}
