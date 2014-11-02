@@ -46,6 +46,13 @@ class Channel(models.Model):
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
 	
+	CHANNEL_CATEGORIES = (
+        ('technology', 'Technology'),
+        ('business', 'Business'),
+        ('law', 'Law'),
+        ('medicine', 'Medicine')
+    )
+	categories = models.CharField(max_length=4, default='none', editable=False, choices=CHANNEL_CATEGORIES)
 	
 	
 class ChannelAdminNote(models.Model):

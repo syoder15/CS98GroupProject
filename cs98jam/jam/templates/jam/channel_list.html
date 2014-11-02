@@ -1,22 +1,51 @@
-<!DOCTYPE html>
-<html>
- <head>
- 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+{% extends "../../jam/templates/jam/index_landing.html" %}
 
+{% block styles %}
 	{% load staticfiles %}
-	<link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
+	{{ block.super }}
+	<!-- <link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" /> -->
+{% endblock %}
 
-</head>
 
-<body>
-<div class="main">
-<h1>Channels</h1>
-{% for channel in channels %}
-	<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+{% block side_col %}
+	<h2>Browse</h2>
+	{% for category in categories %} 
+		{{ category.name }}
+	{% endfor %}
 
-{% empty %}
-	<p>No channels yet.</p>
-{% endfor %}
-</div>
-</body>
-</html>
+	<h2>Search</h2>
+	<form class="navbar-form navbar-left" role="search">
+	    <div class="form-group">
+	      <input type="text" class="form-control" placeholder="Search">
+	    </div>
+	    <button type="submit" class="btn btn-default">Submit</button>
+	</form>
+
+{% endblock %}
+
+{% block main_col %}
+	<section class="container-fluid">
+		<div class="row">
+	        <div class="col-sm-8">
+	            <h2>Channels</h2>
+				{% for channel in channels %}
+					<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+
+
+				{% empty %}
+					<p>No channels yet.</p>
+				{% endfor %}
+	        </div>
+
+	        <div class="col-sm-4">
+	            <h2>My Channels</h2>
+	            
+	        </div>
+	    </div>
+    <section>
+
+
+
+
+
+{% endblock %}
