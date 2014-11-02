@@ -25,7 +25,7 @@ from django.db import models
 # Create your views here.
 @login_required
 def index(request):
-    context = {'username': request.user.username}
+	context = {'username': request.user.username}
 
 	# show only channels in sidebar that user is subscribed to
 	all_channels = Channel.objects.all()
@@ -45,30 +45,31 @@ def index(request):
     #post request can mean 2 things.
     #either a request to see a channel's newsfeed
     #or a request to main homepage view
-    else:
-    	show_feed = True
-    	form_data = request.POST
+	elif request.method == "POST":
+		show_feed = True
+		form_data = request.POST
 
     	# if user clicked go home, show main homepage
-    	go_home = form_data.get('back_home')
-    	if( go_home == ("Go home, Roger!")):
-    		show_feed = False
-    		context = {'username': request.user.username, 'channels': channels,'show': show_feed}
+		go_home = form_data.get('back_home')
+		if( go_home == ("Go home, Roger!")):
+			show_feed = False
+			context = {'username': request.user.username, 'channels': channels,'show': show_feed}
     	# otherwise, showing clicked channel feed
-    	else:
+		else:
+			print 'here'
 			c_name = form_data.get('channel_name')
 			channel = get_object_or_404(Channel, name=c_name)
-    		
+    	
 			is_admin = False
 			if request.user.controlledChannels.filter(name=channel.name).exists():
 				is_admin = True
 
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
-                'channel_description': channel.description, 'channel_status': channel.is_public, 
-                'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, "adminNotes": channel.adminNotes}
+				'channel_description': channel.description, 'channel_status': channel.is_public, 
+				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, "adminNotes": channel.adminNotes}
             
 
-    return render(request, 'jam/index_landing_home.html', context)
+	return render(request, 'jam/index_landing_home.html', context)
 
 
 @login_required
