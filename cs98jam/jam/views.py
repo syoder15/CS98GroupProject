@@ -270,9 +270,9 @@ def companies(request):
 
 def company_page(request, company_name):
     company = get_object_or_404(Company, name=company_name,user=request.user.username)
-    #events = UserProfile.events.filter(user=request.user.username)
+    contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
     events = request.user.profile.events.all()
-    context = {'company': company, 'events': events}
+    context = {'company': company, 'contacts': contacts, 'events': events}
     return render(request, 'jam/company_page.html', context)
 
 def contacts(request):
