@@ -275,11 +275,11 @@ def companies(request):
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
-    company = get_object_or_404(Company, name=company_name,user=request.user.username)
-    contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
-    events = request.user.profile.events.all()
-    context = {'company': company, 'contacts': contacts, 'events': events}
-    return render(request, 'jam/company_page.html', context)
+	company = get_object_or_404(Company, name=company_name,user=request.user.username)
+	contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
+	events = request.user.profile.events.all()
+	context = {'company': company, 'contacts': contacts, 'events': events}
+	return render(request, 'jam/company_page.html', context)
 
 def contacts(request):
 	contacts = Contact.objects.filter(user=request.user.username)
@@ -307,7 +307,7 @@ def channel_list(request):
 		'Law', 
 		'Medicine', 
 		'Women'
-    )
+	)
 	channels = Channel.objects.all()
 	context={'channels': channels, 'categories': CHANNEL_CATEGORIES}
 	return render(request,'jam/channel_list.html',context)
@@ -439,19 +439,19 @@ def month_view(
 	# TODO Whether to include those occurrences that started in the previous
 	# month but end in this month?
 	my_events = request.user.profile.events.all() #access all of the uers events
-    
-    
-    for event in my_events: #loop through the users events and create a queryset of all of the occurances
-    	if queryset == None:
-    		queryset = event.occurrence_set.all()
-    	else:
-    		queryset = queryset | event.occurrence_set.all()
-    
-    if queryset == None:
-        queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
-    
-    #queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
-    # this line was replaced by our for loop
+	
+	
+	for event in my_events: #loop through the users events and create a queryset of all of the occurances
+		if queryset == None:
+			queryset = event.occurrence_set.all()
+		else:
+			queryset = queryset | event.occurrence_set.all()
+	
+	if queryset == None:
+		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+	
+	#queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
+	# this line was replaced by our for loop
 
 
 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
@@ -476,8 +476,8 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 
 	Context parameters:
 
-    year
-        an integer value for the year in question
+	year
+		an integer value for the year in question
 
 	next_year
 		year + 1
@@ -492,37 +492,37 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 		is a (potentially empty) list of values for that month. Only months
 		which have at least 1 occurrence is represented in the list
 
-    '''
+	'''
 
 	year = int(year)
 
-    for event in my_events:  #access all of the uers events
-    	if queryset == None:
-    		queryset = event.occurrence_set.all()
-    	else:
-    		queryset = queryset | event.occurrence_set.all()
+	for event in my_events:  #access all of the uers events
+		if queryset == None:
+			queryset = event.occurrence_set.all()
+		else:
+			queryset = queryset | event.occurrence_set.all()
 
-    if queryset == None:
-        queryset = Occurrence.objects.filter(start_time = "1970-01-01 00:00")        
-              
-    occurrences = queryset.filter(
-        models.Q(start_time__year=year) |
-        models.Q(end_time__year=year)
-    )
-    
-    def group_key(o):
-        return datetime(
-            year,
-            o.start_time.month if o.start_time.year == year else o.end_time.month,
-            1
-        )
+	if queryset == None:
+		queryset = Occurrence.objects.filter(start_time = "1970-01-01 00:00")        
+			  
+	occurrences = queryset.filter(
+		models.Q(start_time__year=year) |
+		models.Q(end_time__year=year)
+	)
+	
+	def group_key(o):
+		return datetime(
+			year,
+			o.start_time.month if o.start_time.year == year else o.end_time.month,
+			1
+		)
 
-    return render(request, template, {
-        'year': year,
-        'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
-        'next_year': year + 1,
-        'last_year': year - 1
-    })
+	return render(request, template, {
+		'year': year,
+		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
+		'next_year': year + 1,
+		'last_year': year - 1
+	})
 
 
 #########################################################################################################
