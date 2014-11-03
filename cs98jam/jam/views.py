@@ -272,14 +272,21 @@ def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
 
-	if (data and data["export"]) : #if we want to output this as text file:
-		user = request.META['LOGNAME']
-		path_name = "/Users/%s/Downloads/" % user
-		f = open(os.path.join(path_name, "companies.txt"), "w")
-		for company in companies:
-			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
-		f.close() 
-
+	if(data):
+		if("export" in data):
+			user = request.META['LOGNAME']
+			path_name = "/Users/%s/Downloads/" % user
+			f = open(os.path.join(path_name, "companies.txt"), "w")
+			for company in companies:
+				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
+			f.close() 
+		else:
+			#print "delete"
+			for company in companies:
+				if company.name in data:
+					company.delete()
+					break
+			companies = Company.objects.filter(user=request.user.username)
  
 	context = {'companies': companies}
 	return render(request, 'jam/companies.html', context)
@@ -295,14 +302,21 @@ def contacts(request):
 	contacts = Contact.objects.filter(user=request.user.username)
 	data = request.POST
 
-	if (data and data["export"]) : #if we want to output this as text file:
-		#import pdb; pdb.set_trace()
-		user = request.META['LOGNAME']
-		path_name = "/Users/%s/Downloads/" % user
-		f = open(os.path.join(path_name, "contacts.txt"), "w")
-		for contact in contacts:
-			f.write(str(contact) + ", " + str(contact.employer) + "\n")
-		f.close()
+	if (data):
+		if("export" in data): #if we want to output this as text file:
+			#import pdb; pdb.set_trace()
+			user = request.META['LOGNAME']
+			path_name = "/Users/%s/Downloads/" % user
+			f = open(os.path.join(path_name, "contacts.txt"), "w")
+			for contact in contacts:
+				f.write(str(contact) + ", " + str(contact.employer) + "\n")
+			f.close()
+		else: 
+			for c in contacts:
+				if c.name in data:
+					c.delete()
+					break
+			contacts = Contact.objects.filter(user=request.user.username)
 
 	context = {'contacts': contacts}
 	return render(request, 'jam/contacts.html', context)
