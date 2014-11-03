@@ -499,7 +499,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 	'''
 
 	year = int(year)
-
+	my_events = request.user.profile.events.all()
 	for event in my_events:  #access all of the uers events
 		if queryset == None:
 			queryset = event.occurrence_set.all()
