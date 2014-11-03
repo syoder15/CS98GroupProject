@@ -222,8 +222,14 @@ def view_channel_as_admin(request, channel_name):
 	if is_admin and request.method == 'POST':
 		for key in request.POST:
 			user = User.objects.filter(username=key).first()
-			if user is not None and (user.controlledChannels.filter(name=channel_name).exists() == False or user == request.user):
+			
+			if user is not None and request.POST.get(key) == "Remove" and (not 
+					user.controlledChannels.filter(name=channel_name).exists() or user == request.user):
 				channel.subscribers.remove(User.objects.filter(username=key).first())
+			
+			elif user is not None and request.POST.get(key) == "Make Admin" and (not 
+					user.controlledChannels.filter(name=channel_name).exists()):
+				channel.admins.add(User.objects.filter(username=key).first())
 
 		if 'nickname' in request.POST:
 			channel.moniker = request.POST.get('nickname')
