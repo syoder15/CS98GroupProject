@@ -349,7 +349,8 @@ def add_event(
 	request,
 	template='swingtime/add_event.html',
 	event_form_class=forms.EventForm,
-	recurrence_form_class=forms.MultipleOccurrenceForm
+	recurrence_form_class=forms.MultipleOccurrenceForm,
+	channel_name = None
 ):
 	'''
 	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
@@ -373,8 +374,16 @@ def add_event(
 		recurrence_form = recurrence_form_class(request.POST)
 		if event_form.is_valid() and recurrence_form.is_valid():
 			event = event_form.save()
-			user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-			user_profile.events.add(event) #associate the current event with a user's profile
+			
+			#### JAM CODE #######
+			if (not channel_name):
+				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+				user_profile.events.add(event) #associate the current event with a user's profile
+			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
+				channel = get_object_or_404(Channel, name=channel_name)
+				channel.events.add(event)
+			#### JAM CODE #######	
+				
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
 	else:
