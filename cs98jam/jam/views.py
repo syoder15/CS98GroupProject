@@ -288,7 +288,7 @@ def companies(request):
 					break
 			companies = Company.objects.filter(user=request.user.username)
  
-	context = {'companies': companies}
+	context = {'companies': companies, 'username': request.user.username}
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
@@ -318,7 +318,7 @@ def contacts(request):
 					break
 			contacts = Contact.objects.filter(user=request.user.username)
 
-	context = {'contacts': contacts}
+	context = {'contacts': contacts, 'username': request.user.username}
 	return render(request, 'jam/contacts.html', context)
 
 def cal(request):
@@ -333,7 +333,7 @@ def channel_list(request):
 		'Women'
 	)
 	channels = Channel.objects.all()
-	context={'channels': channels, 'categories': CHANNEL_CATEGORIES}
+	context={'channels': channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
