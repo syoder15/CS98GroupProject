@@ -375,14 +375,14 @@ def add_event(
 		if event_form.is_valid() and recurrence_form.is_valid():
 			event = event_form.save()
 			
-			#### JAM CODE #######
+			#### JAM CODE ####
 			if (not channel_name):
 				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
 				user_profile.events.add(event) #associate the current event with a user's profile
 			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
 				channel = get_object_or_404(Channel, name=channel_name)
 				channel.events.add(event)
-			#### JAM CODE #######	
+			#### JAM CODE ####	
 				
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
@@ -469,8 +469,7 @@ def month_view(
 	last_day    = max(cal[-1])
    # dtend       = datetime(year, month, last_day)
 
-	# TODO Whether to include those occurrences that started in the previous
-	# month but end in this month?
+	#### JAM CODE ####
 	my_events = request.user.profile.events.all() #access all of the uers events
 	
 	
@@ -483,8 +482,7 @@ def month_view(
 	if queryset == None:
 		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
 	
-	#queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
-	# this line was replaced by our for loop
+	#### JAM CODE ####
 
 
 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
