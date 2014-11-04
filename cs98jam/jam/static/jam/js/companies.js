@@ -46,3 +46,9 @@ listItem.on('click', function(){
 	$(this).children('p.list-group-item-text').removeClass('hidden');
 	$(this).siblings().children('p.list-group-item-text').addClass('hidden');
 });
+
+/* Loop through and add event listener? */
+$('.companyName').on('click', function(event) {
+	$('#showCompanyPage').toggle('show')
+	console.log($('.companyName').text())
+});

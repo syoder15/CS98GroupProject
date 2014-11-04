@@ -1,17 +1,23 @@
-{% extends "../../jam/templates/jam/index.html" %}
+{% extends "../../jam/templates/jam/company_landing.html" %}
 
-{% block content %}
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/companies.css' %}" />
+{% endblock %}
+
+{% block side_col %}
 	<div>
 		<button type="button" class="btn btn-primary company-export">Export my companies</button>
 	</div>
 	<div class="list-group">
+		<ul id="companyList">
 		{% for c in companies %}
-		<a href="{% url 'company_page' c.name %}"> 
+		<!--<a href="{% url 'company_page' c.name %}"> -->
 			<!--<div class="list-group-item">-->
-			<h4 class="list-group-item-heading">{{ c }} </h4>
-			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
+			<li class="list-group-item-heading companyName" id="{{c}}">{{ c }} </li>
 			<!--</div>-->
-		</a>
+		<!--</a>-->
 		
 		<form class="deleteCompany" method='POST'>
 			{% csrf_token %}
@@ -21,7 +27,41 @@
 		{% empty %}
 			<h5> You haven't entered any companies. Add one <a data-toggle="modal" data-target="#companyModal">here</a>.</h5>
 		{% endfor %}
+		</ul>
 	</div>
 
 		{% include "jam/modal_add_company.html" %}
+{% endblock %}
+
+{% block main_col %}
+<div id="showCompanyPage">
+	<h2> Company: {{ company.name }}</h2> 
+	<h4> Application Deadline: {{ company.application_deadline }}</h4>
+
+	<h3> Contacts </h3>
+		<ul>
+			{% for c in contacts %}
+			<li><a href="#">{{ c }}</a></li>
+
+			{% empty %}
+			<p> You haven't entered any contacts for this company.</p>
+			{% endfor %}
+		</ul>
+
+	<h3> Events </h3>
+		<ul>
+			{% for e in events %}
+			<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+
+			{% empty %}
+			<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
+			{% endfor %}
+		</ul>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	{% load static %}
+	<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'jam/js/companies.js' %}"></script>
 {% endblock %}
