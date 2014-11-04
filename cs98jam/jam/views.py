@@ -223,8 +223,14 @@ def view_channel_as_admin(request, channel_name):
 	if is_admin and request.method == 'POST':
 		for key in request.POST:
 			user = User.objects.filter(username=key).first()
-			if user is not None and (user.controlledChannels.filter(name=channel_name).exists() == False or user == request.user):
+			
+			if user is not None and request.POST.get(key) == "Remove" and (not 
+					user.controlledChannels.filter(name=channel_name).exists() or user == request.user):
 				channel.subscribers.remove(User.objects.filter(username=key).first())
+			
+			elif user is not None and request.POST.get(key) == "Make Admin" and (not 
+					user.controlledChannels.filter(name=channel_name).exists()):
+				channel.admins.add(User.objects.filter(username=key).first())
 
 		if 'nickname' in request.POST:
 			channel.moniker = request.POST.get('nickname')
@@ -268,16 +274,23 @@ def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
 
-	if (data and data["export"]) : #if we want to output this as text file:
-		user = request.META['LOGNAME']
-		path_name = "/Users/%s/Downloads/" % user
-		f = open(os.path.join(path_name, "companies.txt"), "w")
-		for company in companies:
-			f.write(str(company) + ", " + str(company.application_deadline) + "\n")
-		f.close() 
-
+	if(data):
+		if("export" in data):
+			user = request.META['LOGNAME']
+			path_name = "/Users/%s/Downloads/" % user
+			f = open(os.path.join(path_name, "companies.txt"), "w")
+			for company in companies:
+				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
+			f.close() 
+		else:
+			#print "delete"
+			for company in companies:
+				if company.name in data:
+					company.delete()
+					break
+			companies = Company.objects.filter(user=request.user.username)
  
-	context = {'companies': companies}
+	context = {'companies': companies, 'username': request.user.username}
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
@@ -291,16 +304,23 @@ def contacts(request):
 	contacts = Contact.objects.filter(user=request.user.username)
 	data = request.POST
 
-	if (data and data["export"]) : #if we want to output this as text file:
-		#import pdb; pdb.set_trace()
-		user = request.META['LOGNAME']
-		path_name = "/Users/%s/Downloads/" % user
-		f = open(os.path.join(path_name, "contacts.txt"), "w")
-		for contact in contacts:
-			f.write(str(contact) + ", " + str(contact.employer) + "\n")
-		f.close()
+	if (data):
+		if("export" in data): #if we want to output this as text file:
+			#import pdb; pdb.set_trace()
+			user = request.META['LOGNAME']
+			path_name = "/Users/%s/Downloads/" % user
+			f = open(os.path.join(path_name, "contacts.txt"), "w")
+			for contact in contacts:
+				f.write(str(contact) + ", " + str(contact.employer) + "\n")
+			f.close()
+		else: 
+			for c in contacts:
+				if c.name in data:
+					c.delete()
+					break
+			contacts = Contact.objects.filter(user=request.user.username)
 
-	context = {'contacts': contacts}
+	context = {'contacts': contacts, 'username': request.user.username}
 	return render(request, 'jam/contacts.html', context)
 
 def cal(request):
@@ -315,7 +335,7 @@ def channel_list(request):
 		'Women'
 	)
 	channels = Channel.objects.all()
-	context={'channels': channels, 'categories': CHANNEL_CATEGORIES}
+	context={'channels': channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
@@ -331,7 +351,8 @@ def add_event(
 	request,
 	template='swingtime/add_event.html',
 	event_form_class=forms.EventForm,
-	recurrence_form_class=forms.MultipleOccurrenceForm
+	recurrence_form_class=forms.MultipleOccurrenceForm,
+	channel_name = None
 ):
 	'''
 	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
@@ -355,8 +376,16 @@ def add_event(
 		recurrence_form = recurrence_form_class(request.POST)
 		if event_form.is_valid() and recurrence_form.is_valid():
 			event = event_form.save()
-			user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-			user_profile.events.add(event) #associate the current event with a user's profile
+			
+			#### JAM CODE ####
+			if (not channel_name):
+				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+				user_profile.events.add(event) #associate the current event with a user's profile
+			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
+				channel = get_object_or_404(Channel, name=channel_name)
+				channel.events.add(event)
+			#### JAM CODE ####	
+				
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
 	else:
@@ -442,8 +471,7 @@ def month_view(
 	last_day    = max(cal[-1])
    # dtend       = datetime(year, month, last_day)
 
-	# TODO Whether to include those occurrences that started in the previous
-	# month but end in this month?
+	#### JAM CODE ####
 	my_events = request.user.profile.events.all() #access all of the uers events
 	
 	
@@ -456,8 +484,7 @@ def month_view(
 	if queryset == None:
 		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
 	
-	#queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
-	# this line was replaced by our for loop
+	#### JAM CODE ####
 
 
 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
@@ -501,7 +528,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 	'''
 
 	year = int(year)
-
+	my_events = request.user.profile.events.all()
 	for event in my_events:  #access all of the uers events
 		if queryset == None:
 			queryset = event.occurrence_set.all()

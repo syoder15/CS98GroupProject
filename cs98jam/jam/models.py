@@ -47,6 +47,7 @@ class Channel(models.Model):
 	is_public = models.BooleanField(default=False)
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
+	events = models.ManyToManyField(SwingtimeEvent, blank=True)
 	
 	
 class ChannelAdminNote(models.Model):

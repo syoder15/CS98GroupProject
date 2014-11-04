@@ -36,14 +36,15 @@
 		{% endfor %}
 		
 		{% for subscriber in subscribers.all %}
-			<p> {{ subscriber.username }} 
-			<form class="removeSubs" method="POST">{% csrf_token %}
-				<input class="button" name="{{ subscriber.username }}" type="submit" value="-"/>
+			<p style="display: inline"> {{ subscriber.username }} 
+			<form style="display: inline" class="removeSubs" method="POST">{% csrf_token %}
+					<input class="button" name="{{ subscriber.username }}" type="submit" value="Remove"/>
+					<input class="button" name="{{ subscriber.username }}" type="submit" value="Make Admin"/>
 			</form>
 			</p>
 		{% endfor %}
 		
-		
+		<a href="../../../events/add/{{ channel_name }}">Add New Event</a>
 		
 	{% else %}
 		Sorry, according to our records, you are not an admin for this channel.
