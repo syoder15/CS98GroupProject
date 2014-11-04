@@ -56,6 +56,7 @@ contactForm.submit(function(event) {
   	var phone = $('#phone_number_input').val();
   	var email = $('#email_input').val();
   	var company = $('#company_input').val();
+  	var notes = $('#contact_notes_input').val();
 	var csrftoken = getCookie('csrftoken');
 
 	var formName = $('.contact_form').attr('name');
@@ -74,7 +75,8 @@ contactForm.submit(function(event) {
 			"name": name,
 			"phone": phone,
 			"email": email,
-			"company": company
+			"company": company,
+			"notes":notes
 		}
 	}).done(function() {
 		console.log("GOT HERE");

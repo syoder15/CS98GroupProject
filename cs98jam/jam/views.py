@@ -150,6 +150,7 @@ def new_contact(request):
 					  phone_number=form_data.get('phone'),
 					  email=form_data.get('email'),
 					  employer=form_data.get('company'),
+					  notes=form_data.get('notes'),
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
@@ -250,6 +251,7 @@ def new_company(request):
 		form_data = request.POST
 		company = Company(name=form_data.get('name'),
 						  application_deadline=form_data.get('deadline'),
+						  notes=form_data.get('company_notes'),
 						  user=request.user.username)
 		company.save()
 	context = {'username': request.user.username}
