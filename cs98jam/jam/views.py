@@ -150,6 +150,7 @@ def new_contact(request):
 					  phone_number=form_data.get('phone'),
 					  email=form_data.get('email'),
 					  employer=form_data.get('company'),
+					  notes=form_data.get('notes'),
 					  user=request.user.username)
 	contact.save()
 	return HttpResponse()
@@ -256,6 +257,7 @@ def new_company(request):
 		form_data = request.POST
 		company = Company(name=form_data.get('name'),
 						  application_deadline=form_data.get('deadline'),
+						  notes=form_data.get('company_notes'),
 						  user=request.user.username)
 		company.save()
 	context = {'username': request.user.username}
@@ -288,7 +290,7 @@ def companies(request):
 					break
 			companies = Company.objects.filter(user=request.user.username)
  
-	context = {'companies': companies}
+	context = {'companies': companies, 'username': request.user.username}
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
@@ -318,7 +320,7 @@ def contacts(request):
 					break
 			contacts = Contact.objects.filter(user=request.user.username)
 
-	context = {'contacts': contacts}
+	context = {'contacts': contacts, 'username': request.user.username}
 	return render(request, 'jam/contacts.html', context)
 
 def cal(request):
@@ -333,7 +335,7 @@ def channel_list(request):
 		'Women'
 	)
 	channels = Channel.objects.all()
-	context={'channels': channels, 'categories': CHANNEL_CATEGORIES}
+	context={'channels': channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
@@ -349,7 +351,8 @@ def add_event(
 	request,
 	template='swingtime/add_event.html',
 	event_form_class=forms.EventForm,
-	recurrence_form_class=forms.MultipleOccurrenceForm
+	recurrence_form_class=forms.MultipleOccurrenceForm,
+	channel_name = None
 ):
 	'''
 	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
@@ -373,8 +376,16 @@ def add_event(
 		recurrence_form = recurrence_form_class(request.POST)
 		if event_form.is_valid() and recurrence_form.is_valid():
 			event = event_form.save()
-			user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-			user_profile.events.add(event) #associate the current event with a user's profile
+			
+			#### JAM CODE ####
+			if (not channel_name):
+				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+				user_profile.events.add(event) #associate the current event with a user's profile
+			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
+				channel = get_object_or_404(Channel, name=channel_name)
+				channel.events.add(event)
+			#### JAM CODE ####	
+				
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
 	else:
@@ -460,8 +471,7 @@ def month_view(
 	last_day    = max(cal[-1])
    # dtend       = datetime(year, month, last_day)
 
-	# TODO Whether to include those occurrences that started in the previous
-	# month but end in this month?
+	#### JAM CODE ####
 	my_events = request.user.profile.events.all() #access all of the uers events
 	
 	
@@ -474,8 +484,7 @@ def month_view(
 	if queryset == None:
 		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
 	
-	#queryset = queryset._clone() if queryset else request.user.profile.events.all()#Occurrence.objects.select_related(request.user.profile)
-	# this line was replaced by our for loop
+	#### JAM CODE ####
 
 
 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)

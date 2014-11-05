@@ -12,6 +12,7 @@ class Company(models.Model):
  	class Meta:
  		verbose_name_plural =_('Companies')
     name = models.CharField(max_length=50)
+    notes = models.TextField()
     user = models.CharField(max_length=20)
     application_deadline = models.DateField()
 
@@ -24,6 +25,7 @@ class Contact(models.Model):
     phone_number = models.IntegerField(default=0)
     email = models.CharField(max_length=50)
     employer = models.CharField(max_length=50)
+    notes = models.TextField()
     user = models.CharField(max_length=20)
 
 
@@ -45,6 +47,7 @@ class Channel(models.Model):
 	is_public = models.BooleanField(default=False)
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
+	events = models.ManyToManyField(SwingtimeEvent, blank=True)
 	
 	
 class ChannelAdminNote(models.Model):
