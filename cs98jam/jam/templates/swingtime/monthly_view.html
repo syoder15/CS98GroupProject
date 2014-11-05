@@ -24,12 +24,12 @@
     <div class="backgroundCalendar">
         <div class="calHeader">
             <h4 class="monthlyTitle"> 
-                <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
-                   title="Last Month">&larr;</a>
                 {{ this_month|date:"F" }}
                 <a title="View {{ this_month.year}}" href="{% url 'swingtime-yearly-view' this_month.year %}">
                     {{ this_month|date:"Y" }}</a>
-                <a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}" 
+                <a href="{% url 'swingtime-monthly-view' last_month.year last_month.month %}" 
+                   title="Last Month">&larr;</a>
+				<a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}" 
                    title="Next Month">&rarr;</a>
             </h4>
 
