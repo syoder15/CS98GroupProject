@@ -11,23 +11,16 @@
 		<button type="button" class="btn btn-primary company-export">Export my companies</button>
 	</div>
 	<div class="list-group">
-		<ul id="companyList">
+		<form action="" method="POST">
+		{% csrf_token %}
 		{% for c in companies %}
-		<!--<a href="{% url 'company_page' c.name %}"> -->
-			<!--<div class="list-group-item">-->
-			<li class="list-group-item-heading companyName" id="{{c}}">{{ c }} </li>
-			<!--</div>-->
-		<!--</a>-->
-		
-		<form class="deleteCompany" method='POST'>
-			{% csrf_token %}
+			<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
 			<input class="button" name="{{ c.name }}" type="submit" value="Delete"/>
-		</form>
-
+			<br />
 		{% empty %}
-			<h5> You haven't entered any companies. Add one <a data-toggle="modal" data-target="#companyModal">here</a>.</h5>
+			You haven't entered any companies yet.
 		{% endfor %}
-		</ul>
+		</form>
 	</div>
 
 		{% include "jam/modal_add_company.html" %}
@@ -35,29 +28,16 @@
 
 {% block main_col %}
 <div id="showCompanyPage">
-	<h2> Company: {{ company.name }}</h2> 
-	<h4> Application Deadline: {{ company.application_deadline }}</h4>
-
-	<h3> Contacts </h3>
-		<ul>
-			{% for c in contacts %}
-			<li><a href="#">{{ c }}</a></li>
-
-			{% empty %}
-			<p> You haven't entered any contacts for this company.</p>
-			{% endfor %}
-		</ul>
-
-	<h3> Events </h3>
-		<ul>
-			{% for e in events %}
-			<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
-
-			{% empty %}
-			<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
-			{% endfor %}
-		</ul>
-	</div>
+	{% if show %}
+		{% include "jam/company_page.html" %}
+			<form class="goHome" method="POST" action="">
+			{% csrf_token %}
+				
+			<br />
+			<input class="button" name="back_home" type="submit" value="Back"/>
+			</form>
+		{% endif %}
+</div>
 {% endblock %}
 
 {% block javascript %}

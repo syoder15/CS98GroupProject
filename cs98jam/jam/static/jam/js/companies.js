@@ -47,8 +47,9 @@ listItem.on('click', function(){
 	$(this).siblings().children('p.list-group-item-text').addClass('hidden');
 });
 
-/* Loop through and add event listener? */
-$('.companyName').on('click', function(event) {
+/*$('.companyName').on('click', function(event) {
 	$('#showCompanyPage').toggle('show')
-	console.log($('.companyName').text())
-});
+	var companyName = $('.companyName').data().options//['company-name']
+	console.log(companyName)
+	$('#printCompanyName').val = "Company: " + companyName
+});*/
