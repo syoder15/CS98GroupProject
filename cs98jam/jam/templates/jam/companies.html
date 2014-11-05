@@ -37,10 +37,11 @@
 				<br />
 				<input class="button" name="back_home" type="submit" value="Back"/>
 				</form>
-				<a href="../edit/company/{{ company_name }}">Edit</a>
-				<a href="{% url 'edit_company_page' 'Google' %}">Edit 2</a>
 		</div>
 		{% endif %}
+				<a href="../edit/company/{{ company_name }}">Edit</a>
+		<a href="{% url 'edit_company_page' 'Google' %}">Edit 2</a>
+
 </div>
 {% endblock %}
 
