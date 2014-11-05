@@ -13,7 +13,7 @@ class Company(models.Model):
  		verbose_name_plural =_('Companies')
     name = models.CharField(max_length=50)
     notes = models.TextField()
-    user = models.CharField(max_length=20)
+    user = models.ForeignKey(User)
     application_deadline = models.DateField()
 
 class Contact(models.Model):
@@ -26,7 +26,7 @@ class Contact(models.Model):
     email = models.CharField(max_length=50)
     employer = models.CharField(max_length=50)
     notes = models.TextField()
-    user = models.CharField(max_length=20)
+    user = models.ForeignKey(User)
 
 
 # class Event(models.Model):
