@@ -1,28 +1,47 @@
-{% extends "../../jam/templates/jam/index.html" %}
+{% extends "../../jam/templates/jam/company_landing.html" %}
 
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/companies.css' %}" />
+{% endblock %}
 
-{% block content %}
+{% block side_col %}
 	<div>
 		<button type="button" class="btn btn-primary company-export">Export my companies</button>
 	</div>
 	<div class="list-group">
+		<form action="" method="POST">
+		{% csrf_token %}
 		{% for c in companies %}
-		<a href="{% url 'company_page' c.name %}"> 
-			<!--<div class="list-group-item">-->
-			<h4 class="list-group-item-heading">{{ c }} </h4>
-			<p class="list-group-item-text hidden">Deadline is: {{ c.application_deadline }}</p>
-			<!--</div>-->
-		</a>
-		
-		<form class="deleteCompany" method='POST'>
-			{% csrf_token %}
-			<input class="button" name="{{ c.name }}" type="submit" value="Delete"/>
-		</form>
-
+			<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
+			<input class="button" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c }}?')"/>
+			<br />
 		{% empty %}
-			<h5> You haven't entered any companies. Add one <a data-toggle="modal" data-target="#companyModal">here</a>.</h5>
+			You haven't entered any companies yet.
 		{% endfor %}
+		</form>
 	</div>
 
 		{% include "jam/modal_add_company.html" %}
+{% endblock %}
+
+{% block main_col %}
+<div id="showCompanyPage">
+	{% if show %}
+		{% include "jam/company_page.html" %}
+			<form class="goHome" method="POST" action="">
+			{% csrf_token %}
+				
+			<br />
+			<input class="button" name="back_home" type="submit" value="Back"/>
+			</form>
+		{% endif %}
+</div>
+{% endblock %}
+
+{% block javascript %}
+	{% load static %}
+	<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'jam/js/companies.js' %}"></script>
 {% endblock %}

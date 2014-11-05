@@ -1,8 +1,6 @@
-{% extends "../../jam/templates/jam/index.html" %}
-
-{% block content %}
-<h2> Company: {{ company.name }}</h2> 
-<h4> Application Deadline: {{ company.application_deadline }}</h4>
+<div>
+<h2> Company: {{ company_name }}</h2> 
+<h4> Application Deadline: {{ application_deadline }}</h4>
 
 <h3> Contacts </h3>
 	<ul>
@@ -23,5 +21,4 @@
 		<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
 		{% endfor %}
 	</ul>
-		
-{% endblock %}
+</div>
