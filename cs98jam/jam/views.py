@@ -27,6 +27,8 @@ from django.db import models
 def index(request):
 	context = {'username': request.user.username}
 
+	events = request.user.profile.events.all()
+
 	# show only channels in sidebar that user is subscribed to
 	all_channels = Channel.objects.all()
 	channels = []
@@ -40,7 +42,7 @@ def index(request):
 		form = UploadFileForm()
 		site = settings.DOMAIN
 		c_name = ""
-		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed}
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed ,'events': events}
 
     #post request can mean 2 things.
     #either a request to see a channel's newsfeed
@@ -53,7 +55,7 @@ def index(request):
 		go_home = form_data.get('back_home')
 		if( go_home == ("Go home, Roger!")):
 			show_feed = False
-			context = {'username': request.user.username, 'channels': channels,'show': show_feed}
+			context = {'username': request.user.username, 'channels': channels,'show': show_feed, 'events': events}
     	# otherwise, showing clicked channel feed
 		else:
 			print 'here'
