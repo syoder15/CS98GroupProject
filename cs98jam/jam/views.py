@@ -159,7 +159,7 @@ def new_contact(request):
 					  email=form_data.get('email'),
 					  employer=form_data.get('company'),
 					  notes=form_data.get('notes'),
-					  user=request.user.username)
+					  user=request.user)
 	contact.save()
 	return HttpResponse()
 
@@ -260,13 +260,13 @@ def view_channel_as_admin(request, channel_name):
 def new_company(request):
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
-		read_from_file(request.user.username, request.FILES['filep'])
+		read_from_file(request.user, request.FILES['filep'])
 	elif request.method == "POST":
 		form_data = request.POST
 		company = Company(name=form_data.get('name'),
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
-						  user=request.user.username)
+						  user=request.user)
 		company.save()
 	context = {'username': request.user.username}
 	return render(request, 'jam/index_landing_home.html', context)
@@ -279,7 +279,7 @@ def new_event(request):
 	return HttpResponse()
 
 def companies(request):
-	companies = Company.objects.filter(user=request.user.username)
+	companies = request.user.company_set.all()
 	data = request.POST
 	show_company = True
 
@@ -309,20 +309,50 @@ def companies(request):
 				if company.name in data:
 					company.delete()
 					break
-			companies = Company.objects.filter(user=request.user.username)
+			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username}
 
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
-	company = get_object_or_404(Company, name=company_name,user=request.user.username)
+	#company = get_object_or_404(Company, name=company_name,user=request.user.username)
 	contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
+	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
-	context = {'company': company, 'contacts': contacts, 'events': events}
+	context = {'company': 'company', 'contacts': contacts, 'events': events, 'company_name': company_name}
+	print "f'in company_page"
 	return render(request, 'jam/company_page.html', context)
 
+#@login_required
+def edit_company_page(request, comp_name):
+	print "got_here"
+	form_data = request.POST
+
+	# username = request.user.username
+
+	# user = User.objects.get(username=username.lower())
+	# company = get_object_or_404(Company, name=company_name,user=request.user.username)
+	# if form_data:
+	# 	if user and company: 
+	# 		company.name=form_data.get('company_name')
+	# 		company.application_deadline=form_data.get('application_deadline')
+	# 		company.notes=form_data.get('notes')
+
+	# 	else:
+	# 		company = Company(user=request.user.username,
+	# 						  company_name=form_data.get('company_name'),
+	# 						  application_deadline=form_data.get('application_deadline'),
+	# 						  notes=form_data.get('notes'))
+
+	# 	company.save()
+
+	# 	return render(request, 'jam/index.html', {})
+
+	context = {'company': 'company'}
+	return render(request, 'jam/company_page_edit.html', context)
+
 def contacts(request):
-	contacts = Contact.objects.filter(user=request.user.username)
+	contacts = request.user.contact_set.all()
 	data = request.POST
 
 	if (data):
@@ -339,7 +369,7 @@ def contacts(request):
 				if c.name in data:
 					c.delete()
 					break
-			contacts = Contact.objects.filter(user=request.user.username)
+			contacts = request.user.contact_set.all()
 
 	context = {'contacts': contacts, 'username': request.user.username}
 	return render(request, 'jam/contacts.html', context)

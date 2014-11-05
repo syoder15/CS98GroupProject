@@ -5,7 +5,7 @@ from jam.models import Company
 ## Company, yyyy-mm-dd
 
 
-def read_from_file(username, input_file):
+def read_from_file(user, input_file):
 
 	for line in input_file:
 		company_info = line.split(',')
@@ -14,5 +14,5 @@ def read_from_file(username, input_file):
 
 		company = Company(name=company_name,
 						  application_deadline=company_deadline,
-						  user=username)
+						  user=user)
 		company.save()
