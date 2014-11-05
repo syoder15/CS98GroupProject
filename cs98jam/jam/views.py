@@ -309,8 +309,10 @@ def companies(request):
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
-	#company = get_object_or_404(Company, name=company_name,user=request.user.username)
-	contacts = Contact.objects.filter(user=request.user.username, employer=company_name)
+	#companies = request.user.com_set.all
+
+	#company = get_object_or_404(Company, name=company_name,user=request.user)
+	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
 	context = {'company': 'company', 'contacts': contacts, 'events': events, 'company_name': company_name}
@@ -318,7 +320,7 @@ def company_page(request, company_name):
 	return render(request, 'jam/company_page.html', context)
 
 #@login_required
-def edit_company_page(request, comp_name):
+def edit_company(request, company_name):
 	print "got_here"
 	form_data = request.POST
 
@@ -342,8 +344,8 @@ def edit_company_page(request, comp_name):
 
 	# 	return render(request, 'jam/index.html', {})
 
-	context = {'company': 'company'}
-	return render(request, 'jam/company_page_edit.html', context)
+	#context = {'company': 'company'}
+	return render(request, 'jam/company_page_edit.html')
 
 def contacts(request):
 	contacts = request.user.contact_set.all()
