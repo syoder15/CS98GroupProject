@@ -39,7 +39,9 @@
 				</p>
 				</form>
 			{% else %}
-				{% include "jam/carousel.html" %}
+				{% for e in events %}
+					<p>{{e}} {{e.next_occurrence.start_time}}</p>
+				{% endfor %}
 			{% endif %}
 
 		</div>
