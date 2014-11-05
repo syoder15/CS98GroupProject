@@ -275,8 +275,12 @@ def new_event(request):
 def companies(request):
 	companies = Company.objects.filter(user=request.user.username)
 	data = request.POST
+	show_company = True
+
+	context = {'companies': companies, 'username': request.user.username}
 
 	if(data):
+		go_home = data.get('back_home')
 		if("export" in data):
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
@@ -284,6 +288,15 @@ def companies(request):
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+
+		elif(go_home == ("Back")):
+			show_company = False
+		elif('company_name' in data):
+			c_name = data.get('company_name')
+			company = get_object_or_404(Company, name=c_name)
+
+			context = {'companies': companies, 'company_name': company.name, 
+			'application_deadline': company.application_deadline, 'show': show_company}
 		else:
 			#print "delete"
 			for company in companies:
@@ -291,8 +304,8 @@ def companies(request):
 					company.delete()
 					break
 			companies = Company.objects.filter(user=request.user.username)
- 
-	context = {'companies': companies, 'username': request.user.username}
+			context = {'companies': companies, 'username': request.user.username}
+
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):

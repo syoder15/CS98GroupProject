@@ -46,3 +46,10 @@ listItem.on('click', function(){
 	$(this).children('p.list-group-item-text').removeClass('hidden');
 	$(this).siblings().children('p.list-group-item-text').addClass('hidden');
 });
+
+/*$('.companyName').on('click', function(event) {
+	$('#showCompanyPage').toggle('show')
+	var companyName = $('.companyName').data().options//['company-name']
+	console.log(companyName)
+	$('#printCompanyName').val = "Company: " + companyName
+});*/
