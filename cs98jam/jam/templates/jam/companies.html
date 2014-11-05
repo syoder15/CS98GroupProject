@@ -30,12 +30,16 @@
 <div id="showCompanyPage">
 	{% if show %}
 		{% include "jam/company_page.html" %}
-			<form class="goHome" method="POST" action="">
-			{% csrf_token %}
-				
-			<br />
-			<input class="button" name="back_home" type="submit" value="Back"/>
-			</form>
+			<div>
+				<form class="goHome" method="POST" action="">
+				{% csrf_token %}
+					
+				<br />
+				<input class="button" name="back_home" type="submit" value="Back"/>
+				</form>
+				<a href="../edit/company/{{ company_name }}">Edit</a>
+				<a href="{% url 'edit_company_page' 'Google' %}">Edit 2</a>
+		</div>
 		{% endif %}
 </div>
 {% endblock %}
