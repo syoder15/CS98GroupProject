@@ -30,19 +30,24 @@ def index(request):
 	events = request.user.profile.events.all()
 
 	# show only channels in sidebar that user is subscribed to
-	all_channels = Channel.objects.all()
-	channels = []
-	for c in all_channels:
-		if request.user.channel_set.filter(name=c.name).exists():
-			channels.append(c)
+	channels = request.user.channel_set.order_by("name").all()
 
+	notificationList = []
+	for c in channels:
+		newNotes = 0
+		for note in c.adminNotes.all():
+			if note.created_at > request.user.last_login:
+				newNotes += 1
+		notificationList.append(newNotes)	
+	
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
 		form = UploadFileForm()
 		site = settings.DOMAIN
 		c_name = ""
-		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed ,'events': events}
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 
+			'show': show_feed ,'events': events, 'notificationList': notificationList}
 
     #post request can mean 2 things.
     #either a request to see a channel's newsfeed
@@ -55,7 +60,8 @@ def index(request):
 		go_home = form_data.get('back_home')
 		if( go_home == ("Go home, Roger!")):
 			show_feed = False
-			context = {'username': request.user.username, 'channels': channels,'show': show_feed, 'events': events}
+			context = {'username': request.user.username, 
+			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
     	# otherwise, showing clicked channel feed
 		else:
 			print 'here'
@@ -67,7 +73,7 @@ def index(request):
 				is_admin = True
 
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
-				'channel_description': channel.description, 'channel_status': channel.is_public, 
+				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, "adminNotes": channel.adminNotes}
             
 
