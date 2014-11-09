@@ -526,7 +526,19 @@ def month_view(
 
 	#### JAM CODE ####
 	my_events = request.user.profile.events.all() #access all of the uers events
-	
+	my_new_events = request.user.profile.events.none()
+	if request.method == "POST":
+		if request.POST.get('Interviews'):
+			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
+		if request.POST.get('Career Fairs'):
+			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
+		if request.POST.get('Info Sessions'):
+			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
+		if request.POST.get('Other'):
+			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
+		my_events = my_new_events
+
+
 	
 	for event in my_events: #loop through the users events and create a queryset of all of the occurances
 		if queryset == None:
