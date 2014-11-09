@@ -27,7 +27,7 @@ from django.db import models
 def index(request):
 	context = {'username': request.user.username}
 		
-	
+	events = request.user.profile.events.all()
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -593,16 +593,16 @@ def month_view(
 
 	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
 	data = {
-		'today':      datetime.now(),
-		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-        'username': request.user.username
-		'this_month' : dtstart,
-		'next_month' : dtstart + timedelta(days=+last_day),
-		'last_month' : dtstart + timedelta(days=-1),
-		'interview'  : interview,
-		'careerFair' : careerFair,
-		'infoSession': infoSession,
-		'other'		 : other,
+        'today':      datetime.now(),
+        'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
+        'username': request.user.username,
+        'this_month' : dtstart,
+        'next_month' : dtstart + timedelta(days=+last_day),
+        'last_month' : dtstart + timedelta(days=-1),
+        'interview'  : interview,
+        'careerFair' : careerFair,
+        'infoSession': infoSession,
+        'other'		 : other,
 	}
 
 	return render(request, template, data)
