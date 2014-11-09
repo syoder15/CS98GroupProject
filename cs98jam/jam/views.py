@@ -300,9 +300,12 @@ def companies(request):
 		elif('company_name' in data):
 			c_name = data.get('company_name')
 			company = get_object_or_404(Company, name=c_name)
+			contacts = Contact.objects.filter(user=request.user, employer=c_name)
+			events = request.user.profile.events.all()
 
 			context = {'companies': companies, 'company_name': company.name, 
-			'application_deadline': company.application_deadline, 'show': show_company}
+			'application_deadline': company.application_deadline, 'show': show_company,
+			'contacts': contacts} #'events': events}
 		else:
 			#print "delete"
 			for company in companies:
@@ -315,14 +318,13 @@ def companies(request):
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
-	#companies = request.user.com_set.all
-
-	#company = get_object_or_404(Company, name=company_name,user=request.user)
-	contacts = Contact.objects.filter(user=request.user, employer=company_name)
+	companies = request.user.company_set.all()
+	company = get_object_or_404(Company, name=company_name,user=request.user)
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
-	context = {'company': 'company', 'contacts': contacts, 'events': events, 'company_name': company_name}
-	print "f'in company_page"
+	
+	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name}
+	
 	return render(request, 'jam/company_page.html', context)
 
 #@login_required
