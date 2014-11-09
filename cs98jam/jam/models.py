@@ -48,7 +48,8 @@ class Channel(models.Model):
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
 	events = models.ManyToManyField(SwingtimeEvent, blank=True)
-	
+	added = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
 	
 class ChannelAdminNote(models.Model):
 	def __unicode__(self):

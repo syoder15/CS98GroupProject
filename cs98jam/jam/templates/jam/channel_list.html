@@ -34,17 +34,15 @@
 	        <div class="col-sm-8">
 	            <h2>Channels</h2>
 				{% for channel in channels %}
+					{% if channel in sub_channels%}
+						<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" style="color:black" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+					{% else %}
 					<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
-
+					{% endif %}
 
 				{% empty %}
 					<p>No channels yet.</p>
 				{% endfor %}
-	        </div>
-
-	        <div class="col-sm-4">
-	            <h2>My Channels</h2>
-
 	        </div>
 	    </div>
     <section>

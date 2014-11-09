@@ -12,12 +12,33 @@
     
     <div class="eventSidebar">
         <h3 id="filterTitle"> Filters </h3>
-        <form>
-            <input type="checkbox" name="Interviews" value="true" checked="true"> Interviews</input> <br />
-            <input type="checkbox" name="Career Fairs" value="true" checked="true"> Career Fairs</input> <br />
-            <input type="checkbox" name="Info Sessions" value="true" checked="true"> Info Sessions</input> <br />
-            <input type="checkbox" name="Other" value="true" checked="true"> Other</input> <br />
-            <input value="Update" type="submit" />
+        <form name="filters" method="POST">
+            {% csrf_token %} 
+            {% if interview %}
+            <input type="checkbox" name="Interviews" value="interview" id="interviews" checked> Interviews</input> <br />
+            {% else %}
+            <input type="checkbox" name="Interviews" value="interview" id="interviews"> Interviews</input> <br />
+            {% endif %}
+
+            {% if careerFair %}
+            <input type="checkbox" name="Career Fairs" value="careerFair" checked> Career Fairs</input> <br />
+            {% else %}
+            <input type="checkbox" name="Career Fairs" value="careerFair"> Career Fairs</input> <br />
+            {% endif %}
+
+            {% if infoSession %}
+            <input type="checkbox" name="Info Sessions" value="infoSessions" checked> Info Sessions</input> <br />
+            {% else %}
+            <input type="checkbox" name="Info Sessions" value="infoSessions"> Info Sessions</input> <br />
+            {% endif %}
+
+            {% if other %}
+            <input type="checkbox" name="Other" value="other" checked> Other</input> <br />
+            {% else %}
+            <input type="checkbox" name="Other" value="other"> Other</input> <br />    
+            {% endif %}
+
+            <input value="Update" type="submit" id="filterUpdate" />
         </form>
     </div>
 
@@ -70,6 +91,7 @@
                                     <a href="{{ item.get_absolute_url }}">
                                         <span class="event-times">{{ item.start_time|time }}</span>
                                         {{ item.title }}</a>
+                                        {{ item.event_type_id }}
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -84,6 +106,7 @@
                 </tbody>
             </table>
     </div>
+<br /> <br /> <br />
 {% endblock %}
 
 {% block javascript %}

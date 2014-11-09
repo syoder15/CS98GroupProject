@@ -308,9 +308,12 @@ def companies(request):
 		elif('company_name' in data):
 			c_name = data.get('company_name')
 			company = get_object_or_404(Company, name=c_name)
+			contacts = Contact.objects.filter(user=request.user, employer=c_name)
+			events = request.user.profile.events.all()
 
 			context = {'companies': companies, 'company_name': company.name, 
-			'application_deadline': company.application_deadline, 'show': show_company}
+			'application_deadline': company.application_deadline, 'show': show_company,
+			'contacts': contacts} #'events': events}
 		else:
 			#print "delete"
 			for company in companies:
@@ -323,14 +326,13 @@ def companies(request):
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
-	#companies = request.user.com_set.all
-
-	#company = get_object_or_404(Company, name=company_name,user=request.user)
-	contacts = Contact.objects.filter(user=request.user, employer=company_name)
+	companies = request.user.company_set.all()
+	company = get_object_or_404(Company, name=company_name,user=request.user)
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
-	context = {'company': 'company', 'contacts': contacts, 'events': events, 'company_name': company_name}
-	print "f'in company_page"
+	
+	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name}
+	
 	return render(request, 'jam/company_page.html', context)
 
 #@login_required
@@ -395,8 +397,14 @@ def channel_list(request):
 		'Medicine', 
 		'Women'
 	)
-	channels = Channel.objects.all()
-	context={'channels': channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
+
+	sub_channels = request.user.channel_set.all()
+
+	# get channels in order of creation, starting with the most recent 
+	channels = Channel.objects.order_by('-added').all()
+
+	#channels = Channel.objects.all()
+	context={'channels': channels, 'sub_channels': sub_channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
@@ -532,11 +540,39 @@ def month_view(
 	cal         = calendar.monthcalendar(year, month)
 	dtstart     = datetime(year, month, 1)
 	last_day    = max(cal[-1])
+	interview   = True
+	careerFair  = True
+	infoSession = True
+	other       = True
    # dtend       = datetime(year, month, last_day)
 
 	#### JAM CODE ####
 	my_events = request.user.profile.events.all() #access all of the uers events
-	
+	my_new_events = request.user.profile.events.none()
+	if request.method == "POST":
+		if request.POST.get('Interviews'):
+			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
+		else:
+			interview = False
+
+		if request.POST.get('Career Fairs'):
+			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
+		else:
+			careerFair = False
+
+		if request.POST.get('Info Sessions'):
+			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
+		else:
+			infoSession = False
+
+		if request.POST.get('Other'):
+			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
+		else:
+			other = False
+
+		my_events = my_new_events
+
+
 	
 	for event in my_events: #loop through the users events and create a queryset of all of the occurances
 		if queryset == None:
@@ -559,10 +595,14 @@ def month_view(
 	data = {
 		'today':      datetime.now(),
 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-		'this_month': dtstart,
-		'next_month': dtstart + timedelta(days=+last_day),
-		'last_month': dtstart + timedelta(days=-1),
         'username': request.user.username
+		'this_month' : dtstart,
+		'next_month' : dtstart + timedelta(days=+last_day),
+		'last_month' : dtstart + timedelta(days=-1),
+		'interview'  : interview,
+		'careerFair' : careerFair,
+		'infoSession': infoSession,
+		'other'		 : other,
 	}
 
 	return render(request, template, data)
