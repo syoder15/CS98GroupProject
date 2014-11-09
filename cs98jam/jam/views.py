@@ -27,7 +27,7 @@ from django.db import models
 def index(request):
 	context = {'username': request.user.username}
 		
-	
+	events = request.user.profile.events.all()
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
