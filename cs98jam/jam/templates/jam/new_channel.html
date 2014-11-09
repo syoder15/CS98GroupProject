@@ -12,6 +12,8 @@
 <div class="main">
 	<h1>Create a channel</h1>
 		
+	{{ errors }}	
+		
 	<form class="channelInfo" method="POST">
 		{% csrf_token %}
 		<p>

@@ -26,9 +26,8 @@ from django.db import models
 @login_required
 def index(request):
 	context = {'username': request.user.username}
-
-	events = request.user.profile.events.all()
-
+		
+	
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -74,7 +73,8 @@ def index(request):
 
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
-				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, "adminNotes": channel.adminNotes}
+				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
+				"adminNotes": channel.adminNotes.order_by("-created_at")}
             
 
 	return render(request, 'jam/index_landing_home.html', context)
@@ -135,41 +135,31 @@ def profile(request):
 def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
-		category_names = form_data.getlist('category')
-		'''
-		for c in ChannelCategory.objects.all():
-			if c.name in form_data['category']:
-				category_names.append(c)
-				print "category: " + c.name
-	 	'''
-		#category_name = form_data.get('category')
 
-		channel = Channel(name=form_data.get('name'), 
-			moniker=form_data.get('moniker'), 
-			description=form_data.get('description'), 
-			is_public=(form_data.get('is_public')))
-		print form_data.get('is_public')
-		channel.save()
-
-		# add the categories to the Channel model instance
-
-		#cat = ChannelCategory.objects.get(name = category_name)
-		for c in category_names:
-			cat = ChannelCategory.objects.get(name = c)
-			channel.categories.add(cat)
-
-		#else:
-		#	channel.categories.add(ChannelCategory(name = category_name))
-
-		channel.subscribers.add(request.user)
-		channel.admins.add(request.user)
-		channel.save()
-
-		return HttpResponseRedirect("/jam/")
+		if form_data.get('name') != "" and Channel.objects.filter(name=form_data.get('name')) == None:
+			category_names = form_data.getlist('category')
+			channel = Channel(name=form_data.get('name'), 
+				moniker=form_data.get('moniker'), 
+				description=form_data.get('description'), 
+				is_public=(form_data.get('is_public')))
+			channel.save()
+			for c in category_names:
+				cat = ChannelCategory.objects.get(name = c)
+				channel.categories.add(cat)
+			channel.subscribers.add(request.user)
+			channel.admins.add(request.user)
+			channel.save()
+			return HttpResponseRedirect("/jam/")
+		else:
+			errors = ""
+			if Channel.objects.filter(name=form_data.get('name')) != None:
+				errors = "A channel with that name already exists: please choose another."
+			context = {"errors": errors}
+			
+			return render(request, 'jam/new_channel.html', context)
 
 	else:
 		cats = ChannelCategory.objects.all()
-
 		context = {'categories':cats}
 		return render(request, 'jam/new_channel.html', context)
 
@@ -273,7 +263,7 @@ def view_channel_as_admin(request, channel_name):
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
-		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes}
+		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at")}
 
 
 	return render(request, 'jam/view_channel_as_admin.html', context)
@@ -321,9 +311,12 @@ def companies(request):
 		elif('company_name' in data):
 			c_name = data.get('company_name')
 			company = get_object_or_404(Company, name=c_name)
+			contacts = Contact.objects.filter(user=request.user, employer=c_name)
+			events = request.user.profile.events.all()
 
 			context = {'companies': companies, 'company_name': company.name, 
-			'application_deadline': company.application_deadline, 'show': show_company}
+			'application_deadline': company.application_deadline, 'show': show_company,
+			'contacts': contacts} #'events': events}
 		else:
 			#print "delete"
 			for company in companies:
@@ -336,14 +329,13 @@ def companies(request):
 	return render(request, 'jam/companies.html', context)
 
 def company_page(request, company_name):
-	#companies = request.user.com_set.all
-
-	#company = get_object_or_404(Company, name=company_name,user=request.user)
-	contacts = Contact.objects.filter(user=request.user, employer=company_name)
+	companies = request.user.company_set.all()
+	company = get_object_or_404(Company, name=company_name,user=request.user)
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
-	context = {'company': 'company', 'contacts': contacts, 'events': events, 'company_name': company_name}
-	print "f'in company_page"
+	
+	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name}
+	
 	return render(request, 'jam/company_page.html', context)
 
 #@login_required
@@ -501,7 +493,7 @@ def add_event(
 	return render(
 		request,
 		template,
-		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
+		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
    ####FROM SWINGWIMG ADD COMENTS
@@ -525,10 +517,12 @@ def event_listing(
 	???
 		all values passed in via **extra_context
 	'''
+	extra_context={'username': request.user.username}
 	return render(
 		request,
 		template,
-		dict(extra_context, events=events or request.user.profile.events.all())
+		dict(extra_context, events=events or request.user.profile.events.all()),
+        
 		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
 	)
 
@@ -567,6 +561,10 @@ def month_view(
 	cal         = calendar.monthcalendar(year, month)
 	dtstart     = datetime(year, month, 1)
 	last_day    = max(cal[-1])
+	interview   = True
+	careerFair  = True
+	infoSession = True
+	other       = True
    # dtend       = datetime(year, month, last_day)
 
 	#### JAM CODE ####
@@ -575,12 +573,24 @@ def month_view(
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
+		else:
+			interview = False
+
 		if request.POST.get('Career Fairs'):
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
+		else:
+			careerFair = False
+
 		if request.POST.get('Info Sessions'):
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
+		else:
+			infoSession = False
+
 		if request.POST.get('Other'):
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
+		else:
+			other = False
+
 		my_events = my_new_events
 
 
@@ -606,9 +616,14 @@ def month_view(
 	data = {
 		'today':      datetime.now(),
 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-		'this_month': dtstart,
-		'next_month': dtstart + timedelta(days=+last_day),
-		'last_month': dtstart + timedelta(days=-1),
+		'username': request.user.username,
+		'this_month' : dtstart,
+		'next_month' : dtstart + timedelta(days=+last_day),
+		'last_month' : dtstart + timedelta(days=-1),
+		'interview'  : interview,
+		'careerFair' : careerFair,
+		'infoSession': infoSession,
+		'other'		 : other,
 	}
 
 	return render(request, template, data)
@@ -664,10 +679,100 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 		'year': year,
 		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
 		'next_year': year + 1,
-		'last_year': year - 1
+		'last_year': year - 1,
+        'username': request.user.username
 	})
 
+#-------------------------------------------------------------------------------
 
+def event_view(
+    request, 
+    pk, 
+    template='swingtime/event_detail.html', 
+    event_form_class=forms.EventForm,
+    recurrence_form_class=forms.MultipleOccurrenceForm
+):
+    '''
+    View an ``Event`` instance and optionally update either the event or its
+    occurrences.
+
+    Context parameters:
+
+    event
+        the event keyed by ``pk``
+        
+    event_form
+        a form object for updating the event
+        
+    recurrence_form
+        a form object for adding occurrences
+    '''
+    event = get_object_or_404(Event, pk=pk)
+    event_form = recurrence_form = None
+	
+    if request.user.profile.events.filter(pk=pk).exists():
+        if request.method == 'POST':
+            if '_update' in request.POST:
+                event_form = event_form_class(request.POST, instance=event)
+                if event_form.is_valid():
+                    event_form.save(event)
+                    return http.HttpResponseRedirect(request.path)
+            elif '_add' in request.POST:
+                recurrence_form = recurrence_form_class(request.POST)
+                if recurrence_form.is_valid():
+                    recurrence_form.save(event)
+                    return http.HttpResponseRedirect(request.path)
+            else:
+                return http.HttpResponseBadRequest('Bad Request')
+
+        data = {
+            'event': event,
+            'event_form': event_form or event_form_class(instance=event),
+            'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()})
+        }
+        return render(request, template, data)
+    else:
+        return HttpResponseRedirect("/jam/events")
+
+#-------------------------------------------------------------------------------
+def occurrence_view(
+    request, 
+    event_pk, 
+    pk, 
+    template='swingtime/occurrence_detail.html',
+    form_class=forms.SingleOccurrenceForm
+):
+    '''
+    View a specific occurrence and optionally handle any updates.
+    
+    Context parameters:
+    
+    occurrence
+        the occurrence object keyed by ``pk``
+
+    form
+        a form object for updating the occurrence
+    '''
+    occurrence = get_object_or_404(Occurrence, pk=pk, event__pk=event_pk)
+    print "TEST"
+    if request.user.profile.events.filter(pk=event_pk).exists():
+        print "TEST2"
+        if request.method == 'POST':
+            form = form_class(request.POST, instance=occurrence)
+            if form.is_valid():
+                form.save()
+                return http.HttpResponseRedirect(request.path)
+        else:
+            form = form_class(instance=occurrence)
+        
+        return render(request, template, {'occurrence': occurrence, 'form': form})
+        
+    else:
+        return HttpResponseRedirect('/jam/events/')
+#-------------------------------------------------------------------------------
+	
+	
+	
 #########################################################################################################
 # End to swingtime edits!
 #########################################################################################################
