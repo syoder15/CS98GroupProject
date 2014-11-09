@@ -18,6 +18,8 @@ class UserSignupForm(UserCreationForm):
     		raise forms.ValidationError("This email address is already associated with a JAM account")
     	except User.DoesNotExist:
     		return email
+            
+    # validate that username isn't already registered!
     def clean_username(self):
         username = self.cleaned_data["username"]
         try:
