@@ -10,7 +10,7 @@ from jam.input import read_from_file
 from django.conf import settings
 import os
 
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -135,22 +135,43 @@ def profile(request):
 def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
+		category_names = form_data.getlist('category')
+		'''
+		for c in ChannelCategory.objects.all():
+			if c.name in form_data['category']:
+				category_names.append(c)
+				print "category: " + c.name
+	 	'''
+		#category_name = form_data.get('category')
+
 		channel = Channel(name=form_data.get('name'), 
 			moniker=form_data.get('moniker'), 
 			description=form_data.get('description'), 
-			is_public=(form_data.get('is_public')), 
-			categories="technology")
+			is_public=(form_data.get('is_public')))
 		print form_data.get('is_public')
 		channel.save()
-		channel.categories
-		channel.get_categories_display()
+
+		# add the categories to the Channel model instance
+
+		#cat = ChannelCategory.objects.get(name = category_name)
+		for c in category_names:
+			cat = ChannelCategory.objects.get(name = c)
+			channel.categories.add(cat)
+
+		#else:
+		#	channel.categories.add(ChannelCategory(name = category_name))
+
 		channel.subscribers.add(request.user)
 		channel.admins.add(request.user)
+		channel.save()
 
 		return HttpResponseRedirect("/jam/")
 
 	else:
-		return render(request, 'jam/new_channel.html')
+		cats = ChannelCategory.objects.all()
+
+		context = {'categories':cats}
+		return render(request, 'jam/new_channel.html', context)
 
 def new_contact(request):
 	form_data = request.POST
@@ -197,7 +218,7 @@ def view_channel(request, channel_name):
 		is_admin = True
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
-		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber,
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
 		'is_admin': is_admin}
 
 	if request.method == 'POST':
@@ -381,20 +402,38 @@ def cal(request):
 	return render(request, 'jam/calendar.html', context)
 
 def channel_list(request):
-	CHANNEL_CATEGORIES = ('Technology', 
-		'Business', 
-		'Law', 
-		'Medicine', 
-		'Women'
-	)
+	form_data = request.POST
+	channel_categories = ChannelCategory.objects.all()
 
 	sub_channels = request.user.channel_set.all()
 
 	# get channels in order of creation, starting with the most recent 
 	channels = Channel.objects.order_by('-added').all()
 
+	if(form_data):
+		cat = form_data.get('search')
+		if(cat != ''):
+			print 'category: ' + cat
+			channel_category = ChannelCategory.objects.get(name = cat)
+
+			print "identified cat: " + channel_category.name
+
+			all_channels = Channel.objects.order_by('-added').all()
+			all_sub_channels = request.user.channel_set.all()
+			channels = []
+			sub_channels = []
+
+			# show only channels that contain searched category 
+			for c in all_channels:
+				print "channel: " + c.name
+				if channel_category in c.categories.all():
+					channels.append(c)
+					if c in all_sub_channels:
+						sub_channels.append(c)
+			channel_categories = []
+			channel_categories.append(channel_category)
 	#channels = Channel.objects.all()
-	context={'channels': channels, 'sub_channels': sub_channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
+	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
