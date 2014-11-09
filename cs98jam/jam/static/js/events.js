@@ -5,4 +5,3 @@ links.click( function() {
 	links.removeClass('activeButton');
 	$(this).addClass('activeButton');
 });
-	console.log(links);

@@ -522,6 +522,10 @@ def month_view(
 	cal         = calendar.monthcalendar(year, month)
 	dtstart     = datetime(year, month, 1)
 	last_day    = max(cal[-1])
+	interview   = True
+	careerFair  = True
+	infoSession = True
+	other       = True
    # dtend       = datetime(year, month, last_day)
 
 	#### JAM CODE ####
@@ -530,12 +534,24 @@ def month_view(
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
+		else:
+			interview = False
+
 		if request.POST.get('Career Fairs'):
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
+		else:
+			careerFair = False
+
 		if request.POST.get('Info Sessions'):
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
+		else:
+			infoSession = False
+
 		if request.POST.get('Other'):
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
+		else:
+			other = False
+
 		my_events = my_new_events
 
 
@@ -561,9 +577,13 @@ def month_view(
 	data = {
 		'today':      datetime.now(),
 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-		'this_month': dtstart,
-		'next_month': dtstart + timedelta(days=+last_day),
-		'last_month': dtstart + timedelta(days=-1),
+		'this_month' : dtstart,
+		'next_month' : dtstart + timedelta(days=+last_day),
+		'last_month' : dtstart + timedelta(days=-1),
+		'interview'  : interview,
+		'careerFair' : careerFair,
+		'infoSession': infoSession,
+		'other'		 : other,
 	}
 
 	return render(request, template, data)
