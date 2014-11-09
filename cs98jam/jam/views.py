@@ -387,8 +387,14 @@ def channel_list(request):
 		'Medicine', 
 		'Women'
 	)
-	channels = Channel.objects.all()
-	context={'channels': channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
+
+	sub_channels = request.user.channel_set.all()
+
+	# get channels in order of creation, starting with the most recent 
+	channels = Channel.objects.order_by('-added').all()
+
+	#channels = Channel.objects.all()
+	context={'channels': channels, 'sub_channels': sub_channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
