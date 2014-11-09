@@ -18,6 +18,14 @@ class UserSignupForm(UserCreationForm):
     		raise forms.ValidationError("This email address is already associated with a JAM account")
     	except User.DoesNotExist:
     		return email
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        try:
+            user = User.objects.get(username = username)
+            raise forms.ValidationError("This username is already associated with a JAM account, pick another one!")
+        except User.DoesNotExist:
+            return username        
+
     def save(self, commit=True):
     	user = super(UserCreationForm,self).save(commit = False)
     	user.set_password(self.cleaned_data["password1"])

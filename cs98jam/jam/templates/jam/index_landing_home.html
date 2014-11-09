@@ -1,6 +1,7 @@
 {% extends "../../jam/templates/jam/index_landing.html" %}
 
 {% load staticfiles %}
+{% load notification_custom %}
 
 {% block side_col %}
 	<!-- <div class="navbar navbar-fixed-top"> -->
@@ -15,6 +16,11 @@
 		</a>
 		-->
 			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
+			{% if notificationList|get_notifications:forloop.counter0 != 0 %}
+				({{ notificationList|get_notifications:forloop.counter0 }})
+			{% endif %}	
+			
+
 		</form>
 		{% empty %}
 			<h5> You currently don't have any channels. Add one <a href="{% url 'new_channel' %}">here</a>. </h5>

@@ -5,7 +5,7 @@ var profileDropDown = $('.profileNameButton');
 var contactForm = $('.contact_form');
 var companyForm = $('.company_form');
 var eventForm = $('.event_form');
-var uploadFileButton = $('.upload-file');
+var addFileButton = $("#id_filep");
 
 function importMain(){
     var x = document.createElement('script');
@@ -31,6 +31,14 @@ addEvent.on('click', function(){
 profileDropDown.on('click', function() {
 	$('.dropdown').toggleClass('visible');
 });
+
+
+addFileButton.on('change', function() {
+	console.log("HERE");
+  	$('#company_name_input').removeAttr('required');
+  	$('#company_deadline_input').removeAttr('required');
+});
+
 
 function getCookie(name) {
     var cookieValue = null;

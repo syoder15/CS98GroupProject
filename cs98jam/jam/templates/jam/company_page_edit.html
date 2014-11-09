@@ -1,0 +1,46 @@
+{% extends "../../jam/templates/jam/index.html" %}
+
+
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'jam/css/profile.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid"> 
+	<div class="banner-picture row">
+		<div class="col-sm-8">
+			<div class="profile-bar">
+				<h3 class="profile-name"> 
+					Jane Doe
+				</h3> 
+			</div>
+		</div> 
+	</div> 
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-2">
+			
+		</div>
+		<div class="col-sm-10">
+			<div>Number:  </div>
+			<div>Email:  </div>
+			<div>Address: 
+				<div> 
+					XXXX Hinman 
+					Dartmouth College
+				</div>
+			</div> 
+		</div>
+	</div>	
+</div>
+{% endblock %}
+
+{% block javascript %}
+	{{ block.super }}
+	<script src="{% static 'jam/js/profile.js' %}"></script>
+{% endblock %}
