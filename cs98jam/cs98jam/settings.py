@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'i5%(_v1qwogc+^ed!1+yr)f3s#n_c#v(4v9cwni3b$h@zlsi!t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
@@ -67,7 +67,7 @@ ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, us
 AUTH_PROFILE_MODULE = 'jam.UserProfile'
 
 MIDDLEWARE_CLASSES = (
-    'sslify.middleware.SSLifyMiddleware',
+    #'sslify.middleware.SSLifyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
