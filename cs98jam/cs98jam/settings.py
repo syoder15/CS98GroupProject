@@ -26,7 +26,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-LOCAL_TEST = False
+LOCAL_TEST = True
 DOMAIN = 'http://dartmouthjam.pythonanywhere.com/'
 SSL_DOMAIN = 'https://dartmouthjam.pythonanywhere.com/'
 
