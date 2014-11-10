@@ -24,6 +24,7 @@
                 </ul></td></tr>
 
         <tr class="recurrenceOptions"><th class="addEventTitle">{{ recurrence_form.freq.label_tag }}</th>
+
             <td>
                 {{ recurrence_form.interval.errors }}
                 <div style="float: left">Every {{ recurrence_form.interval }} </div>
@@ -58,7 +59,6 @@
                                     {{ recurrence_form.month_ordinal }}
                                     {{ recurrence_form.month_ordinal_day }}
                                 </li>
-                                <!-- Commented out before -->
                                 <li>
                                     <label for="id_month_option_1">
                                         <input checked="checked" type="radio" 
@@ -73,7 +73,6 @@
                             </ul>
                         </div>
                     </li>
-                    <!--Commented out before -->
                     <li>
                         <label for="id_freq_3">
                             <input type="radio" id="id_freq_3" 

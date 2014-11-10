@@ -22,17 +22,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'i5%(_v1qwogc+^ed!1+yr)f3s#n_c#v(4v9cwni3b$h@zlsi!t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
-LOCAL_TEST = True
+LOCAL_TEST = False
 DOMAIN = 'http://dartmouthjam.pythonanywhere.com/'
+SSL_DOMAIN = 'https://dartmouthjam.pythonanywhere.com/'
 
 if(LOCAL_TEST):
     DOMAIN = 'http://127.0.0.1:8000/'
 
-ALLOWED_HOSTS = ['http://dartmouthjam.pythonanywhere.com/']
+ALLOWED_HOSTS = ['*']
+    #'http://dartmouthjam.pythonanywhere.com/', 'https://dartmouthjam.pythonanywhere.com/']
 
 #SITE_ROOT = 'home/dartmouthjam/CS98GroupProject/cs98jam/jam/static'
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
@@ -65,6 +67,7 @@ ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, us
 AUTH_PROFILE_MODULE = 'jam.UserProfile'
 
 MIDDLEWARE_CLASSES = (
+    'sslify.middleware.SSLifyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
