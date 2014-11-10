@@ -403,12 +403,12 @@ def channel_list(request):
 	channels = Channel.objects.order_by('-added').all()
 
 	if(form_data):
-		cat = form_data.get('search')
+		if 'search_category' in form_data:
+			cat = form_data.get('search_category')
+		else:
+			cat = form_data.get('search')
 		if(cat != ''):
-			print 'category: ' + cat
 			channel_category = ChannelCategory.objects.get(name = cat)
-
-			print "identified cat: " + channel_category.name
 
 			all_channels = Channel.objects.order_by('-added').all()
 			all_sub_channels = request.user.channel_set.all()
@@ -417,7 +417,6 @@ def channel_list(request):
 
 			# show only channels that contain searched category 
 			for c in all_channels:
-				print "channel: " + c.name
 				if channel_category in c.categories.all():
 					channels.append(c)
 					if c in all_sub_channels:
