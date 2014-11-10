@@ -12,7 +12,9 @@
 
 	{% for category in categories %} 
 		<p>
-			{{ category }}
+		<form class="search_filters" method = 'POST'>
+			{% csrf_token %}
+			<input type ="submit" name="search_category" value= "{{ category.name }}" style="border: 0; background:transparent" >
 		</p>
 
 	{% endfor %}
