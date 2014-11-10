@@ -99,3 +99,6 @@ button:hover {
 	background-color:#1E90FF;
 }
 
+.recurrenceOptions{
+	display: none;
+}

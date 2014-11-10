@@ -444,7 +444,6 @@ def add_event(
 				channel = get_object_or_404(Channel, name=channel_name)
 				channel.events.add(event)
 			#### JAM CODE ####	
-				
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
 	else:
@@ -459,13 +458,15 @@ def add_event(
 		event_form = event_form_class()
 		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
 
+		print recurrence_form
+
 	return render(
 		request,
 		template,
 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
 	)
 
-   ####FROM SWINGWIMG ADD COMENTS
+   ####FROM SWINGWIME ADD COMENTS
 
 def event_listing(
 	request,
