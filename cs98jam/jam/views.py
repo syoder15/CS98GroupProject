@@ -136,7 +136,7 @@ def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
 
-		if form_data.get('name') != "" and Channel.objects.filter(name=form_data.get('name')) == None:
+		if form_data.get('name') != "" and not Channel.objects.filter(name=form_data.get('name')).exists():
 			category_names = form_data.getlist('category')
 			channel = Channel(name=form_data.get('name'), 
 				moniker=form_data.get('moniker'), 
@@ -152,7 +152,7 @@ def new_channel(request):
 			return HttpResponseRedirect("/jam/")
 		else:
 			errors = ""
-			if Channel.objects.filter(name=form_data.get('name')) != None:
+			if Channel.objects.filter(name=form_data.get('name')).exists():
 				errors = "A channel with that name already exists: please choose another."
 			context = {"errors": errors}
 			
