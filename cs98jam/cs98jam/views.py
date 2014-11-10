@@ -12,6 +12,7 @@ from jam.models import UserProfile
 from django.utils import timezone
 from django.conf import settings
 
+
 def main_page(request):
     return render_to_response('index.html')
 
@@ -65,6 +66,7 @@ def send_activation_email(user,new_profile):
 
     email_body = "Howdy!\n\nYou're receiving this email since you recently signed up for a JAM account! If you're receiving this email in error, please ignore it. Otherwise, click here: " + activation_link + " to activate your account within the next 7 days!\n"
     send_mail(email_subject, email_body, 'no-reply@gmail.com', [user.email], fail_silently =False)
+
 
 # confirm that activation link's parameter matches user profile's activation key
 # if confirmed, activate user's account
