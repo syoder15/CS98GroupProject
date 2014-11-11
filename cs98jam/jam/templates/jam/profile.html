@@ -19,7 +19,7 @@
 		<div class="col-sm-8">
 			<div class="profile-bar">
 				<h3 class="profile-name"> 
-					Jane Doe {{ username }}
+					{{ username }}
 				</h3> 
 			</div>
 		</div> 
@@ -47,11 +47,14 @@
 
 <div class="centered">
 	<div>
-		{% csrf_token %}
-		<h2>Contact Information</h2>
+		<!--{% csrf_token %}-->
+		<br>
+		<h2 style="text-align:left">Contact Information</h2>
+		<br>
 
 		<form class="contactInfo" method="POST">
 			{% csrf_token %}
+
 			<table id="profileTable">
 				<tr>
 					<td class="profileField">
@@ -132,7 +135,7 @@
 			</table>
 
 			<div class="personalInfo">
-			<h2>Personal Information</h2>
+			<h2 style="text-align:left">Personal Information</h2>
 				<table id="profileTable">
 					<tr>
 						<td class="profileField">
@@ -199,7 +202,14 @@
 
 {% endblock %}
 
+
 {% block javascript %}
-	{{ block.super }}
-	<script src="{% static 'jam/js/profile.js' %}"></script>
+	<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'jam/js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+
+	<!--{{ block.super }}
+	<script src="{% static 'jam/js/profile.js' %}"></script>-->
 {% endblock %}

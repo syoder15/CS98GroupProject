@@ -87,7 +87,8 @@ def profile(request):
 
 	username = request.user.username
 	#pdb.set_trace()
-	user = User.objects.get(username=username.lower())
+	#user = User.objects.get(username=username.lower())
+	user = User.objects.get(username = username)
 	if user:
 		try:
 			profile = Profile.objects.get(user=username)
@@ -126,9 +127,9 @@ def profile(request):
 
 		profile.save()
 
-		return render(request, 'jam/index.html', {})
+		#return render(request, 'jam/index.html', {})
 
-	context = {'profile': profile}
+	context = {'profile': profile, 'username': request.user.username}
 	return render(request, 'jam/profile.html', context)
 
 @login_required
