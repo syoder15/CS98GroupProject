@@ -15,6 +15,7 @@ function getCookie(name) {
 }
 
 $('.company-export').on('click', function(){
+	alert("Check your Downloads folder for a 'companies.txt.' file");
 	var csrftoken = getCookie('csrftoken');
 	console.log("GOT HERE");
 	$.ajaxSetup({
