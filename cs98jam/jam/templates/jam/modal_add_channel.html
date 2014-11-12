@@ -1,0 +1,57 @@
+{% load staticfiles %}
+<!-- Channel Modal -->
+<div class="modal fade" id="channelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">New Channel</h4>
+      </div>
+      <div class="modal-body">
+      	{{ errors }}
+        <form class="channel_form form-horizontal" enctype="multipart/form-data" method="POST" >
+			{% csrf_token %}
+			<div class="form-group"> 
+				<label for="name_input" class="col-sm-4 control-label">Channel Name: </label>
+				<div class="col-sm-8"> 
+					<input id="name_input" class="form-control" name="name" required placeholder="Women in Computer Science"/>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<label for="moniker_input" class="col-sm-4 control-label">Nickname: </label>
+				<div class="col-sm-8">
+					<input id="moniker_input" class="form-control" name="moniker" placeholder="WiCS" required/>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<label for="description_input" class="col-sm-4 control-label">Description: </label>
+				<div class="col-sm-8">
+					<input id="description_input" class="form-control" name="description" placeholder="The best" required/>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<label for="is_public_input" class="col-sm-4 control-label">Categories (hold command to select multiple): </label>
+				<div class="col-sm-8">
+					<select multiple="true" name="category">
+					{% for c in categories %}
+						<option value='{{ c.name }}'>{{ c.name }} </option>
+					{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<label for="is_public_input" class="col-sm-4 control-label">Public? </label>
+				<div class="col-sm-8">
+					<input id="is_public_input" type="radio" name="is_public" value="True" checked/> True  
+					<input id="is_public_input" type="radio" name="is_public" value=""/> False
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<input class="btn btn-primary" type="submit" value="Save"/>
+      		</div>
+		</form>
+      </div>
+    </div>
+  </div>
+</div>
