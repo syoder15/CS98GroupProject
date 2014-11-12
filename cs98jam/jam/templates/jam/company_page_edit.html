@@ -9,32 +9,44 @@
 
 
 {% block content %}
-<div class="container-fluid"> 
-	<div class="banner-picture row">
-		<div class="col-sm-8">
-			<div class="profile-bar">
-				<h3 class="profile-name"> 
-					Jane Doe
-				</h3> 
-			</div>
-		</div> 
-	</div> 
-</div>
-
 <div class="container">
 	<div class="row">
-		<div class="col-sm-2">
-			
+		<div class="col-sm-5">
+			<h2> Company: {{ company_name }}</h2> 
+			<h4> Application Deadline: {{ application_deadline }}</h4>
 		</div>
-		<div class="col-sm-10">
-			<div>Number:  </div>
-			<div>Email:  </div>
-			<div>Address: 
-				<div> 
-					XXXX Hinman 
-					Dartmouth College
-				</div>
-			</div> 
+		<div class="col-sm-7">
+		{% csrf_token %}
+		<form class="contactInfo" method="POST">
+			<table id="profileTable">
+				<tr>
+					<td class="profileField">
+						<label for="name_input">Company: </label>
+						{% if profile %}
+							<input id="company_name_input" name="company_name" value='{{ company_name }}'/>
+						{% else %}
+							<input id="company_name_input" name="company_name" value='{{ company_name }}' required/>
+						{% endif %}
+					</td>
+					<td class="profileField">
+						<label for="name_input">Application Deadline: </label>
+						{% if profile %}
+							<input id="last_name_input" name="last_name" value='{{profile.last_name}}'/>
+						{% else %}
+							<input id="last_name_input" name="last_name" placeholder="Smith" required/>
+						{% endif %}
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+
+				<tr>
+						<td class="profileField">
+							<input class="button" type="submit" value="Save"/>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
 		</div>
 	</div>	
 </div>

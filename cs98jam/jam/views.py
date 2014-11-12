@@ -299,7 +299,7 @@ def companies(request):
 			show_company = False
 		elif('company_name' in data):
 			c_name = data.get('company_name')
-			company = get_object_or_404(Company, name=c_name)
+			company = request.user.company_set.filter(name=company_name).first()
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
 
@@ -319,7 +319,7 @@ def companies(request):
 
 def company_page(request, company_name):
 	companies = request.user.company_set.all()
-	company = get_object_or_404(Company, name=company_name,user=request.user)
+	company = request.user.company_set.filter(name=company_name).first()
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
 	
@@ -327,33 +327,31 @@ def company_page(request, company_name):
 	
 	return render(request, 'jam/company_page.html', context)
 
-#@login_required
+@login_required
 def edit_company(request, company_name):
-	print "got_here"
 	form_data = request.POST
 
-	# username = request.user.username
+	username = request.user.username
+	user = User.objects.get(username=username.lower())
+	company = request.user.company_set.filter(name=company_name).first()
+	if form_data:
+		if user and company: 
+			company.name=form_data.get('company_name')
+	 		company.application_deadline=form_data.get('application_deadline')
+	 		company.notes=form_data.get('notes')
 
-	# user = User.objects.get(username=username.lower())
-	# company = get_object_or_404(Company, name=company_name,user=request.user.username)
-	# if form_data:
-	# 	if user and company: 
-	# 		company.name=form_data.get('company_name')
-	# 		company.application_deadline=form_data.get('application_deadline')
-	# 		company.notes=form_data.get('notes')
+	 	else:
+	 		company = Company(user=request.user.username,
+	 						  company_name=form_data.get('company_name'),
+	 						  application_deadline=form_data.get('application_deadline'),
+	 						  notes=form_data.get('notes'))
 
-	# 	else:
-	# 		company = Company(user=request.user.username,
-	# 						  company_name=form_data.get('company_name'),
-	# 						  application_deadline=form_data.get('application_deadline'),
-	# 						  notes=form_data.get('notes'))
+	 	company.save()
 
-	# 	company.save()
+	 	return render(request, 'jam/index.html', {})
 
-	# 	return render(request, 'jam/index.html', {})
-
-	#context = {'company': 'company'}
-	return render(request, 'jam/company_page_edit.html')
+	context = {'company_name': company_name, 'application_deadline': company.application_deadline}
+	return render(request, 'jam/company_page_edit.html', context)
 
 def contacts(request):
 	contacts = request.user.contact_set.all()
