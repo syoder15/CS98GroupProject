@@ -37,6 +37,12 @@ class Contact(models.Model):
 #     name = models.CharField(max_length=50)
 #     date = models.DateField()
 
+
+class ChannelCategory(models.Model):
+	def __unicode__(self):
+		return self.name
+	name = models.CharField(max_length = 50)
+
 class Channel(models.Model): 
 	def __unicode__(self):
 		return self.name
@@ -50,7 +56,8 @@ class Channel(models.Model):
 	events = models.ManyToManyField(SwingtimeEvent, blank=True)
 	added = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
-	
+	categories = models.ManyToManyField(ChannelCategory, related_name="channelCategories", blank=True, null=True)
+
 class ChannelAdminNote(models.Model):
 	def __unicode__(self):
 		return self.text
@@ -58,7 +65,8 @@ class ChannelAdminNote(models.Model):
 	home_channel = models.ForeignKey(Channel, related_name="adminNotes")
 	text = models.CharField(max_length = 1000)
 	author =  models.ForeignKey(User)
-	
+
+
 class Profile(models.Model):
 	def __unicode__(self):
 		return self.first_name

@@ -28,11 +28,13 @@ TEMPLATE_DEBUG = True
 
 LOCAL_TEST = True
 DOMAIN = 'http://dartmouthjam.pythonanywhere.com/'
+SSL_DOMAIN = 'https://dartmouthjam.pythonanywhere.com/'
 
 if(LOCAL_TEST):
     DOMAIN = 'http://127.0.0.1:8000/'
 
-ALLOWED_HOSTS = ['http://dartmouthjam.pythonanywhere.com/']
+ALLOWED_HOSTS = ['*']
+    #'http://dartmouthjam.pythonanywhere.com/', 'https://dartmouthjam.pythonanywhere.com/']
 
 #SITE_ROOT = 'home/dartmouthjam/CS98GroupProject/cs98jam/jam/static'
 SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
@@ -65,6 +67,7 @@ ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, us
 AUTH_PROFILE_MODULE = 'jam.UserProfile'
 
 MIDDLEWARE_CLASSES = (
+    #'sslify.middleware.SSLifyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

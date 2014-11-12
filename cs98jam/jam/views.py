@@ -10,7 +10,7 @@ from jam.input import read_from_file
 from django.conf import settings
 import os
 
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -26,9 +26,8 @@ from django.db import models
 @login_required
 def index(request):
 	context = {'username': request.user.username}
-
+		
 	events = request.user.profile.events.all()
-
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -74,7 +73,8 @@ def index(request):
 
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
-				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, "adminNotes": channel.adminNotes}
+				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
+				"adminNotes": channel.adminNotes.order_by("-created_at")}
             
 
 	return render(request, 'jam/index_landing_home.html', context)
@@ -87,7 +87,8 @@ def profile(request):
 
 	username = request.user.username
 	#pdb.set_trace()
-	user = User.objects.get(username=username.lower())
+	#user = User.objects.get(username=username.lower())
+	user = User.objects.get(username = username)
 	if user:
 		try:
 			profile = Profile.objects.get(user=username)
@@ -126,31 +127,42 @@ def profile(request):
 
 		profile.save()
 
-		return render(request, 'jam/index.html', {})
+		#return render(request, 'jam/index.html', {})
 
-	context = {'profile': profile}
+	context = {'profile': profile, 'username': request.user.username}
 	return render(request, 'jam/profile.html', context)
 
 @login_required
 def new_channel(request):
 	if request.method == 'POST':
 		form_data = request.POST
-		channel = Channel(name=form_data.get('name'), 
-			moniker=form_data.get('moniker'), 
-			description=form_data.get('description'), 
-			is_public=(form_data.get('is_public')), 
-			categories="technology")
-		print form_data.get('is_public')
-		channel.save()
-		channel.categories
-		channel.get_categories_display()
-		channel.subscribers.add(request.user)
-		channel.admins.add(request.user)
 
-		return HttpResponseRedirect("/jam/")
+		if form_data.get('name') != "" and not Channel.objects.filter(name=form_data.get('name')).exists():
+			category_names = form_data.getlist('category')
+			channel = Channel(name=form_data.get('name'), 
+				moniker=form_data.get('moniker'), 
+				description=form_data.get('description'), 
+				is_public=(form_data.get('is_public')))
+			channel.save()
+			for c in category_names:
+				cat = ChannelCategory.objects.get(name = c)
+				channel.categories.add(cat)
+			channel.subscribers.add(request.user)
+			channel.admins.add(request.user)
+			channel.save()
+			return HttpResponseRedirect("/jam/")
+		else:
+			errors = ""
+			if Channel.objects.filter(name=form_data.get('name')).exists():
+				errors = "A channel with that name already exists: please choose another."
+			context = {"errors": errors}
+			
+			return render(request, 'jam/new_channel.html', context)
 
 	else:
-		return render(request, 'jam/new_channel.html')
+		cats = ChannelCategory.objects.all()
+		context = {'categories':cats}
+		return render(request, 'jam/new_channel.html', context)
 
 def new_contact(request):
 	form_data = request.POST
@@ -197,7 +209,7 @@ def view_channel(request, channel_name):
 		is_admin = True
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
-		'channel_description': channel.description, 'channel_status': channel.is_public, 'is_subscriber': is_subscriber,
+		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
 		'is_admin': is_admin}
 
 	if request.method == 'POST':
@@ -252,7 +264,7 @@ def view_channel_as_admin(request, channel_name):
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
-		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes}
+		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at")}
 
 
 	return render(request, 'jam/view_channel_as_admin.html', context)
@@ -381,20 +393,37 @@ def cal(request):
 	return render(request, 'jam/calendar.html', context)
 
 def channel_list(request):
-	CHANNEL_CATEGORIES = ('Technology', 
-		'Business', 
-		'Law', 
-		'Medicine', 
-		'Women'
-	)
+	form_data = request.POST
+	channel_categories = ChannelCategory.objects.all()
 
 	sub_channels = request.user.channel_set.all()
 
 	# get channels in order of creation, starting with the most recent 
 	channels = Channel.objects.order_by('-added').all()
 
+	if(form_data):
+		if 'search_category' in form_data:
+			cat = form_data.get('search_category')
+		else:
+			cat = form_data.get('search')
+		if(cat != ''):
+			channel_category = ChannelCategory.objects.get(name = cat)
+
+			all_channels = Channel.objects.order_by('-added').all()
+			all_sub_channels = request.user.channel_set.all()
+			channels = []
+			sub_channels = []
+
+			# show only channels that contain searched category 
+			for c in all_channels:
+				if channel_category in c.categories.all():
+					channels.append(c)
+					if c in all_sub_channels:
+						sub_channels.append(c)
+			channel_categories = []
+			channel_categories.append(channel_category)
 	#channels = Channel.objects.all()
-	context={'channels': channels, 'sub_channels': sub_channels, 'categories': CHANNEL_CATEGORIES, 'username': request.user.username}
+	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username}
 	return render(request,'jam/channel_list.html',context)
 
 def test(request):
@@ -444,7 +473,6 @@ def add_event(
 				channel = get_object_or_404(Channel, name=channel_name)
 				channel.events.add(event)
 			#### JAM CODE ####	
-				
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
 	else:
@@ -459,13 +487,15 @@ def add_event(
 		event_form = event_form_class()
 		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
 
+		print recurrence_form
+
 	return render(
 		request,
 		template,
-		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form}
+		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
-   ####FROM SWINGWIMG ADD COMENTS
+   ####FROM SWINGWIME ADD COMENTS
 
 def event_listing(
 	request,
@@ -486,10 +516,12 @@ def event_listing(
 	???
 		all values passed in via **extra_context
 	'''
+	extra_context={'username': request.user.username}
 	return render(
 		request,
 		template,
-		dict(extra_context, events=events or request.user.profile.events.all())
+		dict(extra_context, events=events or request.user.profile.events.all()),
+        
 		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
 	)
 
@@ -583,6 +615,7 @@ def month_view(
 	data = {
 		'today':      datetime.now(),
 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
+		'username': request.user.username,
 		'this_month' : dtstart,
 		'next_month' : dtstart + timedelta(days=+last_day),
 		'last_month' : dtstart + timedelta(days=-1),
@@ -645,10 +678,100 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 		'year': year,
 		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
 		'next_year': year + 1,
-		'last_year': year - 1
+		'last_year': year - 1,
+        'username': request.user.username
 	})
 
+#-------------------------------------------------------------------------------
 
+def event_view(
+    request, 
+    pk, 
+    template='swingtime/event_detail.html', 
+    event_form_class=forms.EventForm,
+    recurrence_form_class=forms.MultipleOccurrenceForm
+):
+    '''
+    View an ``Event`` instance and optionally update either the event or its
+    occurrences.
+
+    Context parameters:
+
+    event
+        the event keyed by ``pk``
+        
+    event_form
+        a form object for updating the event
+        
+    recurrence_form
+        a form object for adding occurrences
+    '''
+    event = get_object_or_404(Event, pk=pk)
+    event_form = recurrence_form = None
+	
+    if request.user.profile.events.filter(pk=pk).exists():
+        if request.method == 'POST':
+            if '_update' in request.POST:
+                event_form = event_form_class(request.POST, instance=event)
+                if event_form.is_valid():
+                    event_form.save(event)
+                    return http.HttpResponseRedirect(request.path)
+            elif '_add' in request.POST:
+                recurrence_form = recurrence_form_class(request.POST)
+                if recurrence_form.is_valid():
+                    recurrence_form.save(event)
+                    return http.HttpResponseRedirect(request.path)
+            else:
+                return http.HttpResponseBadRequest('Bad Request')
+
+        data = {
+            'event': event,
+            'event_form': event_form or event_form_class(instance=event),
+            'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()})
+        }
+        return render(request, template, data)
+    else:
+        return HttpResponseRedirect("/jam/events")
+
+#-------------------------------------------------------------------------------
+def occurrence_view(
+    request, 
+    event_pk, 
+    pk, 
+    template='swingtime/occurrence_detail.html',
+    form_class=forms.SingleOccurrenceForm
+):
+    '''
+    View a specific occurrence and optionally handle any updates.
+    
+    Context parameters:
+    
+    occurrence
+        the occurrence object keyed by ``pk``
+
+    form
+        a form object for updating the occurrence
+    '''
+    occurrence = get_object_or_404(Occurrence, pk=pk, event__pk=event_pk)
+    print "TEST"
+    if request.user.profile.events.filter(pk=event_pk).exists():
+        print "TEST2"
+        if request.method == 'POST':
+            form = form_class(request.POST, instance=occurrence)
+            if form.is_valid():
+                form.save()
+                return http.HttpResponseRedirect(request.path)
+        else:
+            form = form_class(instance=occurrence)
+        
+        return render(request, template, {'occurrence': occurrence, 'form': form})
+        
+    else:
+        return HttpResponseRedirect('/jam/events/')
+#-------------------------------------------------------------------------------
+	
+	
+	
 #########################################################################################################
 # End to swingtime edits!
 #########################################################################################################
