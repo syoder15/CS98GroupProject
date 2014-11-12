@@ -1,4 +1,14 @@
-     <h3>Event Occurrences</h3>
+{% extends "../../jam/templates/jam/index.html" %}
+
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
+{% endblock %}
+
+{% block content %}
+	<h3>Event Occurrences</h3>
      <h4>
          <a href="{{ occurrence.event.get_absolute_url }}">{{ occurrence.title }}</a>
          &ndash;
@@ -45,3 +55,10 @@
          </tbody>
      </table>
      </form>
+{% endblock %}
+	 
+	 
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'js/events.js' %}"></script>
+{% endblock %}
