@@ -11,41 +11,50 @@
 {% block content %}
 <div class="container">
 	<div class="row">
-		<div class="col-sm-5">
+		<!--<div class="col-sm-5">-->
 			<h2> Company: {{ company_name }}</h2> 
-			<h4> Application Deadline: {{ application_deadline }}</h4>
-		</div>
-		<div class="col-sm-7">
+		<!--</div>
+		<div class="col-sm-7">-->
 		{% csrf_token %}
 		<form class="contactInfo" method="POST">
-			<table id="profileTable">
+			<table>
 				<tr>
-					<td class="profileField">
-						<label for="name_input">Company: </label>
-						{% if profile %}
+					<td >
+						<label for="name_input">Name: </label>
+						{% if company_name %}
 							<input id="company_name_input" name="company_name" value='{{ company_name }}'/>
 						{% else %}
-							<input id="company_name_input" name="company_name" value='{{ company_name }}' required/>
+							<input id="company_name_input" name="company_name" value='Company' required/>
 						{% endif %}
 					</td>
-					<td class="profileField">
+					<td>&nbsp;&nbsp;&nbsp;</td>
+					<td>
 						<label for="name_input">Application Deadline: </label>
-						{% if profile %}
-							<input id="last_name_input" name="last_name" value='{{profile.last_name}}'/>
+						{% if application_deadline %}
+							<input id="app_deadline_input" name="app_deadline" value='{{ application_deadline }}'/>
 						{% else %}
-							<input id="last_name_input" name="last_name" placeholder="Smith" required/>
+							<input id="app_deadline_input" name="app_deadline" placeholder="12/31/2015" required/>
 						{% endif %}
 					</td>
 				</tr>
 				<tr><td>&nbsp;</td></tr>
-
 				<tr>
-						<td class="profileField">
-							<input class="button" type="submit" value="Save"/>
-						</td>
-					</tr>
-				</table>
-			</div>
+					<td>
+						<label for="name_input">Notes: </label>
+						{% if notes %}
+							<textarea id="notes_input" rows="2" columns="40" name="notes" value='{{ notes }}'></textarea>
+						{% else %}
+							<textarea id="notes_input" rows="2" columns="40" name="notes" placeholder="Include GPA in resume."></textarea>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="profileField">
+						<input class="button" type="submit" value="Save"/>
+					</td>
+				</tr>
+			</table>
+			<!--</div>-->
 		</form>
 		</div>
 	</div>	

@@ -294,6 +294,7 @@ def companies(request):
 	companies = request.user.company_set.all()
 	data = request.POST
 	show_company = True
+	user = User.objects.get(username = request.user.username)
 
 	context = {'companies': companies, 'username': request.user.username}
 
@@ -309,15 +310,31 @@ def companies(request):
 
 		elif(go_home == ("Back")):
 			show_company = False
+
 		elif('company_name' in data):
 			c_name = data.get('company_name')
-			company = request.user.company_set.filter(name=company_name).first()
+			company = request.user.company_set.filter(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
+			
+			if user and company:
+
+				company.name = c_name
+				company.application_deadline = data.get('app_deadline')
+				company.notes = data.get('notes')
+			else:
+
+				company = Company(
+					name=c_name,
+					application_deadline=data.get('app_deadline'),
+					notes=data.get('notes'),
+					user_id=request.user.user_id,
+				)
+			company.save()
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts} #'events': events}
+			'contacts': contacts, 'notes': company.notes}
 		else:
 			#print "delete"
 			for company in companies:
@@ -351,14 +368,15 @@ def edit_company(request, company_name):
 			company.name=form_data.get('company_name')
 	 		company.application_deadline=form_data.get('application_deadline')
 	 		company.notes=form_data.get('notes')
+	 		company.update()
 
 	 	else:
 	 		company = Company(user=request.user.username,
 	 						  company_name=form_data.get('company_name'),
 	 						  application_deadline=form_data.get('application_deadline'),
-	 						  notes=form_data.get('notes'))
-
-	 	company.save()
+	 						  notes=form_data.get('notes')
+	 						  )
+			company.save()
 
 	 	return render(request, 'jam/index.html', {})
 
@@ -722,7 +740,12 @@ def event_view(
                     recurrence_form.save(event)
                     return http.HttpResponseRedirect(request.path)
             else:
-                return http.HttpResponseBadRequest('Bad Request')
+				events = request.user.profile.events.all()
+				for event in events:
+					if event.title in request.POST:
+						event.delete()
+						break
+				return HttpResponseRedirect("{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}")
 
         data = {
             'event': event,
