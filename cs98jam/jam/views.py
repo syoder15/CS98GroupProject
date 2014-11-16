@@ -337,7 +337,7 @@ def companies(request, company_name):
 	else:
 		if company_name != 'all':
 			company = request.user.company_set.get(name=company_name)
-			contacts = Contact.objects.filter(user=request.user, employer=c_name)
+			contacts = Contact.objects.filter(user=request.user, employer=company_name)
 			events = request.user.profile.events.all()
 
 			context = {'companies': companies, 'company_name': company.name, 
