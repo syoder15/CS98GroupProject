@@ -6,7 +6,7 @@ from swingtime import views as swingtime
 urlpatterns = patterns('', 
     url(r'^$', views.index, name='index'),
     url(r'^profile', views.profile, name='profile'),
-    url(r'^companies/', views.companies, name='companies'),
+    url(r'^companies/(?P<company_name>.+)/$', views.companies, name='companies'),
     url(r'^contacts/', views.contacts, name='contacts'),
     url(r'^cal/', views.cal, name='cal'),
     url(r'^new_contact/', views.new_contact, name='new_contact'),

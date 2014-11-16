@@ -15,8 +15,8 @@
 			<h2> Company: {{ company_name }}</h2> 
 		<!--</div>
 		<div class="col-sm-7">-->
-		{% csrf_token %}
-		<form class="contactInfo" method="POST">
+		<form class="contactInfo" method="POST" action="{% url 'companies' company_name %}">
+			{% csrf_token %}
 			<table>
 				<tr>
 					<td >
@@ -42,7 +42,7 @@
 					<td>
 						<label for="name_input">Notes: </label>
 						{% if notes %}
-							<textarea id="notes_input" rows="2" columns="40" name="notes" value='{{ notes }}'></textarea>
+							<textarea id="notes_input" rows="2" columns="40" name="notes">{{ notes }}</textarea>
 						{% else %}
 							<textarea id="notes_input" rows="2" columns="40" name="notes" placeholder="Include GPA in resume."></textarea>
 						{% endif %}
@@ -62,6 +62,10 @@
 {% endblock %}
 
 {% block javascript %}
-	{{ block.super }}
 	<script src="{% static 'jam/js/profile.js' %}"></script>
+	<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'jam/js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
 {% endblock %}

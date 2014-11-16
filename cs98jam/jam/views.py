@@ -54,25 +54,25 @@ def index(request):
 		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 
 			'show': show_feed ,'events': future_events, 'notificationList': notificationList}
 
-    #post request can mean 2 things.
-    #either a request to see a channel's newsfeed
-    #or a request to main homepage view
+	#post request can mean 2 things.
+	#either a request to see a channel's newsfeed
+	#or a request to main homepage view
 	elif request.method == "POST":
 		show_feed = True
 		form_data = request.POST
 
-    	# if user clicked go home, show main homepage
+		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
 		if( go_home == ("Go home, Roger!")):
 			show_feed = False
 			context = {'username': request.user.username, 
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
-    	# otherwise, showing clicked channel feed
+		# otherwise, showing clicked channel feed
 		else:
 			print 'here'
 			c_name = form_data.get('channel_name')
 			channel = get_object_or_404(Channel, name=c_name)
-    	
+		
 			is_admin = False
 			if request.user.controlledChannels.filter(name=channel.name).exists():
 				is_admin = True
@@ -81,7 +81,7 @@ def index(request):
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
 				"adminNotes": channel.adminNotes.order_by("-created_at")}
-            
+			
 
 	return render(request, 'jam/index_landing_home.html', context)
 
@@ -296,7 +296,7 @@ def new_event(request):
 	event.save()
 	return HttpResponse()
 
-def companies(request):
+def companies(request, company_name):
 	companies = request.user.company_set.all()
 	data = request.POST
 	show_company = True
@@ -319,24 +319,9 @@ def companies(request):
 
 		elif('company_name' in data):
 			c_name = data.get('company_name')
-			company = request.user.company_set.filter(name=c_name)
+			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
-			
-			if user and company:
-
-				company.name = c_name
-				company.application_deadline = data.get('app_deadline')
-				company.notes = data.get('notes')
-			else:
-
-				company = Company(
-					name=c_name,
-					application_deadline=data.get('app_deadline'),
-					notes=data.get('notes'),
-					user_id=request.user.user_id,
-				)
-			company.save()
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
@@ -349,6 +334,15 @@ def companies(request):
 					break
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username}
+	else:
+		if company_name != 'all':
+			company = request.user.company_set.get(name=company_name)
+			contacts = Contact.objects.filter(user=request.user, employer=c_name)
+			events = request.user.profile.events.all()
+
+			context = {'companies': companies, 'company_name': company.name, 
+			'application_deadline': company.application_deadline, 'show': show_company,
+			'contacts': contacts, 'notes': company.notes}
 
 	return render(request, 'jam/companies.html', context)
 
@@ -357,8 +351,8 @@ def company_page(request, company_name):
 	company = request.user.company_set.filter(name=company_name).first()
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
-	
-	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name}
+	application_deadline = company.application_deadline
+	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline}
 	
 	return render(request, 'jam/company_page.html', context)
 
@@ -366,27 +360,34 @@ def company_page(request, company_name):
 def edit_company(request, company_name):
 	form_data = request.POST
 
-	username = request.user.username
-	user = User.objects.get(username=username.lower())
+	user = User.objects.get(username=request.user.username)
 	company = request.user.company_set.filter(name=company_name).first()
+
+
 	if form_data:
 		if user and company: 
 			company.name=form_data.get('company_name')
-	 		company.application_deadline=form_data.get('application_deadline')
-	 		company.notes=form_data.get('notes')
-	 		company.update()
+			company.application_deadline=form_data.get('app_deadline')
+			company.notes=form_data.get('notes')
+			print company.name + company.application_deadline + company.notes
+			company.save()
+			companies(request)
 
-	 	else:
-	 		company = Company(user=request.user.username,
-	 						  company_name=form_data.get('company_name'),
-	 						  application_deadline=form_data.get('application_deadline'),
-	 						  notes=form_data.get('notes')
-	 						  )
+
+		else:
+			company = Company(user=request.user.username,
+							  company_name=form_data.get('company_name'),
+							  application_deadline=form_data.get('app_deadline'),
+							  notes=form_data.get('notes')
+							  )
 			company.save()
 
-	 	return render(request, 'jam/index.html', {})
+	app_deadline = company.application_deadline
+	app_deadline = str(app_deadline)
+	datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	context = {'company_name': company_name, 'application_deadline': company.application_deadline}
+	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes}
+
 	return render(request, 'jam/company_page_edit.html', context)
 
 def contacts(request):
@@ -549,7 +550,7 @@ def event_listing(
 		request,
 		template,
 		dict(extra_context, events=events or request.user.profile.events.all()),
-        
+		
 		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
 	)
 
@@ -707,49 +708,49 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
 		'next_year': year + 1,
 		'last_year': year - 1,
-        'username': request.user.username
+		'username': request.user.username
 	})
 
 #-------------------------------------------------------------------------------
 
 def event_view(
-    request, 
-    pk, 
-    template='swingtime/event_detail.html', 
-    event_form_class=forms.EventForm,
-    recurrence_form_class=forms.MultipleOccurrenceForm
+	request, 
+	pk, 
+	template='swingtime/event_detail.html', 
+	event_form_class=forms.EventForm,
+	recurrence_form_class=forms.MultipleOccurrenceForm
 ):
-    '''
-    View an ``Event`` instance and optionally update either the event or its
-    occurrences.
+	'''
+	View an ``Event`` instance and optionally update either the event or its
+	occurrences.
 
-    Context parameters:
+	Context parameters:
 
-    event
-        the event keyed by ``pk``
-        
-    event_form
-        a form object for updating the event
-        
-    recurrence_form
-        a form object for adding occurrences
-    '''
-    event = get_object_or_404(Event, pk=pk)
-    event_form = recurrence_form = None
+	event
+		the event keyed by ``pk``
+		
+	event_form
+		a form object for updating the event
+		
+	recurrence_form
+		a form object for adding occurrences
+	'''
+	event = get_object_or_404(Event, pk=pk)
+	event_form = recurrence_form = None
 	
-    if request.user.profile.events.filter(pk=pk).exists():
-        if request.method == 'POST':
-            if '_update' in request.POST:
-                event_form = event_form_class(request.POST, instance=event)
-                if event_form.is_valid():
-                    event_form.save(event)
-                    return http.HttpResponseRedirect(request.path)
-            elif '_add' in request.POST:
-                recurrence_form = recurrence_form_class(request.POST)
-                if recurrence_form.is_valid():
-                    recurrence_form.save(event)
-                    return http.HttpResponseRedirect(request.path)
-            else:
+	if request.user.profile.events.filter(pk=pk).exists():
+		if request.method == 'POST':
+			if '_update' in request.POST:
+				event_form = event_form_class(request.POST, instance=event)
+				if event_form.is_valid():
+					event_form.save(event)
+					return http.HttpResponseRedirect(request.path)
+			elif '_add' in request.POST:
+				recurrence_form = recurrence_form_class(request.POST)
+				if recurrence_form.is_valid():
+					recurrence_form.save(event)
+					return http.HttpResponseRedirect(request.path)
+			else:
 				events = request.user.profile.events.all()
 				for event in events:
 					if event.title in request.POST:
@@ -757,50 +758,50 @@ def event_view(
 						break
 				return HttpResponseRedirect("{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}")
 
-        data = {
-            'event': event,
-            'event_form': event_form or event_form_class(instance=event),
-            'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()})
-        }
-        return render(request, template, data)
-    else:
-        return HttpResponseRedirect("/jam/events")
+		data = {
+			'event': event,
+			'event_form': event_form or event_form_class(instance=event),
+			'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()})
+		}
+		return render(request, template, data)
+	else:
+		return HttpResponseRedirect("/jam/events")
 
 #-------------------------------------------------------------------------------
 def occurrence_view(
-    request, 
-    event_pk, 
-    pk, 
-    template='swingtime/occurrence_detail.html',
-    form_class=forms.SingleOccurrenceForm
+	request, 
+	event_pk, 
+	pk, 
+	template='swingtime/occurrence_detail.html',
+	form_class=forms.SingleOccurrenceForm
 ):
-    '''
-    View a specific occurrence and optionally handle any updates.
-    
-    Context parameters:
-    
-    occurrence
-        the occurrence object keyed by ``pk``
+	'''
+	View a specific occurrence and optionally handle any updates.
+	
+	Context parameters:
+	
+	occurrence
+		the occurrence object keyed by ``pk``
 
-    form
-        a form object for updating the occurrence
-    '''
-    occurrence = get_object_or_404(Occurrence, pk=pk, event__pk=event_pk)
-    print "TEST"
-    if request.user.profile.events.filter(pk=event_pk).exists():
-        print "TEST2"
-        if request.method == 'POST':
-            form = form_class(request.POST, instance=occurrence)
-            if form.is_valid():
-                form.save()
-                return http.HttpResponseRedirect(request.path)
-        else:
-            form = form_class(instance=occurrence)
-        
-        return render(request, template, {'occurrence': occurrence, 'form': form})
-        
-    else:
-        return HttpResponseRedirect('/jam/events/')
+	form
+		a form object for updating the occurrence
+	'''
+	occurrence = get_object_or_404(Occurrence, pk=pk, event__pk=event_pk)
+	print "TEST"
+	if request.user.profile.events.filter(pk=event_pk).exists():
+		print "TEST2"
+		if request.method == 'POST':
+			form = form_class(request.POST, instance=occurrence)
+			if form.is_valid():
+				form.save()
+				return http.HttpResponseRedirect(request.path)
+		else:
+			form = form_class(instance=occurrence)
+		
+		return render(request, template, {'occurrence': occurrence, 'form': form})
+		
+	else:
+		return HttpResponseRedirect('/jam/events/')
 #-------------------------------------------------------------------------------
 	
 	
