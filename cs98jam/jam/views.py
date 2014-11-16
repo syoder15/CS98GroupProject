@@ -409,11 +409,15 @@ def channel_list(request):
 	# get channels in order of creation, starting with the most recent 
 	channels = Channel.objects.order_by('-added').all()
 
-	if(form_data):
+	if(form_data ):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
-		else:
+		elif 'search_category' in form_data:
 			cat = form_data.get('search')
+		# it must be a call from modal_add_channel to create a new channel!
+		else: 
+			cat =''
+			new_channel(request) 
 		if(cat != ''):
 			channel_category = ChannelCategory.objects.get(name = cat)
 
