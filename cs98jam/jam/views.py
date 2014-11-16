@@ -21,13 +21,19 @@ from datetime import datetime, timedelta, time
 from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
+from django.utils import timezone
 
 # Create your views here.
 @login_required
 def index(request):
 	context = {'username': request.user.username}
 		
-	events = request.user.profile.events.all()
+	events = request.user.profile.events.order_by("occurrence").all()
+	future_events = []
+	for e in events:
+		if e.occurrence_set.all()[0].start_time >= timezone.now():
+			future_events.append(e)
+
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -46,7 +52,7 @@ def index(request):
 		site = settings.DOMAIN
 		c_name = ""
 		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 
-			'show': show_feed ,'events': events, 'notificationList': notificationList}
+			'show': show_feed ,'events': future_events, 'notificationList': notificationList}
 
     #post request can mean 2 things.
     #either a request to see a channel's newsfeed
@@ -419,11 +425,15 @@ def channel_list(request):
 	# get channels in order of creation, starting with the most recent 
 	channels = Channel.objects.order_by('-added').all()
 
-	if(form_data):
+	if(form_data ):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
-		else:
+		elif 'search_category' in form_data:
 			cat = form_data.get('search')
+		# it must be a call from modal_add_channel to create a new channel!
+		else: 
+			cat =''
+			new_channel(request) 
 		if(cat != ''):
 			channel_category = ChannelCategory.objects.get(name = cat)
 

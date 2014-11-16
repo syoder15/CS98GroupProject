@@ -1,3 +1,14 @@
+{% extends "../../jam/templates/jam/index.html" %}
+
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
+{% endblock %}
+
+{% block content %}
+	
     <h3>Swingtime Event</h3>
     <h4>Event Details</h4>
     <div>
@@ -79,3 +90,10 @@
     </table>
     </form>
     </form>
+{% endblock %}
+
+	
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'js/events.js' %}"></script>
+{% endblock %}

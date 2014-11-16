@@ -56,6 +56,38 @@ function getCookie(name) {
     return cookieValue;
 }
 
+companyForm.submit(function(event) {
+	event.preventDefault();
+
+	// NEED TO VALIDATE FIELDS
+	$('#companyModal').modal('hide');
+	var deadline = $('#deadline').val();
+	var name = $('#name').val();
+	var company_notes = $('#company_notes').val();
+
+	var formName = $('.company_form').attr('name');
+	dateValidation(formName);
+
+  	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	    }
+	});
+  	$.ajax({
+  		type: "POST",
+		url: "new_company/",
+		data: {
+			"deadline": deadline,
+			"name": name,
+			"company_notes": company_notes
+		}
+	}).done(function() {
+		console.log("GOT HERE");
+		$( this ).addClass( "done" );
+	});
+});
+
+
 contactForm.submit(function(event) {
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS

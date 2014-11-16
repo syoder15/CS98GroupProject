@@ -8,7 +8,7 @@
         <h4 class="modal-title" id="myModalLabel">New Company</h4>
       </div>
       <div class="modal-body">
-        <form class="company_form form-horizontal" enctype="multipart/form-data" method="POST" action="new_company/">
+        <form name="company_form" class="company_form form-horizontal" enctype="multipart/form-data" method="POST" action="new_company/">
 			{% csrf_token %}
 			<div class="form-group"> 
 				<label for="company_name_input" class="col-sm-4 control-label">Company: </label>

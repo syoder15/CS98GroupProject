@@ -15,6 +15,7 @@ function getCookie(name) {
 }
 
 $('.contact-export').on('click', function(){
+	alert("Check your Downloads folder for a 'contacts.txt.' file");
 	console.log('BUTTON CLICKED');
 	var csrftoken = getCookie('csrftoken');
 	console.log("GOT HERE");
