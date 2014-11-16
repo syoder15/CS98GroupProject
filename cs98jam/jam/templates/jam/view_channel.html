@@ -1,3 +1,12 @@
+{% extends "../../jam/templates/jam/index.html" %}
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+{% endblock %}
+
+{% block content %}
+	
 <div>
 	{% if is_admin %}
 		<a href="../../view_as_admin/{{ channel_name }}">Switch to Administrator View</a>
@@ -35,3 +44,11 @@
 		{% endif %}	
 	</form>
 </div>
+
+{% endblock %}
+
+	
+{% block javascript %}
+{{ block.super }}
+
+{% endblock %}

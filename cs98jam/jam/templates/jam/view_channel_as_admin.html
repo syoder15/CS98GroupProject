@@ -1,3 +1,13 @@
+{% extends "../../jam/templates/jam/index.html" %}
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+{% endblock %}
+
+{% block content %}
+	
+
 <div>	
 	{% if is_admin %}
 		<p>
@@ -50,3 +60,11 @@
 		Sorry, according to our records, you are not an admin for this channel.
 	{% endif %}
 </div>
+
+{% endblock %}
+
+	
+{% block javascript %}
+{{ block.super }}
+
+{% endblock %}
