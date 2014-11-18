@@ -15,7 +15,7 @@
 			<h2> Company: {{ company_name }}</h2> 
 		<!--</div>
 		<div class="col-sm-7">-->
-		<form class="contactInfo" method="POST" action="{% url 'companies' company_name %}">
+		<form class="contactInfo" method="POST">
 			{% csrf_token %}
 			<table>
 				<tr>

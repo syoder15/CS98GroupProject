@@ -56,7 +56,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-companyForm.submit(function(event) {
+/*companyForm.submit(function(event) {
 	event.preventDefault();
 
 	// NEED TO VALIDATE FIELDS
@@ -86,7 +86,7 @@ companyForm.submit(function(event) {
 		$( this ).addClass( "done" );
 	});
 });
-
+*/
 
 contactForm.submit(function(event) {
   	event.preventDefault();

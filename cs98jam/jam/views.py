@@ -322,10 +322,11 @@ def companies(request, company_name):
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
+			notes = company.notes
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'notes': company.notes}
+			'contacts': contacts, 'company_notes': company.notes}
 		else:
 			#print "delete"
 			for company in companies:
@@ -342,7 +343,7 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'notes': company.notes}
+			'contacts': contacts, 'company_notes': company.notes}
 
 	return render(request, 'jam/companies.html', context)
 
@@ -352,7 +353,10 @@ def company_page(request, company_name):
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = request.user.profile.events.all()
 	application_deadline = company.application_deadline
-	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline}
+	company_notes = company.notes
+	print "company notes: " + company_notes
+
+	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes}
 	
 	return render(request, 'jam/company_page.html', context)
 
@@ -363,16 +367,16 @@ def edit_company(request, company_name):
 	user = User.objects.get(username=request.user.username)
 	company = request.user.company_set.filter(name=company_name).first()
 
-
 	if form_data:
+		print "GOT HERE YAY"
 		if user and company: 
 			company.name=form_data.get('company_name')
 			company.application_deadline=form_data.get('app_deadline')
 			company.notes=form_data.get('notes')
 			print company.name + company.application_deadline + company.notes
 			company.save()
-			companies(request)
-
+			redirect_link = '../../../companies/' + company.name
+			return HttpResponseRedirect(redirect_link)
 
 		else:
 			company = Company(user=request.user.username,
@@ -381,6 +385,8 @@ def edit_company(request, company_name):
 							  notes=form_data.get('notes')
 							  )
 			company.save()
+			redirect_link = '../../../companies/' + company.name
+			return HttpResponseRedirect(redirect_link)
 
 	app_deadline = company.application_deadline
 	app_deadline = str(app_deadline)
