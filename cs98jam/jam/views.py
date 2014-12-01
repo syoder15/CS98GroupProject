@@ -186,7 +186,6 @@ def new_contact(request):
 			#request.user.contact_set.get(name=contact_name)
 		print "INVALID NAME!!!"
 		msg = "Sorry, you've already added a contact of the same name!"
-		context = {'error' : msg}
 
 		# return err response to AJAX via JSON
 		response={}
@@ -316,9 +315,18 @@ def new_company(request):
 		application_deadline = form_data.get('deadline')
 		validity = is_valid_date(application_deadline)
 		if(validity!=''):
+			'''
 			print "INVALID "
 			print validity
 			print application_deadline
+			'''
+
+			# return bad requeset if the deadline is still invalid somehow (but very unlikely!)
+			response={}
+			response["error"] = validity
+			print "got here"
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
 			context = { 'validity' : validity }
 			return render(request, 'jam/modal_add_company.html', context)
 		
@@ -329,12 +337,16 @@ def new_company(request):
 			if it does, re-render the form with an appropriate error.
 			if it doesn't, go ahead with business as usual, creating the company DB record
 		'''
-		try:
-			request.user.company_set.get(name=company_name)
+		if request.user.company_set.filter(name=company_name).exists():
+
+			#request.user.company_set.get(name=company_name)
 			msg = "I'm sorry, you've already added that company. Please add a different one!"
-			context = {'error' : msg}
-			return render(request, 'jam/modal_add_company.html', context)
-		except: 
+
+			response={}
+			response["error"] = msg
+			print "got here"
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+		else: 
 			company = Company(name=company_name,
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
