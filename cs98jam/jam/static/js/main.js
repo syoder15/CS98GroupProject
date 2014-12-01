@@ -1,18 +1,26 @@
-function validateEmail(formName){
-	var email = document.forms[formName]["email"].value;
+function validateEmail(email){
 	var at = email.indexOf("@");
 	var period = email.lastIndexOf(".");
 
 	if (at < 1 || period < at + 2 || period + 2 >= email.length) {
-		alert("Please enter a valid email address");
-		return false;
+		//alert("Please enter a valid email address");
+		return "Please enter a valid email address";
 	}
+	return "";
 };
 
-function validatePhoneNumber(formName) {
-	var number = document.forms[formName]['phone_number'].value;
-	//number = number.replace(/[()]-/g, '');
+function validatePhoneNumber(number) {
+	number = number.replace(/[^0-9]/g, '');
+
+	if(! (number.match(/\d/g) && number.length==10)){
+		return "Please enter a valid phone number";
+	}
+	else{
+		$('#phone_number_input').val(number);
+		return "";
+	}
 	number = number.replace(/\)\s*|\(\s*|-/g, '');
+
 	return number;
 };
 
@@ -69,8 +77,8 @@ function startEndTimeValidation(startTime, endTime) {
  * Returns false if a date is invalid, true otherwise
  * Checks to see if a date is in the past (before the current date) and if the month and day exist
  */
-function dateValidation(formName) {
-	date = document.forms[formName]["deadline"].value;
+function dateValidation(date) {
+
 	var currentDate = getCurrentDate();
 
 	var year = +date.substring(0, 4);
@@ -78,20 +86,26 @@ function dateValidation(formName) {
 	var day = +date.substring(8, 10);
 
 	if (date.length < 10) {
-		alert('Please enter your date in the format YYYY-MM-DD');
+		return 'Please enter your date in the format YYYY-MM-DD';
+		//		  document.getElementById(dt).style.background ='#e35152';
+
 		return false;
 	}
 
 	if (year < currentDate['year'] || (month < currentDate['month'] && year == currentDate['year'])
 		|| (month == currentDate['month'] && year == currentDate['year'] && day < currentDate['date'])) {
-		alert ('You cannot enter a date that is in the past. Please try again.');
+		 return 'You cannot enter a date that is in the past.'
+		 // document.getElementById(dt).style.background ='#e35152';
+
 		return false;
 	} else if ( month >  12 || day > 31) {
-		alert('You must enter a valid date. Please try again.');
+		return 'You must enter a valid date. Please try again.'
+		 //		  document.getElementById(dt).style.background ='#e35152';
+
 		return false;
 	}
 
-	return true;
+	return '';
 };
 
 function isValidDate(formName)

@@ -25,7 +25,7 @@ class Contact(models.Model):
     phone_number = models.IntegerField(default=0)
     email = models.CharField(max_length=50)
     employer = models.CharField(max_length=50)
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     user = models.ForeignKey(User)
 
 

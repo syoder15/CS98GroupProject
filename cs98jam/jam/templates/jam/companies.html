@@ -19,7 +19,7 @@
 		{% csrf_token %}
 		{% for c in companies %}
 			<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
-			<input class="button" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c }}?')"/>
+			<input class="button" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')"/>
 			<br />
 		{% empty %}
 			You haven't entered any companies yet.

@@ -56,39 +56,76 @@ function getCookie(name) {
     return cookieValue;
 }
 
-/*companyForm.submit(function(event) {
-	event.preventDefault();
+//validating company deeadline
+function validateDeadline(){
+	var deadline = $('#company_deadline_input').val();
+	var msg = dateValidation(deadline);
+	if(msg.length > 0){
+		$('.error-message').show();
+		$('#company_deadline_input').css('border','solid 2px red');
+		$('.error-message').html(msg);
+	}
+	else{
+		$('.error-message').hide();
+		$('#company_deadline_input').css('border','solid 0px red');
+	}
+	return msg;
+}
 
-	// NEED TO VALIDATE FIELDS
-	$('#companyModal').modal('hide');
-	var deadline = $('#deadline').val();
-	var name = $('#name').val();
-	var company_notes = $('#company_notes').val();
+function validatePhone(){
+	var number = $('#phone_number_input').val();
+	console.log("PHONE NUMBER" + number);
+	var msg = validatePhoneNumber(number);
+	if(msg.length > 0){
+		$('.phone_error_message').show();
+		$('#phone_number_input').css('border','solid 2px red');
+		$('.phone_error_message').html(msg);
+	}
+	else{
+		$('.phone_error_message').hide();
+		$('#phone_number_input').css('border','solid 0px red');
+	}
+	return msg;
+}
 
-	var formName = $('.company_form').attr('name');
-	dateValidation(formName);
+function validateEmailAddress(){
+	var email = $('#email_input').val();
+	var msg = validateEmail(email);
+	if(msg.length > 0){
+		$('.email_error_message').show();
+		$('#email_input').css('border','solid 2px red');
+		$('.email_error_message').html(msg);
+	}
+	else{
+		$('.email_error_message').hide();
+		$('#email_input').css('border','solid 0px red');
+	}
+	return msg;
+}
 
-  	$.ajaxSetup({
-	    beforeSend: function(xhr, settings) {
-		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-	    }
-	});
-  	$.ajax({
-  		type: "POST",
-		url: "new_company/",
-		data: {
-			"deadline": deadline,
-			"name": name,
-			"company_notes": company_notes
-		}
-	}).done(function() {
-		console.log("GOT HERE");
-		$( this ).addClass( "done" );
-	});
+contactForm.submit(function(event){
+	if(validateEmailAddress() !='' || validatePhone() !=''){
+		return false;
+	}
+
 });
-*/
 
-contactForm.submit(function(event) {
+//don't let form submit if there's a date error!
+companyForm.submit(function(event) {
+	var error = 0;
+	if (validateDeadline() != ""){
+		return false;
+	}
+
+});
+
+
+/*contactForm.submit(function(event) {
+
+	if (validateDeadline() != ""){
+		return false;
+	}
+
   	event.preventDefault();
   	//NEED TO VALIDATE FIELDS
   	$('#contactModal').modal('hide');
@@ -123,6 +160,7 @@ contactForm.submit(function(event) {
 		$( this ).addClass( "done" );
 	});
 });
+*/
 
 eventForm.submit(function(event) {
   	event.preventDefault();

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -9,6 +9,7 @@ from jam.forms import UploadFileForm
 from jam.input import read_from_file
 from django.conf import settings
 import os
+import json
 
 from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
 from django.http import HttpResponseRedirect
@@ -172,14 +173,43 @@ def new_channel(request):
 
 def new_contact(request):
 	form_data = request.POST
-	contact = Contact(name=form_data.get('name'),
-					  phone_number=form_data.get('phone'),
-					  email=form_data.get('email'),
-					  employer=form_data.get('company'),
-					  notes=form_data.get('notes'),
-					  user=request.user)
-	contact.save()
-	return HttpResponse()
+	
+	# avoid adding contacts with the same name!
+	contact_name = form_data.get('name')
+	print "contact name = " + contact_name
+
+	''' see whether a contact with the same name already exists
+			if it does, re-render the form with an appropriate error.
+			if it doesn't, go ahead with business as usual, creating the company DB record
+	'''
+	if request.user.contact_set.filter(name=contact_name).exists():
+			#request.user.contact_set.get(name=contact_name)
+		print "INVALID NAME!!!"
+		msg = "Sorry, you've already added a contact of the same name!"
+		context = {'error' : msg}
+
+		# return err response to AJAX via JSON
+		response={}
+		response["error"] = msg
+		print "got here"
+		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+	else:
+		print "making new contact!"
+
+		contact_notes = form_data.get('notes')
+		if contact_notes=='' :
+			contact_notes=" "
+
+		contact = Contact(name=contact_name,
+						  phone_number=form_data.get('phone'),
+						  email=form_data.get('email'),
+						  employer=form_data.get('company'),
+						  notes=contact_notes,
+						  user=request.user)
+		contact.save()
+		context = {'username': request.user.username}
+
+		return render(request, 'jam/index_landing_home.html', context)
 
 @login_required
 def activate_subscriber(request, channel_name, user_name):
@@ -281,13 +311,56 @@ def new_company(request):
 		read_from_file(request.user, request.FILES['filep'])
 	elif request.method == "POST":
 		form_data = request.POST
-		company = Company(name=form_data.get('name'),
+
+		# check whether we've got a valid date. if invalid, we need them to fix their form errors!
+		application_deadline = form_data.get('deadline')
+		validity = is_valid_date(application_deadline)
+		if(validity!=''):
+			print "INVALID "
+			print validity
+			print application_deadline
+			context = { 'validity' : validity }
+			return render(request, 'jam/modal_add_company.html', context)
+		
+		company_name = form_data.get('name')
+
+		
+		''' see whether a company with the same name already exists
+			if it does, re-render the form with an appropriate error.
+			if it doesn't, go ahead with business as usual, creating the company DB record
+		'''
+		try:
+			request.user.company_set.get(name=company_name)
+			msg = "I'm sorry, you've already added that company. Please add a different one!"
+			context = {'error' : msg}
+			return render(request, 'jam/modal_add_company.html', context)
+		except: 
+			company = Company(name=company_name,
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
 						  user=request.user)
-		company.save()
-	context = {'username': request.user.username}
-	return render(request, 'jam/index_landing_home.html', context)
+			company.save()
+			context = {'username': request.user.username}
+			return render(request, 'jam/index_landing_home.html', context)
+
+def is_valid_date(date):
+	now = datetime.now()
+
+	year = int(date[0:4])
+	month = int(date[5:7])
+	day = int(date[8:10])
+
+
+	if(len(date) < 10):
+		return "Please enter a date in YYYY-MM-DD format"
+	elif ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
+		return 'You cannot enter a date that is in the past.'
+	elif ( month >  12 or day > 31):
+		return 'You must enter a valid date. Please try again.'
+
+	return ""
+
+
 
 def new_event(request):
 	form_data = request.POST
