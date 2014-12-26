@@ -148,7 +148,6 @@ var xhr = undefined;
 companyForm.submit(function(event){
 	//disable button during a submit to prevent double submission
 
-	$("input[type=submit]").attr("disabled", "disabled");
 	
 	event.preventDefault();
 
@@ -156,6 +155,8 @@ companyForm.submit(function(event){
 	if (validateDeadline() != "" || validateName('company_name_input') != ""){
 		return false;
 	}
+
+	//$("input[type=submit]").attr("disabled", "disabled");
 
 	if(typeof(xhr)!='undefined'){
 		xhr.abort();
