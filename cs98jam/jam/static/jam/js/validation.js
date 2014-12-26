@@ -122,6 +122,7 @@ contactForm.submit(function(event){
 			$('.server-error').hide();
 			$('#contactModal').modal('hide');
 			$('input').val('');
+			$('textarea').val('');
 		},
 
 		//handles error response
@@ -194,6 +195,7 @@ companyForm.submit(function(event){
 			$('.server-error').hide();
 			$('#companyModal').modal('hide');
 			$('input').val('');
+			$('textarea').val('');
 			$("input[type=submit]").prop("disabled", false);
 			xhr = undefined;
 		},
