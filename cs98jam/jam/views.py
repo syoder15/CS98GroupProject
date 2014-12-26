@@ -315,13 +315,8 @@ def new_company(request):
 		application_deadline = form_data.get('deadline')
 		validity = is_valid_date(application_deadline)
 		if(validity!=''):
-			'''
-			print "INVALID "
-			print validity
-			print application_deadline
-			'''
-
-			# return bad requeset if the deadline is still invalid somehow (but very unlikely!)
+	
+			# return bad request if the deadline is still invalid somehow (but very unlikely!)
 			response={}
 			response["error"] = validity
 			print "got here"

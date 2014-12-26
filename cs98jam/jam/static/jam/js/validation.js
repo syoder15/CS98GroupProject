@@ -140,6 +140,7 @@ contactForm.submit(function(event){
 		if(donezo){
 			console.log("GOT HERE");
 			$( this ).addClass( "done" );
+			location.reload();
 		}
 	});
 });
@@ -218,6 +219,7 @@ companyForm.submit(function(event){
 			$("input[type=submit]").prop("disabled", false);
 			console.log("GOT HERE");
 			$( this ).addClass( "done" );
+			location.reload();
 		}
 		else{
 			return false;
