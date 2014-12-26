@@ -89,20 +89,17 @@ function dateValidation(date) {
 		return 'Please enter your date in the format YYYY-MM-DD';
 		//		  document.getElementById(dt).style.background ='#e35152';
 
-		return false;
 	}
 
 	if (year < currentDate['year'] || (month < currentDate['month'] && year == currentDate['year'])
 		|| (month == currentDate['month'] && year == currentDate['year'] && day < currentDate['date'])) {
-		 return 'You cannot enter a date that is in the past.'
+		 return 'You cannot enter a date that is in the past.';
 		 // document.getElementById(dt).style.background ='#e35152';
 
-		return false;
 	} else if ( month >  12 || day > 31) {
-		return 'You must enter a valid date. Please try again.'
+		return 'You must enter a valid date. Please try again.';
 		 //		  document.getElementById(dt).style.background ='#e35152';
 
-		return false;
 	}
 
 	return '';
