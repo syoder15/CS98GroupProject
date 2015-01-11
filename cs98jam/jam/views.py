@@ -489,6 +489,40 @@ def edit_company(request, company_name):
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
+@login_required
+def edit_contact(request, contact_name):
+	form_data = request.POST
+
+	user = User.objects.get(username=request.user.username)
+	contact = request.user.contact_set.filter(name=contact_name).first()
+
+	if form_data:
+		if user and contact: 
+			contact.name=form_data.get('contact_name')
+			#company.application_deadline=form_data.get('app_deadline')
+			company.notes=form_data.get('notes')
+			print contact.name + contact.application_deadline + contact.notes
+			contact.save()
+			redirect_link = '../../../contacts/' + contact.name
+			return HttpResponseRedirect(redirect_link)
+
+		else:
+			contact = Contact(user=request.user.username,
+							  contact_name=form_data.get('contact_name'),
+							  notes=form_data.get('notes')
+							  )
+			contact.save()
+			redirect_link = '../../../contact/' + contact.name
+			return HttpResponseRedirect(redirect_link)
+
+	#app_deadline = company.application_deadline
+	#app_deadline = str(app_deadline)
+	#datetime.strptime(app_deadline, "%Y-%m-%d")
+
+	context = {'contact_name': contact_name, 'notes': contact.notes}
+
+	return render(request, 'jam/contacts/contact_page_edit.html', context)
+
 def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
 	data = request.POST
