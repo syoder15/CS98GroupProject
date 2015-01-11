@@ -1,0 +1,31 @@
+<!--This comprises the modal icons/fixed-bottom navbar.-->
+
+{% load staticfiles %}
+
+	<div class="navbar navbar-fixed-bottom">
+		<div class="buttons-bottom-align">
+			<div class="round-button" style="float:right;">
+				<!--<a data-toggle="modal" data-target="#contactModal">-->
+				<a href="{% url 'swingtime-add-event' %}">
+				  <!-- Add Event -->
+				  <img src="{% static 'admin/img/icon_addEvent.svg' %}" alt="Home" />
+				</a>
+			</div>
+			<div class="round-button" style="float:right;">
+				<a data-toggle="modal" data-target="#contactModal">
+				  <!-- Add Contact -->
+				  <img src="{% static 'admin/img/icon_addContact.svg' %}" alt="Home" />
+				</a>
+			</div>
+			<div class="round-button" style="float:right;">
+				<a data-toggle="modal" data-target="#companyModal">
+				  <!-- Add Company -->
+				  <img src="{% static 'admin/img/icon_addCompany.svg' %}" alt="Home" />
+				</a>
+			</div>
+		</div>
+	</div>
+
+	{% include "jam/modals/modal_add_company.html" %}
+	{% include "jam/modals/modal_add_contact.html" %}
+	{% include "jam/modals/modal_add_event.html" %}

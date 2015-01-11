@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
+
+</head>
+
+<body>
+<div class="main">
+	<h1>Create a channel</h1>
+		
+	{{ errors }}	
+		
+	<form class="channelInfo" method="POST">
+		{% csrf_token %}
+		<p>
+		<label for="name_input">Name: </label>
+		<input id="name_input" name="name" placeholder="Women in Computer Science" required />
+		</p>
+		
+		<p>
+		<label for="moniker_input">Nickname: </label>
+		<input id="moniker_input" name="moniker" placeholder="WiCS" required/>
+		</p>
+		
+		<p>
+		<label for="description_input">Description: </label>
+		<input id="description_input" name="description"  placeholder="The best" required/>
+		</p>
+		
+		<label for="is_public_input">Categories (hold command to select multiple)</label>
+		<br>
+		<select multiple="true" name="category">
+		{% for c in categories %}
+			<option value='{{ c.name }}'>{{ c.name }} </option>
+		{% endfor %}
+		</select>
+
+		<p>
+			<label for="is_public_input">Public? </label>
+			<input id="is_public_input" type="radio" name="is_public" value="True" checked/>True
+			<input id="is_public_input" type="radio" name="is_public" value=""/>False
+		</p>
+		
+		<p>
+		<input class="button" type="submit" value="Save"/>
+		</p>
+	</form>
+	
+</div>
+</body>
+
+</html>

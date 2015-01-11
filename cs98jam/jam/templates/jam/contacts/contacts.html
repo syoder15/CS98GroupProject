@@ -1,0 +1,59 @@
+{% extends "../../jam/templates/jam/index/index_landing.html" %}
+
+{% load staticfiles %}
+{% load notification_custom %}
+
+<!--
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css' %}" />
+{% endblock %}
+-->
+{% block side_col %}
+	<div>
+		<button type="button" class="btn btn-primary contact-export">Export my contacts</button>
+	</div>
+	<div class="list-group">
+		<form class="deleteContact" method='POST'>
+			{% csrf_token %}
+			{% for c in contacts %}
+				<input type="submit" name="contact_name" value="{{c}}" class="contactNames"/>
+				<input class="button" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c.name }}?')"/>
+		</form>
+
+		{% empty %}
+			<h5> You haven't entered any contacts. Add one <a data-toggle="modal" data-target="#contactModal">here</a>.</h5>
+		{% endfor %}
+	</div>
+		{% include "jam/nav/modal_nav_bar.html" %}
+{% endblock %}
+
+{% block main_col %}
+<div id="showContactPage">
+	{% if show %}
+		{% include "jam/contacts_page.html" %}
+			<div>
+				<form class="goHome" method="POST" action="">
+				{% csrf_token %}
+					
+				<br />
+				<input class="button" name="back_home" type="submit" value="Back"/>
+					<a href="../../edit/contacts/{{ c.name }}"><button style="color:black" type="button">Edit</button></a>
+
+				</form>
+			</div>
+		{% endif %}
+
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+	<script src="{% static 'jam/js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'jam/js/contacts.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'jam/js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+{% endblock %}
