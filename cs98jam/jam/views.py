@@ -510,13 +510,13 @@ def contacts(request, contact_name):
 		elif(go_home == ("Back")):
 			show_contact = False
 
-		elif('company_name' in data):
+		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
 			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
-			'show': show_company, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
 		
 		else: 
 			for c in contacts:
@@ -530,7 +530,7 @@ def contacts(request, contact_name):
 
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_company, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
 
 	return render(request, 'jam/contacts/contacts.html', context)
 
