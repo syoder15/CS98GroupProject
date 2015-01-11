@@ -1,9 +1,0 @@
-<div>
-	{% if valid %}
-	<p>{{ username }} has been successfully added to your channel, {{ channel_name }}</p>
-	<p>Click <a href="http://127.0.0.1:8000/jam/channels/view/{{ channel_name }}">here</a> to view your channel!</p>
-	{% else %}
-	<p>This page was reached in error! According to our records, you are not an admin of {{ channel_name }}</p>
-	{% endif %}
-
-</div>

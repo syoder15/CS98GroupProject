@@ -20,3 +20,24 @@ html {
 	background-color: #4166F5;
 
 }
+
+/* media query to optimize login screen for mobile*/
+@media screen and (max-width: 800px){
+	body{
+	font-size:40px;
+	}
+	div{
+		height:100%;
+		width:100%;
+	}
+	input{
+		font-size:1em;
+		height:1.5em;
+	}
+	input[type=submit]{
+		height:1.5em;
+		width:1em;
+		font-size: 5em;
+
+	}
+}

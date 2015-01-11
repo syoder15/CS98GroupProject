@@ -84,7 +84,7 @@ def index(request):
 				"adminNotes": channel.adminNotes.order_by("-created_at")}
 			
 
-	return render(request, 'jam/index_landing_home.html', context)
+	return render(request, 'jam/index/index_landing_home.html', context)
 
 
 @login_required
@@ -134,10 +134,10 @@ def profile(request):
 
 		profile.save()
 
-		#return render(request, 'jam/index.html', {})
+		#return render(request, 'jam/index/index.html', {})
 
 	context = {'profile': profile, 'username': request.user.username}
-	return render(request, 'jam/profile.html', context)
+	return render(request, 'jam/user/profile.html', context)
 
 @login_required
 def new_channel(request):
@@ -164,12 +164,12 @@ def new_channel(request):
 				errors = "A channel with that name already exists: please choose another."
 			context = {"errors": errors}
 			
-			return render(request, 'jam/new_channel.html', context)
+			return render(request, 'jam/channels/new_channel.html', context)
 
 	else:
 		cats = ChannelCategory.objects.all()
 		context = {'categories':cats}
-		return render(request, 'jam/new_channel.html', context)
+		return render(request, 'jam/channels/new_channel.html', context)
 
 def new_contact(request):
 	form_data = request.POST
@@ -208,7 +208,7 @@ def new_contact(request):
 		contact.save()
 		context = {'username': request.user.username}
 
-		return render(request, 'jam/index_landing_home.html', context)
+		return render(request, 'jam/index/index_landing_home.html', context)
 
 @login_required
 def activate_subscriber(request, channel_name, user_name):
@@ -224,7 +224,7 @@ def activate_subscriber(request, channel_name, user_name):
 
 	# pass the appropriate context to populate generic activation view
 	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin, 'site': settings.DOMAIN}
-	return render(request, 'jam/activate_subscriber.html', context)
+	return render(request, 'jam/channels/activate_subscriber.html', context)
 
 
 # Shows the details of a channel. View differs based on whether the channel is public
@@ -261,7 +261,7 @@ def view_channel(request, channel_name):
 				send_mail(subject,body,'dartmouthjam@gmail.com', [admin.email], fail_silently=False)
 		return HttpResponseRedirect("/jam/channels/view/" + channel.name)
 
-	return render(request, 'jam/view_channel.html', context)
+	return render(request, 'jam/channels/view_channel.html', context)
 
 
 # Administrative view for a channel. Allows for removal of subscribers.
@@ -302,7 +302,7 @@ def view_channel_as_admin(request, channel_name):
 		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at")}
 
 
-	return render(request, 'jam/view_channel_as_admin.html', context)
+	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
 	if request.method == "POST" and request.FILES:
@@ -323,7 +323,7 @@ def new_company(request):
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 
 			context = { 'validity' : validity }
-			return render(request, 'jam/modal_add_company.html', context)
+			return render(request, 'jam/modals/modal_add_company.html', context)
 		
 		company_name = form_data.get('name')
 
@@ -348,7 +348,7 @@ def new_company(request):
 						  user=request.user)
 			company.save()
 			context = {'username': request.user.username}
-			return render(request, 'jam/index_landing_home.html', context)
+			return render(request, 'jam/index/index_landing_home.html', context)
 
 def is_valid_date(date):
 	now = datetime.now()
@@ -425,7 +425,7 @@ def companies(request, company_name):
 			'application_deadline': company.application_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes}
 
-	return render(request, 'jam/companies.html', context)
+	return render(request, 'jam/companies/companies.html', context)
 
 def company_page(request, company_name):
 	companies = request.user.company_set.all()
@@ -438,7 +438,7 @@ def company_page(request, company_name):
 
 	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes}
 	
-	return render(request, 'jam/company_page.html', context)
+	return render(request, 'jam/companies/company_page.html', context)
 
 @login_required
 def edit_company(request, company_name):
@@ -474,7 +474,7 @@ def edit_company(request, company_name):
 
 	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes}
 
-	return render(request, 'jam/company_page_edit.html', context)
+	return render(request, 'jam/companies/company_page_edit.html', context)
 
 def contacts(request):
 	contacts = request.user.contact_set.all()
@@ -497,7 +497,7 @@ def contacts(request):
 			contacts = request.user.contact_set.all()
 
 	context = {'contacts': contacts, 'username': request.user.username}
-	return render(request, 'jam/contacts.html', context)
+	return render(request, 'jam/contacts/contacts.html', context)
 
 def cal(request):
 	context = {}
@@ -539,11 +539,8 @@ def channel_list(request):
 			channel_categories.append(channel_category)
 	#channels = Channel.objects.all()
 	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username}
-	return render(request,'jam/channel_list.html',context)
+	return render(request,'jam/channels/channel_list.html',context)
 
-def test(request):
-	context = {}
-	return render(request, 'jam/base_companies.html', context)
 
 ######################################################################################
 # The following views were taken from django swingtime: https://github.com/dakrauth/django-swingtime
@@ -921,4 +918,4 @@ def manage_account(request):
 		elif(freq == "notif_weekly"):
 			notifs = 1
 		user_profile.notification_frequency = notifs
-	return render(request, 'jam/manage_account.html', context)
+	return render(request, 'jam/user/manage_account.html', context)

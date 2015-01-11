@@ -1,0 +1,18 @@
+<div>
+	{% if is_admin %}
+		<a href="channels/view_as_admin/{{ channel_name }}">Switch to Administrator View</a>
+	
+	{% endif %}
+	<br>
+	<br>
+	<p>Name: {{ channel_name }} </p>
+	<p>Nickname: {{ channel_nickname }} </p>
+	<p>Description: {{ channel_description }} </p>
+	
+	<br>
+	<p><b> Recent Notes from Admins: <b></p>
+	{% for note in adminNotes.all %}
+			<p>{{ note.text }} - {{ note.author }} @ {{ note.created_at }}</p>
+	{% endfor %}
+	
+</div>

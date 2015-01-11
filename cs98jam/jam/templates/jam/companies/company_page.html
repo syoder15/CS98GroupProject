@@ -1,0 +1,28 @@
+<div>
+<h2> Company: {{ company_name }}</h2> 
+<h4> Application Deadline: {{ application_deadline }}</h4>
+
+
+<h3> Notes </h3>
+	{{ company_notes }}
+
+<h3> Contacts </h3>
+	<ul>
+		{% for c in contacts %}
+		<li><a href="#">{{ c }}</a></li>
+
+		{% empty %}
+		<p> You haven't entered any contacts for this company.</p>
+		{% endfor %}
+	</ul>
+
+<h3> Events </h3>
+	<ul>
+		{% for e in events %}
+		<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+
+		{% empty %}
+		<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
+		{% endfor %}
+	</ul>
+</div>
