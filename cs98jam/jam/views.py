@@ -440,6 +440,19 @@ def company_page(request, company_name):
 	
 	return render(request, 'jam/company_page.html', context)
 
+def contacts_page(request, contact_name):
+	contacts = request.user.contact_set.all()
+	contact = request.user.contact_set.filter(name=contact_name).first()
+	phone_number = contact.phone_number
+	email_address = contact.email
+	contact_notes = contact.notes
+	print "company notes: " + company_notes
+
+	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
+	'contact_email': email_address}
+
+	return render(request, 'jam/contact_page.html', context)
+
 @login_required
 def edit_company(request, company_name):
 	form_data = request.POST
@@ -476,11 +489,15 @@ def edit_company(request, company_name):
 
 	return render(request, 'jam/company_page_edit.html', context)
 
-def contacts(request):
+def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
 	data = request.POST
+	show_contact = True
+
+	context = {'contacts': contacts, 'username': request.user.username}
 
 	if (data):
+		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
 			user = request.META['LOGNAME']
@@ -489,6 +506,18 @@ def contacts(request):
 			for contact in contacts:
 				f.write(str(contact) + ", " + str(contact.employer) + "\n")
 			f.close()
+		
+		elif(go_home == ("Back")):
+			show_contact = False
+
+		elif('company_name' in data):
+			contact_name = data.get('contact_name')
+			contact = request.user.contact_set.get(name=contact_name)
+			notes = contact.notes
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			'show': show_company, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
+		
 		else: 
 			for c in contacts:
 				if c.name in data:
@@ -496,12 +525,18 @@ def contacts(request):
 					break
 			contacts = request.user.contact_set.all()
 
-	context = {'contacts': contacts, 'username': request.user.username}
+	else:
+		if contact_name != 'all':
+
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
+			'show': show_company, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
+
 	return render(request, 'jam/contacts.html', context)
 
-def cal(request):
-	context = {}
-	return render(request, 'jam/calendar.html', context)
+#def cal(request):
+#	context = {}
+#	return render(request, 'jam/calendar.html', context)
 
 def channel_list(request):
 	form_data = request.POST
