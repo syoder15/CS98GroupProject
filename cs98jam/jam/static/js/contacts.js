@@ -26,7 +26,7 @@ $('.contact-export').on('click', function(){
 	});
   	$.ajax({
   		type: "POST",
-		url: "/jam/contacts/",
+		url: "/jam/contacts/all/",
 		data: {"export": true}
 	}).done(function() {
 		console.log("GOT HERE");
