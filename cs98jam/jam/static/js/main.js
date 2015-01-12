@@ -91,16 +91,17 @@ function dateValidation(date) {
 
 	}
 
-	if (year < currentDate['year'] || (month < currentDate['month'] && year == currentDate['year'])
-		|| (month == currentDate['month'] && year == currentDate['year'] && day < currentDate['date'])) {
-		 return 'You cannot enter a date that is in the past.';
-		 // document.getElementById(dt).style.background ='#e35152';
-
-	} else if ( month >  12 || day > 31 || year > 2050 ) {
+	 if ( month >  12 || month < 1 || day > 31  || month < 1 || year > 2050 ) {
 		return 'You must enter a valid date. Please try again.';
 		 //		  document.getElementById(dt).style.background ='#e35152';
 
 	}
+	else if (year < currentDate['year'] || (month < currentDate['month'] && year == currentDate['year'])
+		|| (month == currentDate['month'] && year == currentDate['year'] && day < currentDate['date'])) {
+		 return 'You cannot enter a date that is in the past.';
+		 // document.getElementById(dt).style.background ='#e35152';
+
+	} 
 
 	return '';
 };
