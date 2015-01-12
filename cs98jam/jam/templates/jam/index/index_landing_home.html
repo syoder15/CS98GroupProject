@@ -34,51 +34,12 @@
 			<h2>Newsfeed</h2>
 		</div>
 		<div class="newsfeed-scroll">
-			{% if show %}
-				{% include "jam/channels/channel_feed.html" %}
-				<form class="goHome" method="POST" action="">
-				{% csrf_token %}
-				
-				<br>
-				<p>
-					<input class="button" name="back_home" type="submit" value="Back"/>
-				</p>
-				</form>
-			{% else %}
-				{% for e in events %}
-					<p>{{e}} {{e.next_occurrence.start_time}}  </p>
-				{% endfor %}
-			{% endif %}
-
+			{% for e in events %}
+				<p>{{e}} {{e.next_occurrence.start_time}}</p>
+			{% endfor %}
 		</div>
 		<!-- <div class="push"></div> -->
 	</section>
 
-	<div class="navbar navbar-fixed-bottom">
-		<div class="buttons-bottom-align">
-			<div class="round-button" style="float:right;">
-				<!--<a data-toggle="modal" data-target="#contactModal">-->
-				<a href="{% url 'new_event' %}">
-				  <!-- Add Event -->
-				  <img src="{% static 'admin/img/icon_addEvent.svg' %}" alt="Home" />
-				</a>
-			</div>
-			<div class="round-button" style="float:right;">
-				<a data-toggle="modal" data-target="#contactModal">
-				  <!-- Add Contact -->
-				  <img src="{% static 'admin/img/icon_addContact.svg' %}" alt="Home" />
-				</a>
-			</div>
-			<div class="round-button" style="float:right;">
-				<a data-toggle="modal" data-target="#companyModal">
-				  <!-- Add Company -->
-				  <img src="{% static 'admin/img/icon_addCompany.svg' %}" alt="Home" />
-				</a>
-			</div>
-		</div>
-	</div>
 
-	{% include "jam/modals/modal_add_company.html" %}
-	{% include "jam/modals/modal_add_contact.html" %}
-	{% include "jam/modals/modal_add_event.html" %}
 {% endblock %}

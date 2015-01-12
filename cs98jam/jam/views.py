@@ -32,8 +32,9 @@ def index(request):
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
-		if e.occurrence_set.all()[0].start_time >= timezone.now():
-			future_events.append(e)
+		for u in e.upcoming_occurrences():
+			if u.start_time >= timezone.now():
+				future_events.append(e)
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
