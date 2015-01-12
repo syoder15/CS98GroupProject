@@ -85,7 +85,7 @@ function dateValidation(date) {
 	var month = +date.substring(5, 7);
 	var day = +date.substring(8, 10);
 
-	if (date.length < 10) {
+	if (date.length < 10 || date.substring(4,5) != '-' || date.substring(7,8) != '-') {
 		return 'Please enter your date in the format YYYY-MM-DD';
 		//		  document.getElementById(dt).style.background ='#e35152';
 
@@ -96,7 +96,7 @@ function dateValidation(date) {
 		 return 'You cannot enter a date that is in the past.';
 		 // document.getElementById(dt).style.background ='#e35152';
 
-	} else if ( month >  12 || day > 31) {
+	} else if ( month >  12 || day > 31 || year > 2050 ) {
 		return 'You must enter a valid date. Please try again.';
 		 //		  document.getElementById(dt).style.background ='#e35152';
 
