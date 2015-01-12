@@ -20,13 +20,15 @@
 			{% for c in contacts %}
 				<input type="submit" name="contact_name" value="{{c}}" class="contactNames"/>
 				<input class="button" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c.name }}?')"/>
+				<br />
 		</form>
 
 		{% empty %}
 			<h5> You haven't entered any contacts. Add one <a data-toggle="modal" data-target="#contactModal">here</a>.</h5>
 		{% endfor %}
 	</div>
-		{% include "jam/nav/modal_nav_bar.html" %}
+
+	{% include "jam/nav/modal_nav_bar.html" %}
 {% endblock %}
 
 {% block main_col %}

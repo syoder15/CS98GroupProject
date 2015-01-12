@@ -5,6 +5,12 @@
 	<div class="navbar navbar-fixed-bottom">
 		<div class="buttons-bottom-align">
 			<div class="round-button" style="float:right;">
+				<a data-toggle="modal" data-target="#channelModal">
+				  <!-- Add Channel -->
+				  <img src="{% static 'admin/img/rss40.svg' %}" alt="Home" />
+				</a>
+			</div>
+			<div class="round-button" style="float:right;">
 				<!--<a data-toggle="modal" data-target="#contactModal">-->
 				<a href="{% url 'swingtime-add-event' %}">
 				  <!-- Add Event -->
@@ -29,3 +35,4 @@
 	{% include "jam/modals/modal_add_company.html" %}
 	{% include "jam/modals/modal_add_contact.html" %}
 	{% include "jam/modals/modal_add_event.html" %}
+	{% include "jam/modals/modal_add_channel.html" %}
