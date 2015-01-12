@@ -444,11 +444,12 @@ def contacts_page(request, contact_name):
 	contact = request.user.contact_set.filter(name=contact_name).first()
 	phone_number = contact.phone_number
 	email_address = contact.email
+	employer = contact.employer
 	contact_notes = contact.notes
 	print "company notes: " + company_notes
 
-	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
-	'contact_email': email_address}
+	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
+	'contact_email': email_address, 'employer': employer}
 
 	return render(request, 'jam/contact_page.html', context)
 
@@ -498,6 +499,9 @@ def edit_contact(request, contact_name):
 	if form_data:
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
+			contact.email=form_data.get('email')
+			contact.phone_number=form_data.get('phone')
+			contact.employer=form_data.get('employer')
 			contact.notes=form_data.get('notes')
 			contact.save()
 			redirect_link = '../../../contacts/' + contact.name
@@ -505,15 +509,19 @@ def edit_contact(request, contact_name):
 
 		else:
 			contact = Contact(user=request.user.username,
-							  contact_name=form_data.get('contact_name'),
+							  name=form_data.get('contact_name'),
+							  email=form_data.get('email'),
+							  phone_number=form_data.get('phone'),
+							  employer=form_data.get('employer'),
 							  notes=form_data.get('notes')
 							  )
 			contact.save()
-			redirect_link = '../../../contact/' + contact.name
+			redirect_link = '../../../contacts/' + contact.name
 			return HttpResponseRedirect(redirect_link)
 
 
-	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email}
+	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email, 
+	'phone_number': contact.phone_number, 'employer': contact.employer}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
@@ -523,7 +531,6 @@ def contacts(request, contact_name):
 	show_contact = True
 
 	context = {'contacts': contacts, 'username': request.user.username}
-
 	if (data):
 		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
@@ -541,12 +548,10 @@ def contacts(request, contact_name):
 		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
-			email_address = contact.email
-			phone_number = contact.phone_number
-			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
+			'phone_number': contact.phone_number, 'employer': contact.employer}
 		
 		else: 
 			for c in contacts:
@@ -560,10 +565,12 @@ def contacts(request, contact_name):
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
 			phone_number = contact.phone_number
+			employer = contact.employer
 			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
+			'employer': employer}
 
 	return render(request, 'jam/contacts/contacts.html', context)
 

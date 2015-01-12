@@ -101,6 +101,18 @@
 					</td>
 				</tr>
 				<tr>
+					<td>
+						<label for="name_input">Employer: </label>
+					</td>
+					<td>
+						{% if phone_number %}
+							<input id="employer_input" name="employer" value='{{ employer }}'/>
+						{% else %}
+							<input id="employer_input" name="employer" placeholder="Microsoft" />
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
 					<td class="editTable">
 						<label for="name_input">Notes: </label>
 					</td>
