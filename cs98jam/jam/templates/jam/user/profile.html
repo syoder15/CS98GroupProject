@@ -88,9 +88,9 @@
 					<td class="profileField">
 						<label for="phone_number_input">Phone Number: </label>
 						{% if profile %}
-							<input id="phone_number_input" name="phone" value='{{profile.phone_number}}'/>
+							<input id="phone_number_input" name="phone" value='{{profile.phone_number}}' required/>
 						{% else %}
-							<input id="phone_number_input" name="phone" placeholder="8005550188"/>
+							<input id="phone_number_input" name="phone" placeholder="8005550188" required/>
 						{% endif %}
 					</td>
 				</tr>
@@ -126,9 +126,9 @@
 					<td class="profileField">
 						<label for="zip_input">Zip Code: </label>
 						{% if profile %}
-							<input id="zip_input" name="zip_code" value='{{profile.zip_code}}'/>
+							<input id="zip_input" name="zip_code" value='{{profile.zip_code}}' required/>
 						{% else %}
-							<input id="zip_input" name="zip_code" placeholder="03755"/>
+							<input id="zip_input" name="zip_code" placeholder="03755" required/>
 						{% endif %}
 					</td>
 				</tr>
@@ -183,9 +183,9 @@
 						<td class="profileField">
 							<label for="grad_year_input">Year: </label>
 							{% if profile %}
-								<input id="grad_year_input" name="grad_year" value='{{profile.grad_year}}'/>
+								<input id="grad_year_input" name="grad_year" value='{{profile.grad_year}}' required/>
 							{% else %}
-								<input id="grad_year_input" name="grad_year" placeholder="2015"/>
+								<input id="grad_year_input" name="grad_year" placeholder="2015" required/>
 							{% endif %}
 						</td>
 					</tr>
