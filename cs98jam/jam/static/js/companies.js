@@ -25,7 +25,7 @@ $('.company-export').on('click', function(){
 	});
   	$.ajax({
   		type: "POST",
-		url: "/jam/companies/",
+		url: "/jam/companies/all/",
 		data: {"export": true}
 	}).done(function() {
 		console.log("GOT HERE");

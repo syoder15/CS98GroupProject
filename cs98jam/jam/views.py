@@ -383,6 +383,7 @@ def companies(request, company_name):
 	context = {'companies': companies, 'username': request.user.username}
 
 	if(data):
+		import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 		if("export" in data):
 			user = request.META['LOGNAME']
