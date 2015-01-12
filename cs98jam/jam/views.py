@@ -438,6 +438,19 @@ def company_page(request, company_name):
 	
 	return render(request, 'jam/companies/company_page.html', context)
 
+def contacts_page(request, contact_name):
+	contacts = request.user.contact_set.all()
+	contact = request.user.contact_set.filter(name=contact_name).first()
+	phone_number = contact.phone_number
+	email_address = contact.email
+	contact_notes = contact.notes
+	print "company notes: " + company_notes
+
+	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
+	'contact_email': email_address}
+
+	return render(request, 'jam/contact_page.html', context)
+
 @login_required
 def edit_company(request, company_name):
 	form_data = request.POST
@@ -474,11 +487,49 @@ def edit_company(request, company_name):
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
-def contacts(request):
+@login_required
+def edit_contact(request, contact_name):
+	form_data = request.POST
+
+	user = User.objects.get(username=request.user.username)
+	contact = request.user.contact_set.filter(name=contact_name).first()
+
+	if form_data:
+		if user and contact: 
+			contact.name=form_data.get('contact_name')
+			#company.application_deadline=form_data.get('app_deadline')
+			company.notes=form_data.get('notes')
+			print contact.name + contact.application_deadline + contact.notes
+			contact.save()
+			redirect_link = '../../../contacts/' + contact.name
+			return HttpResponseRedirect(redirect_link)
+
+		else:
+			contact = Contact(user=request.user.username,
+							  contact_name=form_data.get('contact_name'),
+							  notes=form_data.get('notes')
+							  )
+			contact.save()
+			redirect_link = '../../../contact/' + contact.name
+			return HttpResponseRedirect(redirect_link)
+
+	#app_deadline = company.application_deadline
+	#app_deadline = str(app_deadline)
+	#datetime.strptime(app_deadline, "%Y-%m-%d")
+
+	context = {'contact_name': contact_name, 'notes': contact.notes}
+
+	return render(request, 'jam/contacts/contact_page_edit.html', context)
+
+def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
 	data = request.POST
+	show_contact = True
+
+	context = {'contacts': contacts, 'username': request.user.username}
 
 	if (data):
+		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
 			user = request.META['LOGNAME']
@@ -487,6 +538,18 @@ def contacts(request):
 			for contact in contacts:
 				f.write(str(contact) + ", " + str(contact.employer) + "\n")
 			f.close()
+		
+		elif(go_home == ("Back")):
+			show_contact = False
+
+		elif('contact_name' in data):
+			contact_name = data.get('contact_name')
+			contact = request.user.contact_set.get(name=contact_name)
+			notes = contact.notes
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
+		
 		else: 
 			for c in contacts:
 				if c.name in data:
@@ -494,12 +557,18 @@ def contacts(request):
 					break
 			contacts = request.user.contact_set.all()
 
-	context = {'contacts': contacts, 'username': request.user.username}
+	else:
+		if contact_name != 'all':
+
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
+
 	return render(request, 'jam/contacts/contacts.html', context)
 
-def cal(request):
-	context = {}
-	return render(request, 'jam/calendar.html', context)
+#def cal(request):
+#	context = {}
+#	return render(request, 'jam/calendar.html', context)
 
 def channel_list(request):
 	form_data = request.POST
