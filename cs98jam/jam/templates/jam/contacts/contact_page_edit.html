@@ -4,7 +4,7 @@
 {% block styles %}
 	{{ block.super }}
 	{% load staticfiles %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css' %}" />
 {% endblock %}
 
 
@@ -19,8 +19,10 @@
 			{% csrf_token %}
 			<table>
 				<tr>
-					<td >
+					<td>
 						<label for="name_input">Name: </label>
+					</td>
+					<td>
 						{% if contact_name %}
 							<input id="contact_name_input" name="contact_name" value='{{ contact_name }}'/>
 						{% else %}
@@ -28,8 +30,12 @@
 						{% endif %}
 					</td>
 					<td>&nbsp;&nbsp;&nbsp;</td>
+				</tr>
+				<tr>
 					<td>
 						<label for="name_input">Email: </label>
+					</td>
+					<td>
 						{% if email %}
 							<input id="email_input" name="email" value='{{ email }}'/>
 						{% else %}
@@ -40,7 +46,21 @@
 				<tr><td>&nbsp;</td></tr>
 				<tr>
 					<td>
+						<label for="name_input">Phone Number: </label>
+					</td>
+					<td>
+						{% if phone_number %}
+							<input id="phone_input" name="phone" value='{{ phone_number }}'/>
+						{% else %}
+							<input id="phone_input" name="phone" placeholder="8005550198" />
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="editTable">
 						<label for="name_input">Notes: </label>
+					</td>
+					<td class="editTable">
 						{% if notes %}
 							<textarea id="notes_input" rows="2" columns="40" name="notes">{{ notes }}</textarea>
 						{% else %}
@@ -49,7 +69,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="profileField">
+					<td>&nbsp;</td>
+					<td>
 						<input class="button" type="submit" value="Save"/>
 					</td>
 				</tr>
