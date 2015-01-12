@@ -34,25 +34,11 @@
 			<h2>Newsfeed</h2>
 		</div>
 		<div class="newsfeed-scroll">
-			{% if show %}
-				{% include "jam/channels/channel_feed.html" %}
-				<form class="goHome" method="POST" action="">
-				{% csrf_token %}
-				
-				<br>
-				<p>
-					<input class="button" name="back_home" type="submit" value="Back"/>
-				</p>
-				</form>
-			{% else %}
-				{% for e in events %}
-					<p>{{e}} {{e.next_occurrence.start_time}}</p>
-				{% endfor %}
-			{% endif %}
-
+			{% for e in events %}
+				<p>{{e}} {{e.next_occurrence.start_time}}</p>
+			{% endfor %}
 		</div>
 		<!-- <div class="push"></div> -->
 	</section>
-
 
 {% endblock %}

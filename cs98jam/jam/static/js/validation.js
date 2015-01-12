@@ -2,6 +2,14 @@ var contactForm = $('.contact_form');
 var companyForm = $('.company_form');
 var eventForm = $('.event_form');
 
+// change the site for absolute URL paths depending on whether we're in development 
+// vs. production environment.
+var localTest = true; 
+var site = "http://dartmouthjam.pythonanywhere.com/jam/"
+if(localTest){
+	site = "http://127.0.0.1:8000/jam/";
+}
+
 // JS functions necessary for modal form validation
 // real-time inline error validation is a-go!
 
@@ -109,7 +117,7 @@ contactForm.submit(function(event){
   	$.ajax({
   		type: "POST",
   		cache:false,
-		url: "new_contact/",
+		url: site + "new_contact/",
 		data: {
 			"name": name,
 			"phone": phone,
@@ -182,7 +190,7 @@ companyForm.submit(function(event){
   	$.ajax({
   		type: "POST",
   		cache:false,
-		url: "new_company/",
+		url: site + "new_company/",
 		data: {
 			"name": name,
 			"deadline": deadline,

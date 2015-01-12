@@ -32,9 +32,9 @@ def index(request):
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
-		if e.occurrence_set.all()[0].start_time >= timezone.now():
-			future_events.append(e)
-
+		for u in e.upcoming_occurrences():
+			if u.start_time >= timezone.now():
+				future_events.append(e)
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -52,8 +52,7 @@ def index(request):
 		form = UploadFileForm()
 		site = settings.DOMAIN
 		c_name = ""
-		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 
-			'show': show_feed ,'events': future_events, 'notificationList': notificationList}
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -64,7 +63,7 @@ def index(request):
 
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
-		if( go_home == ("Go home, Roger!")):
+		if( go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
@@ -440,6 +439,19 @@ def company_page(request, company_name):
 	
 	return render(request, 'jam/companies/company_page.html', context)
 
+def contacts_page(request, contact_name):
+	contacts = request.user.contact_set.all()
+	contact = request.user.contact_set.filter(name=contact_name).first()
+	phone_number = contact.phone_number
+	email_address = contact.email
+	contact_notes = contact.notes
+	print "company notes: " + company_notes
+
+	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
+	'contact_email': email_address}
+
+	return render(request, 'jam/contact_page.html', context)
+
 @login_required
 def edit_company(request, company_name):
 	form_data = request.POST
@@ -476,11 +488,44 @@ def edit_company(request, company_name):
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
-def contacts(request):
+@login_required
+def edit_contact(request, contact_name):
+	form_data = request.POST
+
+	user = User.objects.get(username=request.user.username)
+	contact = request.user.contact_set.filter(name=contact_name).first()
+
+	if form_data:
+		if user and contact: 
+			contact.name=form_data.get('contact_name')
+			contact.notes=form_data.get('notes')
+			contact.save()
+			redirect_link = '../../../contacts/' + contact.name
+			return HttpResponseRedirect(redirect_link)
+
+		else:
+			contact = Contact(user=request.user.username,
+							  contact_name=form_data.get('contact_name'),
+							  notes=form_data.get('notes')
+							  )
+			contact.save()
+			redirect_link = '../../../contact/' + contact.name
+			return HttpResponseRedirect(redirect_link)
+
+
+	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email}
+
+	return render(request, 'jam/contacts/contact_page_edit.html', context)
+
+def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
 	data = request.POST
+	show_contact = True
+
+	context = {'contacts': contacts, 'username': request.user.username}
 
 	if (data):
+		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
 			user = request.META['LOGNAME']
@@ -489,6 +534,20 @@ def contacts(request):
 			for contact in contacts:
 				f.write(str(contact) + ", " + str(contact.employer) + "\n")
 			f.close()
+		
+		elif(go_home == ("Back")):
+			show_contact = False
+
+		elif('contact_name' in data):
+			contact_name = data.get('contact_name')
+			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
+			notes = contact.notes
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
+		
 		else: 
 			for c in contacts:
 				if c.name in data:
@@ -496,12 +555,21 @@ def contacts(request):
 					break
 			contacts = request.user.contact_set.all()
 
-	context = {'contacts': contacts, 'username': request.user.username}
+	else:
+		if contact_name != 'all':
+			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
+			notes = contact.notes
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
+
 	return render(request, 'jam/contacts/contacts.html', context)
 
-def cal(request):
-	context = {}
-	return render(request, 'jam/calendar.html', context)
+#def cal(request):
+#	context = {}
+#	return render(request, 'jam/calendar.html', context)
 
 def channel_list(request):
 	form_data = request.POST
@@ -512,16 +580,22 @@ def channel_list(request):
 	# get channels in order of creation, starting with the most recent 
 	channels = Channel.objects.order_by('-added').all()
 
+	error = ''
 	if(form_data ):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
-		elif 'search_category' in form_data:
+		elif 'search' in form_data:
 			cat = form_data.get('search')
 		# it must be a call from modal_add_channel to create a new channel!
 		else: 
 			cat =''
 			new_channel(request) 
-		if(cat != ''):
+
+		# if no channels are categorized under a given search term, the channels returned are an empty list... 
+		# the HTML will populate with the line "No results found" d
+		channels = {}
+		if(cat != '' and ChannelCategory.objects.filter(name=cat).exists()):
+
 			channel_category = ChannelCategory.objects.get(name = cat)
 
 			all_channels = Channel.objects.order_by('-added').all()
@@ -537,7 +611,6 @@ def channel_list(request):
 						sub_channels.append(c)
 			channel_categories = []
 			channel_categories.append(channel_category)
-	#channels = Channel.objects.all()
 	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username}
 	return render(request,'jam/channels/channel_list.html',context)
 
@@ -880,14 +953,43 @@ def occurrence_view(
 				return http.HttpResponseRedirect(request.path)
 		else:
 			form = form_class(instance=occurrence)
-		
-		return render(request, template, {'occurrence': occurrence, 'form': form})
+
+		#google calendar link shenanigans		
+		st = occurrence.start_time
+		et = occurrence.end_time
+
+		'''title_list = occurrence.title.split(' ')
+		event_title = ""
+		i = 0
+		for word in title_list:
+			i+=1
+			if i != (len(title_list)):
+				event_title = event_title + word + "+"
+			else:
+				event_title += word
+		'''
+		event_title = urlify(occurrence.title)
+		event_desc = urlify(occurrence.event.description)
+		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
+		return render(request, template, {'occurrence': occurrence, 'form': form, 'google': google_link})
 		
 	else:
 		return HttpResponseRedirect('/jam/events/')
 #-------------------------------------------------------------------------------
 	
-	
+def urlify(desc):
+	word_list = desc.split(' ')
+	url = ''
+
+	i = 0
+	for word in word_list:
+		i+=1
+		if i != len(word_list):
+			url = url + word + '+'
+		else:
+			url += word
+	return url
+
 	
 #########################################################################################################
 # End to swingtime edits!
