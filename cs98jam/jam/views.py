@@ -499,9 +499,7 @@ def edit_contact(request, contact_name):
 	if form_data:
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
-			#company.application_deadline=form_data.get('app_deadline')
-			company.notes=form_data.get('notes')
-			print contact.name + contact.application_deadline + contact.notes
+			contact.notes=form_data.get('notes')
 			contact.save()
 			redirect_link = '../../../contacts/' + contact.name
 			return HttpResponseRedirect(redirect_link)
@@ -515,11 +513,8 @@ def edit_contact(request, contact_name):
 			redirect_link = '../../../contact/' + contact.name
 			return HttpResponseRedirect(redirect_link)
 
-	#app_deadline = company.application_deadline
-	#app_deadline = str(app_deadline)
-	#datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	context = {'contact_name': contact_name, 'notes': contact.notes}
+	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
@@ -547,6 +542,8 @@ def contacts(request, contact_name):
 		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
 			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
@@ -561,7 +558,10 @@ def contacts(request, contact_name):
 
 	else:
 		if contact_name != 'all':
-
+			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
+			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
