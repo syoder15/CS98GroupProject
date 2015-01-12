@@ -1,0 +1,92 @@
+{% extends "../../jam/templates/jam/index/index.html" %}
+
+
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<!--<div class="col-sm-5">-->
+			<h2> Contact: {{ contact_name }}</h2> 
+		<!--</div>
+		<div class="col-sm-7">-->
+		<form class="contactInfo" method="POST">
+			{% csrf_token %}
+			<table>
+				<tr>
+					<td>
+						<label for="name_input">Name: </label>
+					</td>
+					<td>
+						{% if contact_name %}
+							<input id="contact_name_input" name="contact_name" value='{{ contact_name }}'/>
+						{% else %}
+							<input id="contact_name_input" name="contact_name" value='Contact' required/>
+						{% endif %}
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="name_input">Email: </label>
+					</td>
+					<td>
+						{% if email %}
+							<input id="email_input" name="email" value='{{ email }}'/>
+						{% else %}
+							<input id="email_input" name="email" placeholder="test@gmail.com" required/>
+						{% endif %}
+					</td>
+				</tr>
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td>
+						<label for="name_input">Phone Number: </label>
+					</td>
+					<td>
+						{% if phone_number %}
+							<input id="phone_input" name="phone" value='{{ phone_number }}'/>
+						{% else %}
+							<input id="phone_input" name="phone" placeholder="8005550198" />
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td class="editTable">
+						<label for="name_input">Notes: </label>
+					</td>
+					<td class="editTable">
+						{% if notes %}
+							<textarea id="notes_input" rows="2" columns="40" name="notes">{{ notes }}</textarea>
+						{% else %}
+							<textarea id="notes_input" rows="2" columns="40" name="notes" placeholder="Met at school career fair."></textarea>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<input class="button" type="submit" value="Save"/>
+					</td>
+				</tr>
+			</table>
+			<!--</div>-->
+		</form>
+		</div>
+	</div>	
+</div>
+{% endblock %}
+
+{% block javascript %}
+	<script src="{% static 'js/profile.js' %}"></script>
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+{% endblock %}

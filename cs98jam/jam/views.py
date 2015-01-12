@@ -35,7 +35,6 @@ def index(request):
 		for u in e.upcoming_occurrences():
 			if u.start_time >= timezone.now():
 				future_events.append(e)
-
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -53,8 +52,7 @@ def index(request):
 		form = UploadFileForm()
 		site = settings.DOMAIN
 		c_name = ""
-		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 
-			'show': show_feed ,'events': future_events, 'notificationList': notificationList}
+		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -65,7 +63,7 @@ def index(request):
 
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
-		if( go_home == ("Go home, Roger!")):
+		if( go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
@@ -500,9 +498,7 @@ def edit_contact(request, contact_name):
 	if form_data:
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
-			#company.application_deadline=form_data.get('app_deadline')
-			company.notes=form_data.get('notes')
-			print contact.name + contact.application_deadline + contact.notes
+			contact.notes=form_data.get('notes')
 			contact.save()
 			redirect_link = '../../../contacts/' + contact.name
 			return HttpResponseRedirect(redirect_link)
@@ -516,11 +512,8 @@ def edit_contact(request, contact_name):
 			redirect_link = '../../../contact/' + contact.name
 			return HttpResponseRedirect(redirect_link)
 
-	#app_deadline = company.application_deadline
-	#app_deadline = str(app_deadline)
-	#datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	context = {'contact_name': contact_name, 'notes': contact.notes}
+	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
@@ -548,6 +541,8 @@ def contacts(request, contact_name):
 		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
 			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
@@ -562,7 +557,10 @@ def contacts(request, contact_name):
 
 	else:
 		if contact_name != 'all':
-
+			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
+			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
@@ -582,16 +580,22 @@ def channel_list(request):
 	# get channels in order of creation, starting with the most recent 
 	channels = Channel.objects.order_by('-added').all()
 
+	error = ''
 	if(form_data ):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
-		elif 'search_category' in form_data:
+		elif 'search' in form_data:
 			cat = form_data.get('search')
 		# it must be a call from modal_add_channel to create a new channel!
 		else: 
 			cat =''
 			new_channel(request) 
-		if(cat != ''):
+
+		# if no channels are categorized under a given search term, the channels returned are an empty list... 
+		# the HTML will populate with the line "No results found" d
+		channels = {}
+		if(cat != '' and ChannelCategory.objects.filter(name=cat).exists()):
+
 			channel_category = ChannelCategory.objects.get(name = cat)
 
 			all_channels = Channel.objects.order_by('-added').all()
@@ -607,7 +611,6 @@ def channel_list(request):
 						sub_channels.append(c)
 			channel_categories = []
 			channel_categories.append(channel_category)
-	#channels = Channel.objects.all()
 	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username}
 	return render(request,'jam/channels/channel_list.html',context)
 
@@ -950,14 +953,43 @@ def occurrence_view(
 				return http.HttpResponseRedirect(request.path)
 		else:
 			form = form_class(instance=occurrence)
-		
-		return render(request, template, {'occurrence': occurrence, 'form': form})
+
+		#google calendar link shenanigans		
+		st = occurrence.start_time
+		et = occurrence.end_time
+
+		'''title_list = occurrence.title.split(' ')
+		event_title = ""
+		i = 0
+		for word in title_list:
+			i+=1
+			if i != (len(title_list)):
+				event_title = event_title + word + "+"
+			else:
+				event_title += word
+		'''
+		event_title = urlify(occurrence.title)
+		event_desc = urlify(occurrence.event.description)
+		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
+		return render(request, template, {'occurrence': occurrence, 'form': form, 'google': google_link})
 		
 	else:
 		return HttpResponseRedirect('/jam/events/')
 #-------------------------------------------------------------------------------
 	
-	
+def urlify(desc):
+	word_list = desc.split(' ')
+	url = ''
+
+	i = 0
+	for word in word_list:
+		i+=1
+		if i != len(word_list):
+			url = url + word + '+'
+		else:
+			url += word
+	return url
+
 	
 #########################################################################################################
 # End to swingtime edits!
