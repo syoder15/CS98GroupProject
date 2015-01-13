@@ -531,7 +531,6 @@ def contacts(request, contact_name):
 	show_contact = True
 
 	context = {'contacts': contacts, 'username': request.user.username}
-
 	if (data):
 		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
@@ -549,14 +548,10 @@ def contacts(request, contact_name):
 		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
-			email_address = contact.email
-			phone_number = contact.phone_number
-			employer = contact.employer
-			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
-			'phone_number': contact.phone_number, 'employer': employer}
+			'phone_number': contact.phone_number, 'employer': contact.employer}
 		
 		else: 
 			for c in contacts:
