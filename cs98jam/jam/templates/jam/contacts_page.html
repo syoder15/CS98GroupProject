@@ -8,8 +8,11 @@
 		{{ phone_number }}
 
 	<h3> Employer </h3>
-		{{ employer }}
-
+	{% if employer_exists %}
+	<a href="{% url 'companies' employer %}">{{ employer }}</a>
+	{% else %}
+	{{ employer }}
+	{% endif %}
 	<h3> Notes </h3>
 		{{ contact_notes }}
 </div>
