@@ -384,6 +384,7 @@ def companies(request, company_name):
 	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 
 	if(data):
+		import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 		if("export" in data):
 			user = request.META['LOGNAME']
@@ -501,7 +502,7 @@ def edit_contact(request, contact_name):
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
 			contact.email=form_data.get('email')
-			contact.phone_number=form_data.get('phone_number')
+			contact.phone_number=form_data.get('phone')
 			contact.employer=form_data.get('employer')
 			contact.notes=form_data.get('notes')
 			contact.save()
@@ -512,7 +513,7 @@ def edit_contact(request, contact_name):
 			contact = Contact(user=request.user.username,
 							  name=form_data.get('contact_name'),
 							  email=form_data.get('email'),
-							  phone_number=form_data.get('phone_number'),
+							  phone_number=form_data.get('phone'),
 							  employer=form_data.get('employer'),
 							  notes=form_data.get('notes')
 							  )
@@ -550,10 +551,6 @@ def contacts(request, contact_name):
 		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
-			email_address = contact.email
-			phone_number = contact.phone_number
-			employer = contact.employer
-			notes = contact.notes
 
 			# check whether the employer exists as a company in the user's DB
 			employer_exists = False
@@ -563,7 +560,6 @@ def contacts(request, contact_name):
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
-		
 		else: 
 			for c in contacts:
 				if c.name in data:
