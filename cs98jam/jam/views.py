@@ -551,6 +551,10 @@ def contacts(request, contact_name):
 		elif('contact_name' in data):
 			contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
+			email_address = contact.email
+			phone_number = contact.phone_number
+			employer = contact.employer
+			notes = contact.notes
 
 			# check whether the employer exists as a company in the user's DB
 			employer_exists = False
