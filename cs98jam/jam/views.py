@@ -448,7 +448,7 @@ def contacts_page(request, contact_name):
 	contact_notes = contact.notes
 	print "company notes: " + company_notes
 
-	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
+	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
 	'contact_email': email_address, 'employer': employer}
 
 	return render(request, 'jam/contact_page.html', context)
@@ -516,7 +516,7 @@ def edit_contact(request, contact_name):
 							  notes=form_data.get('notes')
 							  )
 			contact.save()
-			redirect_link = '../../../contact/' + contact.name
+			redirect_link = '../../../contacts/' + contact.name
 			return HttpResponseRedirect(redirect_link)
 
 
@@ -556,7 +556,7 @@ def contacts(request, contact_name):
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
-			'contact_number': contact.phone_number, 'employer': employer}
+			'phone_number': contact.phone_number, 'employer': employer}
 		
 		else: 
 			for c in contacts:
@@ -574,7 +574,7 @@ def contacts(request, contact_name):
 			notes = contact.notes
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
 			'employer': employer}
 
 	return render(request, 'jam/contacts/contacts.html', context)
