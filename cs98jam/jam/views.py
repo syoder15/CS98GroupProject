@@ -500,7 +500,7 @@ def edit_contact(request, contact_name):
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
 			contact.email=form_data.get('email')
-			contact.phone_number=form_data.get('phone_number')
+			contact.phone_number=form_data.get('phone')
 			contact.employer=form_data.get('employer')
 			contact.notes=form_data.get('notes')
 			contact.save()
@@ -511,7 +511,7 @@ def edit_contact(request, contact_name):
 			contact = Contact(user=request.user.username,
 							  name=form_data.get('contact_name'),
 							  email=form_data.get('email'),
-							  phone_number=form_data.get('phone_number'),
+							  phone_number=form_data.get('phone'),
 							  employer=form_data.get('employer'),
 							  notes=form_data.get('notes')
 							  )
