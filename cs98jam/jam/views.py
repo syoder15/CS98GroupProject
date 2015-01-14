@@ -963,7 +963,7 @@ def event_view(
 			'event': event,
 			'event_form': event_form or event_form_class(instance=event),
 			'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()}),
-			'owned': event_owned
+			'owned': event_owned,
 
 			'upload_form': upload_form
 
