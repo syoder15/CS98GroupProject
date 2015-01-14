@@ -9,7 +9,8 @@
 <h3> Contacts </h3>
 	<ul>
 		{% for c in contacts %}
-		<li><a href="../../contacts/{{c}}">{{ c }}</a></li>
+		<!--../../contacts/{{c}}-->
+		<li><a href="{% url 'contacts_page' c %}">{{ c }}</a></li>
 
 		{% empty %}
 		<p> You haven't entered any contacts for this company.</p>
