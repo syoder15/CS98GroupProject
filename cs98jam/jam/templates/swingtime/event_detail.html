@@ -11,7 +11,7 @@
 	
     <h3>Event Details</h3>
     <div>
-        <h3>Add Event</h3>
+       
 
             <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">
                 <button>Yearly View</button>
@@ -26,22 +26,35 @@
                 <button>Add Event</button>
             </a>
 </div>
-    <form action="" method="post">
-    <table>
-        <tfoot>
-            <tr>
-                <td colspan="2">
-                	<input type="button" onclick="history.back();" value="Back">
-                    <input type="button" name="eventDelete" value="Delete" onclick="return confirm('Are you sure you want to delete this event?')"/>
-                    <input type="submit" name="_update" value="Update" />
-                </td>
-            </tr>
-        </tfoot>
-        <tbody>
-        {% include "swingtime/event_form_part.html" %}
-        </tbody>
-    </table>
-    </form>
+		{% if owned %}
+			<form action="" method="post">
+			<table>
+				<tfoot>
+					<tr>
+						<td colspan="2">
+							<input type="button" onclick="history.back();" value="Back">
+							<input type="button" name="eventDelete" value="Delete" onclick="return confirm('Are you sure you want to delete this event?')"/>
+							<input type="submit" name="_update" value="Update" />
+						</td>
+					</tr>
+				</tfoot>
+				<tbody>
+				{% include "swingtime/event_form_part.html" %}
+				</tbody>
+			</table>
+			</form>
+		{% else %}
+			 <dt>Event:</dt>
+			 <dd>{{ event.title }}</dd>
+			 
+			 <dt>Event type:</dt>
+			 <dd>{{ event.event_type }}</dd>
+			 
+			 <dt>Description:</dt>
+			 <dd>{{ occurrence.event.description|default:"None" }}</dd>
+			
+			
+		{% endif %}	
     
     <h4>Notes</h4>
     {% with event.notes.all as notes %}
@@ -75,20 +88,23 @@
     {% else %}
     {% endif %}
     
-    <h4>Add Occurrences</h4>
-    <form action="" method="post">
-    <table>
-        <tfoot>
-            <tr>
-                <td colspan="2"><input type="submit" name="_add" value="Add" /></td>
-            </tr>
-        </tfoot>
-        <tbody>
-        {% include "swingtime/recurring_form_part.html" %}
-        </tbody>
-    </table>
-    </form>
-    </form>
+	
+	{% if owned %}
+		<h4>Add Occurrences</h4>
+		<form action="" method="post">
+		<table>
+			<tfoot>
+				<tr>
+					<td colspan="2"><input type="submit" name="_add" value="Add" /></td>
+				</tr>
+			</tfoot>
+			<tbody>
+			{% include "swingtime/recurring_form_part.html" %}
+			</tbody>
+		</table>
+		</form>
+   <!-- </form> Superfluous?? !-->
+   {% endif %}
 {% endblock %}
 
 	
