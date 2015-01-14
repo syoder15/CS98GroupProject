@@ -242,11 +242,19 @@ def view_channel(request, channel_name):
 	if request.user.controlledChannels.filter(name=channel_name).exists():
 		is_admin = True
 
+	added_events = channel.events.all() & request.user.profile.events.all()
+	unadded_events = channel.events.all().exclude(pk__in = added_events.all())
+		
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
-		'is_admin': is_admin}
+		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events}
 
 	if request.method == 'POST':
+		for key in request.POST:
+			if key.isdigit() and channel.events.filter(pk = key).exists():
+				event = channel.events.filter(pk = key).first()
+				request.user.profile.events.add(event)
+		
 		if 'Unsubscribe' in request.POST:
 			channel.subscribers.remove(request.user)
 		elif channel.is_public and 'Subscribe' in request.POST:
@@ -296,7 +304,7 @@ def view_channel_as_admin(request, channel_name):
 
 		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)
 
-	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 'events': channel.events,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
 		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at")}
 
@@ -654,9 +662,14 @@ def add_event(
 			if (not channel_name):
 				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
 				user_profile.events.add(event) #associate the current event with a user's profile
+				user_profile.owned_events.add(event)
 			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
 				channel = get_object_or_404(Channel, name=channel_name)
 				channel.events.add(event)
+				for user in channel.admins.all():
+					user.profile.owned_events.add(event)
+					user.profile.events.add(event)
+				
 			#### JAM CODE ####	
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
@@ -895,6 +908,10 @@ def event_view(
 	event_form = recurrence_form = None
 	
 	if request.user.profile.events.filter(pk=pk).exists():
+		event_owned = False;
+		if request.user.profile.owned_events.filter(pk=pk).exists():
+			event_owned = True;
+	
 		if request.method == 'POST':
 			if '_update' in request.POST:
 				event_form = event_form_class(request.POST, instance=event)
@@ -917,7 +934,8 @@ def event_view(
 		data = {
 			'event': event,
 			'event_form': event_form or event_form_class(instance=event),
-			'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()})
+			'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()}),
+			'owned': event_owned
 		}
 		return render(request, template, data)
 	else:
@@ -943,9 +961,13 @@ def occurrence_view(
 		a form object for updating the occurrence
 	'''
 	occurrence = get_object_or_404(Occurrence, pk=pk, event__pk=event_pk)
-	print "TEST"
+
 	if request.user.profile.events.filter(pk=event_pk).exists():
-		print "TEST2"
+		event_owned = False;
+		if request.user.profile.owned_events.filter(pk=pk).exists():
+			event_owned = True;
+		
+
 		if request.method == 'POST':
 			form = form_class(request.POST, instance=occurrence)
 			if form.is_valid():
@@ -971,7 +993,7 @@ def occurrence_view(
 		event_title = urlify(occurrence.title)
 		event_desc = urlify(occurrence.event.description)
 		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
-		return render(request, template, {'occurrence': occurrence, 'form': form, 'google': google_link})
+		return render(request, template, {'occurrence': occurrence, 'form': form, 'google': google_link, 'owned': event_owned})
 		
 	else:
 		return HttpResponseRedirect('/jam/events/')

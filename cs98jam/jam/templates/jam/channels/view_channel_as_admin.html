@@ -54,6 +54,13 @@
 			</p>
 		{% endfor %}
 		
+		<h3>All Events</h3>
+		<ul>{% for e in events.all %}
+		<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+		{% empty %} No events
+		{% endfor %}
+		
+		
 		<a href="../../../events/add/{{ channel_name }}">Add New Event</a>
 		
 	{% else %}
