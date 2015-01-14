@@ -495,7 +495,6 @@ def edit_contact(request, contact_name):
 
 	user = User.objects.get(username=request.user.username)
 	contact = request.user.contact_set.filter(name=contact_name).first()
-
 	if form_data:
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
