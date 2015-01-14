@@ -28,7 +28,7 @@ upload_form = UploadFileForm
 # Create your views here.
 @login_required
 def index(request):
-	context = {'username': request.user.username}
+	#context = {'username': request.user.username}
 		
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
@@ -50,9 +50,11 @@ def index(request):
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
+		print "This was a get!"
 		site = settings.DOMAIN
 		c_name = ""
-		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList}
+
+		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
