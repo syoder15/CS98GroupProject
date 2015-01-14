@@ -39,24 +39,28 @@
          </dd>
      </dl>
      
-     <form action="" method="POST">
-    {% csrf_token %}
-     <table>
-         <tfoot>
-             <tr>
-                 <td colspan="2">
-                    <input type="button" onclick="history.back();" value="Back">
-                    <input type="submit" value="Update" />
-                </td>
-             </tr>
-         </tfoot>
-         <tbody>
-             {{ form }}
-         </tbody>
-     </table>
-     </form>
+	{% if owned %}
+	 
+		 <form action="" method="POST">
+		{% csrf_token %}
+		 <table>
+			 <tfoot>
+				 <tr>
+					 <td colspan="2">
+						<input type="button" onclick="history.back();" value="Back">
+						<input type="submit" value="Update" />
+					</td>
+				 </tr>
+			 </tfoot>
+			 <tbody>
+				 {{ form }}
+			 </tbody>
+		 </table>
+		 </form>
 
-     <br>
+	 {% endif %}
+	 
+     
      <a href= "{{ google }}" target="_blank"> Sync with Google Calendar </a>
 
 {% endblock %}
