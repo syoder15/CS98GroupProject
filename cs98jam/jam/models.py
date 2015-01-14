@@ -12,7 +12,7 @@ class Company(models.Model):
  	class Meta:
  		verbose_name_plural =_('Companies')
     name = models.CharField(max_length=50)
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
     user = models.ForeignKey(User)
     application_deadline = models.DateField()
 
