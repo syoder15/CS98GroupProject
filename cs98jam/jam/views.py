@@ -252,16 +252,18 @@ def view_channel(request, channel_name):
 		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events}
 
 	if request.method == 'POST':
+		event_added = False
 		for key in request.POST:
 			if key.isdigit() and channel.events.filter(pk = key).exists():
 				event = channel.events.filter(pk = key).first()
 				request.user.profile.events.add(event)
+				event_added = True
 		
 		if 'Unsubscribe' in request.POST:
 			channel.subscribers.remove(request.user)
 		elif channel.is_public and 'Subscribe' in request.POST:
 			channel.subscribers.add(request.user)
-		else:
+		elif not event_added:
 			site = settings.DOMAIN
 			link = site + "/jam/channels/activate/" + channel.name + "/" + request.user.username
 			for admin in channel.admins.all():
