@@ -15,6 +15,7 @@ class Company(models.Model):
     notes = models.TextField()
     user = models.ForeignKey(User)
     application_deadline = models.DateField()
+    application_status = models.BooleanField(default=False)
 
 class Contact(models.Model):
 

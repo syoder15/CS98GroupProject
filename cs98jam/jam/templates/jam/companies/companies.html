@@ -20,7 +20,15 @@
 		{% csrf_token %}
 		{% for c in companies %}
 			<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
-			<input class="button" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')"/>
+			<input class="button" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')"  />
+			
+			<label style="float:right">Application Complete</label>
+			{% if c.app_status %}
+			<input type="checkbox" name="app_status" style="float:right" checked/>
+			{% else %}
+			<input type="checkbox" name="app_status" style="float:right" onchange="this.form.submit()"/>
+			{% endif %}
+
 			<br />
 		{% empty %}
 			You haven't entered any companies yet.

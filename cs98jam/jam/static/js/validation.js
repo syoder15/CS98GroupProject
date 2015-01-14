@@ -136,7 +136,7 @@ contactForm.submit(function(event){
 		//handles error response
 		error: function(response){
 			//console.log(response);
-
+			console.log('got to error sadly');
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
 				$('.server-error').html(errors[error]);
