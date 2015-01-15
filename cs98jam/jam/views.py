@@ -353,11 +353,14 @@ def new_company(request):
 			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 		else: 
-			company = Company(name=company_name,
-						  application_deadline=form_data.get('deadline'),
-						  notes=form_data.get('company_notes'),
-						  user=request.user)
+			print "making Company"
+			print company_name
+			print form_data.get('deadline')
+			print form_data.get('company_notes')
+			print request.user.username
+			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
 			company.save()
+			print 'made company'
 			context = {'username': request.user.username}
 			return render(request, 'jam/index/index_landing_home.html', context)
 
