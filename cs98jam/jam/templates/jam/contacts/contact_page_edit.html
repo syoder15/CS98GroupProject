@@ -9,7 +9,9 @@
 
 
 {% block content %}
-<div class="container"> 
+<div class="container">
+	<h2> Contact: {{ contact_name }}</h2>  
+	
 	<form name="contact_form" class="contact_form form-horizontal" method="POST"> 
 		{% csrf_token %}
 		<div class="form-group"> 
@@ -49,6 +51,10 @@
 				<textarea class="form-control" rows="5" id="comment">{{ notes }}</textarea>
 			</div>
 		</div>	
+
+		<input class="button" type="submit" value="Save"/>
+
+	</form>
 
 {% endblock %}
 
