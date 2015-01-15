@@ -9,7 +9,6 @@
 <h3> Contacts </h3>
 	<ul>
 		{% for c in contacts %}
-		<!--../../contacts/{{c}}-->
 		<li><a href="{% url 'contacts_page' c %}">{{ c }}</a></li>
 
 		{% empty %}
