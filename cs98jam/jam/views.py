@@ -198,17 +198,14 @@ def new_contact(request):
 	form_data = request.POST
 	
 	# avoid adding contacts with the same name!
-<<<<<<< HEAD
 	contact_num = form_data.get('phone')
 	print "contact num = " + contact_num
 
 	contact_email = form_data.get('email')
-=======
 	contact_name = form_data.get('name')
 	print contact_name
 	
 	#print "contact name = " + contact_name
->>>>>>> 760bef0d55e9be68d69b4fef1a274f9d8b834b78
 
 	''' see whether a contact with the same name already exists
 			if it does, re-render the form with an appropriate error.
