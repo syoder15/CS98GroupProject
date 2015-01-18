@@ -97,12 +97,14 @@ contactForm.submit(function(event){
 
 
   	event.preventDefault();
+  	$("input[type=submit]").attr("disabled", "disabled");
+
   	//NEED TO VALIDATE FIELDS
   	var name = $('#name_input').val();
   	var phone = $('#phone_number_input').val();
   	var email = $('#email_input').val();
   	var company = $('#company_input').val();
-  	var notes = $('#contact_notes_input').val();
+  	var notes = $('#comment').val();
 	var csrftoken = getCookie('csrftoken');
 
 	var formName = $('.contact_form').attr('name');
@@ -166,16 +168,17 @@ companyForm.submit(function(event){
 		return false;
 	}
 
-	//$("input[type=submit]").attr("disabled", "disabled");
+	$("input[type=submit]").attr("disabled", "disabled");
 
 	if(typeof(xhr)!='undefined'){
 		xhr.abort();
 		xhr = undefined;
 	}
+	
   	//NEED TO VALIDATE FIELDS
   	var name = $('#company_name_input').val();
   	var deadline = $('#company_deadline_input').val();
-  	var company_notes = $('#company_notes_input').val();
+  	var company_notes = $('#comment').val();
 	var csrftoken = getCookie('csrftoken');
 
 	var formName = $('.company_form').attr('name');
@@ -201,6 +204,7 @@ companyForm.submit(function(event){
         blocking:true,
 		success: function(){
 			donezo = true;
+			console.log("SUCCESS")
 			$('.server-error').hide();
 			$('#companyModal').modal('hide');
 			$('input').val('');
@@ -212,6 +216,7 @@ companyForm.submit(function(event){
 		//handles error response
 		error: function(response){
 			//console.log(response);
+			console.log("ERRORERROR" + name)
 			$("input[type=submit]").prop("disabled", false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){

@@ -28,9 +28,9 @@
 			<div class="form-group"> 
 				<label for="company_notes_input" class="col-sm-4 control-label">Notes on Company: </label>
 				<div class="col-sm-8">
-					<textarea id="company_notes_input" rows="3" columns="30" name="company_notes"></textarea>
+					<textarea class="form-control" rows="3" id="comment"></textarea>
 				</div>
-			</div>
+			</div>	
 
 			<div class="divider">
 			or
@@ -38,7 +38,7 @@
 			<div class="form-group inputFileForm"> 
 				<label for="multiple_companies" class="col-sm-4 control-label">Upload Multiple: </label>
 				<div class="col-sm-8">
-					{{ form.filep }}
+					{{ upload_form.filep }}
 				</div>
 			</div>
 			<div class="modal-footer">

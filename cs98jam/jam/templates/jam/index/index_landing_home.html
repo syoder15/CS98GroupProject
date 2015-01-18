@@ -36,6 +36,21 @@
 		<div class="newsfeed-scroll">
 			{% if show %}
 				{% include "jam/channels/channel_feed.html" %}
+				
+				<h3>All Events</h3>
+				<ul>{% for e in unadded_e.all %}
+				<li>{{ e }} - {{e.next_occurrence.start_time}}</li>
+				<form class="addEvent" method="POST">
+					{% csrf_token %}
+					<input class="button" name="{{e.pk}}-{{channel_name}}" type="submit" value="Add"/>
+				</form>
+				{% endfor %}
+				
+				<ul>{% for e in added_e.all %}
+				<li><a href="{{ e.get_absolute_url }}">{{ e }}</a> - {{e.next_occurrence.start_time}}</li>
+				
+				{% endfor %}
+				
 				<form class="goHome" method="POST" action="">
 				{% csrf_token %}
 				
@@ -46,39 +61,12 @@
 				</form>
 			{% else %}
 				{% for e in events %}
-					<p>{{e}} {{e.next_occurrence.start_time}}  </p>
+					<p>{{e}} {{e.next_occurrence.start_time}}</p>
 				{% endfor %}
 			{% endif %}
-
 		</div>
 		<!-- <div class="push"></div> -->
 	</section>
 
-	<div class="navbar navbar-fixed-bottom">
-		<div class="buttons-bottom-align">
-			<div class="round-button" style="float:right;">
-				<!--<a data-toggle="modal" data-target="#contactModal">-->
-				<a href="{% url 'new_event' %}">
-				  <!-- Add Event -->
-				  <img src="{% static 'admin/img/icon_addEvent.svg' %}" alt="Home" />
-				</a>
-			</div>
-			<div class="round-button" style="float:right;">
-				<a data-toggle="modal" data-target="#contactModal">
-				  <!-- Add Contact -->
-				  <img src="{% static 'admin/img/icon_addContact.svg' %}" alt="Home" />
-				</a>
-			</div>
-			<div class="round-button" style="float:right;">
-				<a data-toggle="modal" data-target="#companyModal">
-				  <!-- Add Company -->
-				  <img src="{% static 'admin/img/icon_addCompany.svg' %}" alt="Home" />
-				</a>
-			</div>
-		</div>
-	</div>
 
-	{% include "jam/modals/modal_add_company.html" %}
-	{% include "jam/modals/modal_add_contact.html" %}
-	{% include "jam/modals/modal_add_event.html" %}
 {% endblock %}

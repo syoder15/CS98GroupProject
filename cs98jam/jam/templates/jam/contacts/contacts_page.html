@@ -5,11 +5,14 @@
 		{{ contact_email }}
 
 	<h3> Phone Number </h3>
-		{{ contact_number }}
+		{{ phone_number }}
 
 	<h3> Employer </h3>
-		{{ contact_employer }}
-
+	{% if employer_exists %}
+	<a href="{% url 'companies' employer %}">{{ employer }}</a>
+	{% else %}
+	{{ employer }}
+	{% endif %}
 	<h3> Notes </h3>
 		{{ contact_notes }}
 </div>

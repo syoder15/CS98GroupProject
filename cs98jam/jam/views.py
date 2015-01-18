@@ -26,16 +26,21 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 import pytz
+
+
+upload_form = UploadFileForm
+
 # Create your views here.
 @login_required
 def index(request):
-	context = {'username': request.user.username}
+	#context = {'username': request.user.username}
 		
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
-		if e.occurrence_set.all()[0].start_time >= timezone.now():
-			future_events.append(e)
+		for u in e.upcoming_occurrences():
+			if u.start_time >= timezone.now():
+				future_events.append(e)
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
@@ -50,10 +55,11 @@ def index(request):
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
-		form = UploadFileForm()
+	
 		site = settings.DOMAIN
 		c_name = ""
-		context = {'username': request.user.username, 'form': form, 'site': site, 'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList}
+
+		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -61,7 +67,7 @@ def index(request):
 	elif request.method == "POST":
 		show_feed = True
 		form_data = request.POST
-
+		
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
 		if( go_home == ("Back")):
@@ -70,18 +76,35 @@ def index(request):
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
 		# otherwise, showing clicked channel feed
 		else:
-			print 'here'
-			c_name = form_data.get('channel_name')
-			channel = get_object_or_404(Channel, name=c_name)
-		
+			c_name = None
+			channel = None
+			
+			# Handle post request when a channel's event is being added to the user's events
+			for key in request.POST:
+				split = key.split('-')
+				if len(split) and split[0].isdigit():
+						c_name = split[1]
+						channel = get_object_or_404(Channel, name=c_name)
+						
+						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
+							event = channel.events.filter(pk = split[0]).first()
+							request.user.profile.events.add(event)
+			
+			if channel == None:
+				c_name = form_data.get('channel_name')
+				channel = get_object_or_404(Channel, name=c_name)			
+					
 			is_admin = False
 			if request.user.controlledChannels.filter(name=channel.name).exists():
 				is_admin = True
-
+			
+			added_events = channel.events.all() & request.user.profile.events.all()
+			unadded_events = channel.events.all().exclude(pk__in = added_events.all())
+			
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
-				"adminNotes": channel.adminNotes.order_by("-created_at")}
+				"adminNotes": channel.adminNotes.order_by("-created_at"), 'unadded_e': unadded_events, 'added_e': added_events}
 			
 
 	return render(request, 'jam/index/index_landing_home.html', context)
@@ -243,16 +266,26 @@ def view_channel(request, channel_name):
 	if request.user.controlledChannels.filter(name=channel_name).exists():
 		is_admin = True
 
+	added_events = channel.events.all() & request.user.profile.events.all()
+	unadded_events = channel.events.all().exclude(pk__in = added_events.all())
+		
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
-		'is_admin': is_admin}
+		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events}
 
 	if request.method == 'POST':
+		event_added = False
+		for key in request.POST:
+			if key.isdigit() and channel.events.filter(pk = key).exists():
+				event = channel.events.filter(pk = key).first()
+				request.user.profile.events.add(event)
+				event_added = True
+		
 		if 'Unsubscribe' in request.POST:
 			channel.subscribers.remove(request.user)
 		elif channel.is_public and 'Subscribe' in request.POST:
 			channel.subscribers.add(request.user)
-		else:
+		elif not event_added:
 			site = settings.DOMAIN
 			link = site + "/jam/channels/activate/" + channel.name + "/" + request.user.username
 			for admin in channel.admins.all():
@@ -297,7 +330,7 @@ def view_channel_as_admin(request, channel_name):
 
 		return HttpResponseRedirect("/jam/channels/view_as_admin/" + channel.name)
 
-	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
+	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 'events': channel.events,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
 		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at")}
 
@@ -343,6 +376,7 @@ def new_company(request):
 			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 		else: 
+
 			company = Company(name=company_name,
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
@@ -350,6 +384,7 @@ def new_company(request):
 
 			
 			event_types = swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+			
 			if len(event_types) == 0:
 				swingmodel.EventType.objects.create(abbr='due', label='Application Deadline')
 				swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
@@ -369,7 +404,16 @@ def new_company(request):
 			request.user.profile.events.add(evt)
 			
 			
+
+			print "making Company"
+			print company_name
+			print form_data.get('deadline')
+			print form_data.get('company_notes')
+			print request.user.username
+			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
+
 			company.save()
+			print 'made company'
 			context = {'username': request.user.username}
 
 
@@ -408,9 +452,10 @@ def companies(request, company_name):
 	show_company = True
 	user = User.objects.get(username = request.user.username)
 
-	context = {'companies': companies, 'username': request.user.username}
+	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 
 	if(data):
+		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 		if("export" in data):
 			user = request.META['LOGNAME']
@@ -432,15 +477,14 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
-			#print "delete"
 			for company in companies:
 				if company.name in data:
 					company.delete()
 					break
 			companies = request.user.company_set.all()
-			context = {'companies': companies, 'username': request.user.username}
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 	else:
 		if company_name != 'all':
 			company = request.user.company_set.get(name=company_name)
@@ -449,7 +493,7 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 
 	return render(request, 'jam/companies/companies.html', context)
 
@@ -462,7 +506,10 @@ def company_page(request, company_name):
 	company_notes = company.notes
 	print "company notes: " + company_notes
 
-	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes}
+
+	site = settings.DOMAIN
+
+	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes, 'site': site}
 	
 	return render(request, 'jam/companies/company_page.html', context)
 
@@ -471,11 +518,11 @@ def contacts_page(request, contact_name):
 	contact = request.user.contact_set.filter(name=contact_name).first()
 	phone_number = contact.phone_number
 	email_address = contact.email
+	employer = contact.employer
 	contact_notes = contact.notes
-	print "company notes: " + company_notes
 
-	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number,
-	'contact_email': email_address}
+	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
+	'contact_email': email_address, 'employer': employer}
 
 	return render(request, 'jam/contact_page.html', context)
 
@@ -521,10 +568,12 @@ def edit_contact(request, contact_name):
 
 	user = User.objects.get(username=request.user.username)
 	contact = request.user.contact_set.filter(name=contact_name).first()
-
 	if form_data:
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
+			contact.email=form_data.get('email')
+			contact.phone_number=form_data.get('phone')
+			contact.employer=form_data.get('employer')
 			contact.notes=form_data.get('notes')
 			contact.save()
 			redirect_link = '../../../contacts/' + contact.name
@@ -532,15 +581,19 @@ def edit_contact(request, contact_name):
 
 		else:
 			contact = Contact(user=request.user.username,
-							  contact_name=form_data.get('contact_name'),
+							  name=form_data.get('contact_name'),
+							  email=form_data.get('email'),
+							  phone_number=form_data.get('phone'),
+							  employer=form_data.get('employer'),
 							  notes=form_data.get('notes')
 							  )
 			contact.save()
-			redirect_link = '../../../contact/' + contact.name
+			redirect_link = '../../../contacts/' + contact.name
 			return HttpResponseRedirect(redirect_link)
 
 
-	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email}
+	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email, 
+	'phone_number': contact.phone_number, 'employer': contact.employer}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
@@ -549,7 +602,7 @@ def contacts(request, contact_name):
 	data = request.POST
 	show_contact = True
 
-	context = {'contacts': contacts, 'username': request.user.username}
+	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
 
 	if (data):
 		go_home = data.get('back_home')
@@ -570,11 +623,17 @@ def contacts(request, contact_name):
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
 			phone_number = contact.phone_number
+			employer = contact.employer
 			notes = contact.notes
 
+			# check whether the employer exists as a company in the user's DB
+			employer_exists = False
+			if request.user.company_set.filter(name=employer).exists():
+				employer_exists = True
+
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 'contact_number': contact.phone_number}
-		
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
+			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
 			for c in contacts:
 				if c.name in data:
@@ -587,10 +646,17 @@ def contacts(request, contact_name):
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
 			phone_number = contact.phone_number
+			employer = contact.employer
 			notes = contact.notes
 
+			# check whether the employer exists as a company in the user's DB
+			employer_exists = False
+			if request.user.company_set.filter(name=employer).exists():
+				employer_exists = True
+
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'contact_number': phone_number}
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
+			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 
 	return render(request, 'jam/contacts/contacts.html', context)
 
@@ -638,7 +704,7 @@ def channel_list(request):
 						sub_channels.append(c)
 			channel_categories = []
 			channel_categories.append(channel_category)
-	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username}
+	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username, 'upload_form': upload_form}
 	return render(request,'jam/channels/channel_list.html',context)
 
 
@@ -681,9 +747,14 @@ def add_event(
 			if (not channel_name):
 				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
 				user_profile.events.add(event) #associate the current event with a user's profile
+				user_profile.owned_events.add(event)
 			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
 				channel = get_object_or_404(Channel, name=channel_name)
 				channel.events.add(event)
+				for user in channel.admins.all():
+					user.profile.owned_events.add(event)
+					user.profile.events.add(event)
+				
 			#### JAM CODE ####	
 			recurrence_form.save(event)
 			return http.HttpResponseRedirect(event.get_absolute_url())
@@ -700,6 +771,7 @@ def add_event(
 		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
 
 		print recurrence_form
+
 
 	return render(
 		request,
@@ -728,7 +800,8 @@ def event_listing(
 	???
 		all values passed in via **extra_context
 	'''
-	extra_context={'username': request.user.username}
+	form = UploadFileForm
+	extra_context={'username': request.user.username, 'upload_form': upload_form}
 	return render(
 		request,
 		template,
@@ -817,7 +890,6 @@ def month_view(
 	
 	#### JAM CODE ####
 
-
 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
 	def start_day(o):
@@ -835,6 +907,7 @@ def month_view(
 		'careerFair' : careerFair,
 		'infoSession': infoSession,
 		'other'		 : other,
+		'upload_form'		 : upload_form
 	}
 
 	return render(request, template, data)
@@ -891,7 +964,8 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 		'by_month': [(dt, list(o)) for dt,o in groupby(occurrences, group_key)],
 		'next_year': year + 1,
 		'last_year': year - 1,
-		'username': request.user.username
+		'username': request.user.username,
+		'upload_form': upload_form
 	})
 
 #-------------------------------------------------------------------------------
@@ -922,6 +996,10 @@ def event_view(
 	event_form = recurrence_form = None
 	
 	if request.user.profile.events.filter(pk=pk).exists():
+		event_owned = False;
+		if request.user.profile.owned_events.filter(pk=pk).exists():
+			event_owned = True;
+	
 		if request.method == 'POST':
 			if '_update' in request.POST:
 				event_form = event_form_class(request.POST, instance=event)
@@ -944,7 +1022,11 @@ def event_view(
 		data = {
 			'event': event,
 			'event_form': event_form or event_form_class(instance=event),
-			'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()})
+			'recurrence_form': recurrence_form or recurrence_form_class(initial={'dtstart': datetime.now()}),
+			'owned': event_owned,
+
+			'upload_form': upload_form
+
 		}
 		return render(request, template, data)
 	else:
@@ -970,9 +1052,13 @@ def occurrence_view(
 		a form object for updating the occurrence
 	'''
 	occurrence = get_object_or_404(Occurrence, pk=pk, event__pk=event_pk)
-	print "TEST"
+
 	if request.user.profile.events.filter(pk=event_pk).exists():
-		print "TEST2"
+		event_owned = False;
+		if request.user.profile.owned_events.filter(pk=pk).exists():
+			event_owned = True;
+		
+
 		if request.method == 'POST':
 			form = form_class(request.POST, instance=occurrence)
 			if form.is_valid():
@@ -998,7 +1084,9 @@ def occurrence_view(
 		event_title = urlify(occurrence.title)
 		event_desc = urlify(occurrence.event.description)
 		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
-		return render(request, template, {'occurrence': occurrence, 'form': form, 'google': google_link})
+
+		return render(request, template, {'occurrence': occurrence, 'form': form, 'upload_form': upload_form, 'google': google_link, 'owned': event_owned})
+
 		
 	else:
 		return HttpResponseRedirect('/jam/events/')
