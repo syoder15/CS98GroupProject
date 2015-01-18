@@ -39,12 +39,14 @@
 			{% csrf_token %}
 				
 			<br />
-			<input class="button" name="back_home" type="submit" value="Back"/>
-				<a href="../../edit/contact/{{ c_name }}"><button style="color:black" type="button">Edit</button></a>
-
+				<input class="button" name="back_home" type="submit" value="Back"/>
+				<a href="../../edit/contact/{{ c_name }}"><button style="color:black" type="submit" name="edit" class="btn btn-default" value="{{ c_name }}">Edit</button></a>
 			</form>
 		</div>
+	{% elif edit %}
+		{% include "jam/contacts/contact_edit.html" %}
 	{% endif %}
+
 </div>
 {% endblock %}
 
