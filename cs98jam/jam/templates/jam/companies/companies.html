@@ -16,15 +16,24 @@
 		<button type="button" class="btn btn-primary company-export">Export my companies</button>
 	</div>
 	<div class="list-group">
-		<form action="" method="POST">
+		<form action="" method="POST" id="company_form">
 		{% csrf_token %}
 		{% for c in companies %}
 			<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
-			<input class="button" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')"/>
+			<input class="button" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')"  />
+			
+			<label style="float:right">Application Complete</label>
+			{% if c.application_status %}
+			<input type="checkbox" name="app_status[]" style="float:right"  value="{{c}}" checked/>
+			{% else %}
+			<input type="checkbox" name = "app_status[]" style="float:right" value="{{c}}" unchecked/>
+			{% endif %}
+
 			<br />
 		{% empty %}
 			You haven't entered any companies yet.
 		{% endfor %}
+		<input type="submit" name="company_update"  value = "Update"/>
 		</form>
 	</div>
 
