@@ -507,7 +507,7 @@ def companies(request, company_name):
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 		elif('company_name' in data):
 			print "company name in data"
-			#c_name = data.get('company_name')
+			c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
