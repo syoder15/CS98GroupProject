@@ -402,9 +402,11 @@ def companies(request, company_name):
 	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 
 	if(data):
+		print "got to post"
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 		if("export" in data):
+			print "export in data"
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
 			f = open(os.path.join(path_name, "companies.txt"), "w")
@@ -413,10 +415,27 @@ def companies(request, company_name):
 			f.close() 
 
 		elif(go_home == ("Back")):
+			print "go home"
 			show_company = False
-
+		elif('company_update' in data):
+			print "APP STATUS"
+			#c_name = data.get('app_status')
+			company_list = data.getlist('app_status[]')
+			for company in companies: 
+				if company.name in company_list: 
+					company = request.user.company_set.get(name=company.name)
+					company.application_status = True
+					print company.name + "is COMPLETE"
+					company.save()
+				else:
+					company.application_status = False
+					print company.name + "IS NOT COMPLETE"
+					company.save()
+			companies = request.user.company_set.all()
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 		elif('company_name' in data):
-			c_name = data.get('company_name')
+			print "company name in data"
+			#c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
@@ -427,6 +446,7 @@ def companies(request, company_name):
 			'application_deadline': company.application_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
+			print "got to the else"
 			for company in companies:
 				if company.name in data:
 					company.delete()
