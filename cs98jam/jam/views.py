@@ -193,23 +193,37 @@ def new_contact(request):
 	form_data = request.POST
 	
 	# avoid adding contacts with the same name!
-	contact_name = form_data.get('name')
-	print "contact name = " + contact_name
+	contact_num = form_data.get('phone')
+	print "contact num = " + contact_num
+
+	contact_email = form_data.get('email')
 
 	''' see whether a contact with the same name already exists
 			if it does, re-render the form with an appropriate error.
 			if it doesn't, go ahead with business as usual, creating the company DB record
 	'''
-	if request.user.contact_set.filter(name=contact_name).exists():
+	if request.user.contact_set.filter(phone_number=contact_num).exists():
 			#request.user.contact_set.get(name=contact_name)
-		print "INVALID NAME!!!"
-		msg = "Sorry, you've already added a contact of the same name!"
+		print "INVALID NUM!!!"
+		msg = "Sorry, you've already added a contact with that number!"
 
 		# return err response to AJAX via JSON
 		response={}
 		response["error"] = msg
 		print "got here"
 		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
+	elif request.user.contact_set.filter(email=contact_email).exists():
+			#request.user.contact_set.get(name=contact_name)
+		print "INVALID EMAIL!!!"
+		msg = "Sorry, you've already added a contact with that email!"
+
+		# return err response to AJAX via JSON
+		response={}
+		response["error"] = msg
+		print "got here"
+		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
 	else:
 		print "making new contact!"
 
