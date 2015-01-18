@@ -15,6 +15,7 @@ from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, Use
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
+from swingtime import models as swingmodel
 from dateutil import parser
 from django import http
 import calendar
@@ -23,7 +24,8 @@ from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
-
+from dateutil import rrule
+import pytz
 # Create your views here.
 @login_required
 def index(request):
@@ -303,6 +305,7 @@ def view_channel_as_admin(request, channel_name):
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
+	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -344,8 +347,33 @@ def new_company(request):
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
 						  user=request.user)
+
+			
+			event_types = swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+			if len(event_types) == 0:
+				swingmodel.EventType.objects.create(abbr='due', label='Application Deadline')
+				swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+
+			
+			year = int(application_deadline[0:4])
+			month = int(application_deadline[5:7])
+			day = int(application_deadline[8:10])
+
+			evt = swingmodel.create_event(
+				company_name,
+				event_types[0],
+				start_time=datetime(year,month,day, 12, 0, 0, 0, pytz.timezone('America/New_York')),
+				
+			)
+			
+			request.user.profile.events.add(evt)
+			
+			
 			company.save()
 			context = {'username': request.user.username}
+
+
+
 			return render(request, 'jam/index/index_landing_home.html', context)
 
 def is_valid_date(date):
