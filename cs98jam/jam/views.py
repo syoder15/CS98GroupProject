@@ -645,6 +645,7 @@ def contacts(request, contact_name):
 	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
 
 	if (data):
+		edit = False
 		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
@@ -658,8 +659,14 @@ def contacts(request, contact_name):
 		elif(go_home == ("Back")):
 			show_contact = False
 
-		elif('contact_name' in data):
-			contact_name = data.get('contact_name')
+		elif('edit' in data or 'contact_name' in data):
+			if('edit' in data):
+				edit = True
+				contact_name = data.get('edit')
+				show_contact = False
+				print "edit pressed"
+			else:
+				contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
 			phone_number = contact.phone_number
@@ -671,7 +678,7 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
-			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			context = {'edit': edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
