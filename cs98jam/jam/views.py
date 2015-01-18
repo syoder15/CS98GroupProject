@@ -202,45 +202,45 @@ def new_contact(request):
 			if it does, re-render the form with an appropriate error.
 			if it doesn't, go ahead with business as usual, creating the company DB record
 	'''
-	# if request.user.contact_set.filter(phone_number=contact_num).exists():
-	# 		#request.user.contact_set.get(name=contact_name)
-	# 	print "INVALID NUM!!!"
-	# 	msg = "Sorry, you've already added a contact with that number!"
+	if request.user.contact_set.filter(phone_number=contact_num).exists():
+			#request.user.contact_set.get(name=contact_name)
+		print "INVALID NUM!!!"
+		msg = "Sorry, you've already added a contact with that number!"
 
-	# 	# return err response to AJAX via JSON
-	# 	response={}
-	# 	response["error"] = msg
-	# 	print "got here"
-	# 	return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+		# return err response to AJAX via JSON
+		response={}
+		response["error"] = msg
+		print "got here"
+		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 
-	# elif request.user.contact_set.filter(email=contact_email).exists():
-	# 		#request.user.contact_set.get(name=contact_name)
-	# 	print "INVALID EMAIL!!!"
-	# 	msg = "Sorry, you've already added a contact with that email!"
+	elif request.user.contact_set.filter(email=contact_email).exists():
+			#request.user.contact_set.get(name=contact_name)
+		print "INVALID EMAIL!!!"
+		msg = "Sorry, you've already added a contact with that email!"
 
-	# 	# return err response to AJAX via JSON
-	# 	response={}
-	# 	response["error"] = msg
-	# 	print "got here"
-	# 	return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+		# return err response to AJAX via JSON
+		response={}
+		response["error"] = msg
+		print "got here"
+		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 
-	# else:
-	print "making new contact!"
+	else:
+		print "making new contact!"
 
-	contact_notes = form_data.get('notes')
-	if contact_notes=='' :
-		contact_notes=" "
+		contact_notes = form_data.get('notes')
+		if contact_notes=='' :
+			contact_notes=" "
 
-	contact = Contact(name=contact_name,
-					  phone_number=form_data.get('phone'),
-					  email=form_data.get('email'),
-					  employer=form_data.get('company'),
-					  notes=contact_notes,
-					  user=request.user)
-	contact.save()
-	context = {'username': request.user.username}
+		contact = Contact(name=contact_name,
+						  phone_number=form_data.get('phone'),
+						  email=form_data.get('email'),
+						  employer=form_data.get('company'),
+						  notes=contact_notes,
+						  user=request.user)
+		contact.save()
+		context = {'username': request.user.username}
 
-	return render(request, 'jam/index/index_landing_home.html', context)
+		return render(request, 'jam/index/index_landing_home.html', context)
 
 @login_required
 def activate_subscriber(request, channel_name, user_name):
