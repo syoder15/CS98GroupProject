@@ -50,7 +50,7 @@ def index(request):
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
-		print "This was a get!"
+	
 		site = settings.DOMAIN
 		c_name = ""
 
@@ -62,7 +62,7 @@ def index(request):
 	elif request.method == "POST":
 		show_feed = True
 		form_data = request.POST
-
+		
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
 		if( go_home == ("Back")):
@@ -71,18 +71,35 @@ def index(request):
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
 		# otherwise, showing clicked channel feed
 		else:
-			print 'here'
-			c_name = form_data.get('channel_name')
-			channel = get_object_or_404(Channel, name=c_name)
-		
+			c_name = None
+			channel = None
+			
+			# Handle post request when a channel's event is being added to the user's events
+			for key in request.POST:
+				split = key.split('-')
+				if len(split) and split[0].isdigit():
+						c_name = split[1]
+						channel = get_object_or_404(Channel, name=c_name)
+						
+						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
+							event = channel.events.filter(pk = split[0]).first()
+							request.user.profile.events.add(event)
+			
+			if channel == None:
+				c_name = form_data.get('channel_name')
+				channel = get_object_or_404(Channel, name=c_name)			
+					
 			is_admin = False
 			if request.user.controlledChannels.filter(name=channel.name).exists():
 				is_admin = True
-
+			
+			added_events = channel.events.all() & request.user.profile.events.all()
+			unadded_events = channel.events.all().exclude(pk__in = added_events.all())
+			
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
-				"adminNotes": channel.adminNotes.order_by("-created_at")}
+				"adminNotes": channel.adminNotes.order_by("-created_at"), 'unadded_e': unadded_events, 'added_e': added_events}
 			
 
 	return render(request, 'jam/index/index_landing_home.html', context)
@@ -536,7 +553,6 @@ def edit_contact(request, contact_name):
 
 	user = User.objects.get(username=request.user.username)
 	contact = request.user.contact_set.filter(name=contact_name).first()
-
 	if form_data:
 		if user and contact: 
 			contact.name=form_data.get('contact_name')
