@@ -11,3 +11,8 @@
 .editTable {
 	padding-bottom: 1em;
 }
+
+.table-contacts td {
+	width:100%;
+	white-space: nowrap; 
+}
