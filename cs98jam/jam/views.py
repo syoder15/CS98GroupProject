@@ -939,7 +939,6 @@ def event_view(
 	event = get_object_or_404(Event, pk=pk)
 	event_form = recurrence_form = None
 	if request.user.profile.events.filter(pk=pk).exists():
-		print 'first if'
 		event_owned = False;
 		if request.user.profile.owned_events.filter(pk=pk).exists():
 			event_owned = True;
@@ -956,14 +955,13 @@ def event_view(
 					recurrence_form.save(event)
 					return http.HttpResponseRedirect(request.path)
 			else:
-				print 'else'
 				events = request.user.profile.events.all()
 				for event in events:
-					if event.title in request.POST:
-						print 'event.title true'
+					#if event.title in request.POST:
+					if request.POST.get('title') == event.title:
 						event.delete()
 						break
-				return HttpResponseRedirect("{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}")
+				return month_view(request, datetime.today().year, datetime.today().month)
 
 		data = {
 			'event': event,
