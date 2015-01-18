@@ -957,7 +957,6 @@ def event_view(
 			else:
 				events = request.user.profile.events.all()
 				for event in events:
-					#if event.title in request.POST:
 					if request.POST.get('title') == event.title:
 						event.delete()
 						break
