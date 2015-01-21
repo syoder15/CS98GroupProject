@@ -520,10 +520,20 @@ def companies(request, company_name):
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
 			print "got to the else"
+		
 			for company in companies:
 				if company.name in data:
 					company.delete()
+					c_name = company.name
 					break
+
+			events = request.user.profile.events.all()
+			for event in events:
+				
+				if c_name == event.title:
+					event.delete()
+					break
+
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 	else:
