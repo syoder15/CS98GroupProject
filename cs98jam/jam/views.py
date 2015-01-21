@@ -357,7 +357,6 @@ def view_channel_as_admin(request, channel_name):
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
-	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -421,6 +420,7 @@ def new_company(request):
 			)
 			
 			request.user.profile.events.add(evt)
+			request.user.profile.owned_events.add(evt)
 			
 			
 
@@ -863,7 +863,8 @@ def month_view(
 	year,
 	month,
 	template='swingtime/monthly_view.html',
-	queryset=None
+	queryset=None,
+	filters='false'
 ):
 	'''
 	Render a tradional calendar grid view with temporal navigation variables.
@@ -902,22 +903,22 @@ def month_view(
 	my_events = request.user.profile.events.all() #access all of the uers events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
-		if request.POST.get('Interviews'):
+		if request.POST.get('Interviews') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
 		else:
 			interview = False
 
-		if request.POST.get('Career Fairs'):
+		if request.POST.get('Career Fairs') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
 		else:
 			careerFair = False
 
-		if request.POST.get('Info Sessions'):
+		if request.POST.get('Info Sessions') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
 		else:
 			infoSession = False
 
-		if request.POST.get('Other'):
+		if request.POST.get('Other') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
 		else:
 			other = False
@@ -1063,7 +1064,7 @@ def event_view(
 					if request.POST.get('title') == event.title:
 						event.delete()
 						break
-				return month_view(request, datetime.today().year, datetime.today().month)
+				return month_view(request, datetime.today().year, datetime.today().month, 'swingtime/monthly_view.html', None, 'true')
 
 		data = {
 			'event': event,
