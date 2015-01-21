@@ -18,7 +18,7 @@
 	<p>Description: {{ channel_description }} </p>
 	<p>Categories: 
 		{% for c in categories %}
-			{{ c }} <br>
+			{{ c }}{% if not forloop.last %},{% endif %} 
 		{% endfor %}</p>
 	{% if channel_status %}
 		<p>Status: Public </p>

@@ -169,14 +169,22 @@ def new_channel(request):
 		form_data = request.POST
 
 		if form_data.get('name') != "" and not Channel.objects.filter(name=form_data.get('name')).exists():
-			category_names = form_data.getlist('category')
+			category_names = form_data.get('category_names')
 			channel = Channel(name=form_data.get('name'), 
 				moniker=form_data.get('moniker'), 
 				description=form_data.get('description'), 
 				is_public=(form_data.get('is_public')))
 			channel.save()
-			for c in category_names:
-				cat = ChannelCategory.objects.get(name = c)
+			for c in category_names.split(","):
+				cat = None
+				c = c.strip(' \t\n\r')
+				if (ChannelCategory.objects.filter(name = c).exists()):
+					cat = ChannelCategory.objects.get(name = c)
+					cat.count += 1
+				else:
+					cat = ChannelCategory(name = c, count = 1)
+				cat.save()
+				cat.save()
 				channel.categories.add(cat)
 			channel.subscribers.add(request.user)
 			channel.admins.add(request.user)
@@ -714,7 +722,7 @@ def contacts(request, contact_name):
 
 def channel_list(request):
 	form_data = request.POST
-	channel_categories = ChannelCategory.objects.all()
+	channel_categories =  ChannelCategory.objects.all().order_by('-count')[:10]
 
 	sub_channels = request.user.channel_set.all()
 
@@ -734,9 +742,9 @@ def channel_list(request):
 
 		# if no channels are categorized under a given search term, the channels returned are an empty list... 
 		# the HTML will populate with the line "No results found" d
-		channels = {}
+		
 		if(cat != '' and ChannelCategory.objects.filter(name=cat).exists()):
-
+			channels = {}
 			channel_category = ChannelCategory.objects.get(name = cat)
 
 			all_channels = Channel.objects.order_by('-added').all()
@@ -752,6 +760,7 @@ def channel_list(request):
 						sub_channels.append(c)
 			channel_categories = []
 			channel_categories.append(channel_category)
+		
 	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username, 'upload_form': upload_form}
 	return render(request,'jam/channels/channel_list.html',context)
 
