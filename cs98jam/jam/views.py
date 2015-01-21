@@ -169,14 +169,22 @@ def new_channel(request):
 		form_data = request.POST
 
 		if form_data.get('name') != "" and not Channel.objects.filter(name=form_data.get('name')).exists():
-			category_names = form_data.getlist('category')
+			category_names = form_data.get('category_names')
 			channel = Channel(name=form_data.get('name'), 
 				moniker=form_data.get('moniker'), 
 				description=form_data.get('description'), 
 				is_public=(form_data.get('is_public')))
 			channel.save()
-			for c in category_names:
-				cat = ChannelCategory.objects.get(name = c)
+			for c in category_names.split(","):
+				cat = None
+				c = c.strip(' \t\n\r')
+				if (ChannelCategory.objects.filter(name = c).exists()):
+					cat = ChannelCategory.objects.get(name = c)
+					cat.count += 1
+				else:
+					cat = ChannelCategory(name = c, count = 1)
+				cat.save()
+				cat.save()
 				channel.categories.add(cat)
 			channel.subscribers.add(request.user)
 			channel.admins.add(request.user)
@@ -357,7 +365,6 @@ def view_channel_as_admin(request, channel_name):
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
-	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -421,6 +428,7 @@ def new_company(request):
 			)
 			
 			request.user.profile.events.add(evt)
+			request.user.profile.owned_events.add(evt)
 			
 			
 
@@ -520,10 +528,20 @@ def companies(request, company_name):
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
 			print "got to the else"
+		
 			for company in companies:
 				if company.name in data:
 					company.delete()
+					c_name = company.name
 					break
+
+			events = request.user.profile.events.all()
+			for event in events:
+				
+				if c_name == event.title:
+					event.delete()
+					break
+
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 	else:
@@ -714,7 +732,7 @@ def contacts(request, contact_name):
 
 def channel_list(request):
 	form_data = request.POST
-	channel_categories = ChannelCategory.objects.all()
+	channel_categories =  ChannelCategory.objects.all().order_by('-count')[:10]
 
 	sub_channels = request.user.channel_set.all()
 
@@ -734,9 +752,9 @@ def channel_list(request):
 
 		# if no channels are categorized under a given search term, the channels returned are an empty list... 
 		# the HTML will populate with the line "No results found" d
-		channels = {}
+		
 		if(cat != '' and ChannelCategory.objects.filter(name=cat).exists()):
-
+			channels = {}
 			channel_category = ChannelCategory.objects.get(name = cat)
 
 			all_channels = Channel.objects.order_by('-added').all()
@@ -752,6 +770,7 @@ def channel_list(request):
 						sub_channels.append(c)
 			channel_categories = []
 			channel_categories.append(channel_category)
+		
 	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username, 'upload_form': upload_form}
 	return render(request,'jam/channels/channel_list.html',context)
 
@@ -863,7 +882,8 @@ def month_view(
 	year,
 	month,
 	template='swingtime/monthly_view.html',
-	queryset=None
+	queryset=None,
+	filters='false'
 ):
 	'''
 	Render a tradional calendar grid view with temporal navigation variables.
@@ -902,22 +922,22 @@ def month_view(
 	my_events = request.user.profile.events.all() #access all of the uers events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
-		if request.POST.get('Interviews'):
+		if request.POST.get('Interviews') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
 		else:
 			interview = False
 
-		if request.POST.get('Career Fairs'):
+		if request.POST.get('Career Fairs') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
 		else:
 			careerFair = False
 
-		if request.POST.get('Info Sessions'):
+		if request.POST.get('Info Sessions') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
 		else:
 			infoSession = False
 
-		if request.POST.get('Other'):
+		if request.POST.get('Other') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
 		else:
 			other = False
@@ -1063,7 +1083,7 @@ def event_view(
 					if request.POST.get('title') == event.title:
 						event.delete()
 						break
-				return month_view(request, datetime.today().year, datetime.today().month)
+				return month_view(request, datetime.today().year, datetime.today().month, 'swingtime/monthly_view.html', None, 'true')
 
 		data = {
 			'event': event,

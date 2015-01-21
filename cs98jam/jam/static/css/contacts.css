@@ -1,7 +1,12 @@
+.contact_names_list {
+	margin-top:5px;
+}
+
 .contactNames {
 	border: 0; 
 	background: transparent;
 	font-size: 20px;
+	vertical-align: center; 
 }
 
 .editButton {

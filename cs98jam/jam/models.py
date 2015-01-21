@@ -43,6 +43,7 @@ class ChannelCategory(models.Model):
 	def __unicode__(self):
 		return self.name
 	name = models.CharField(max_length = 50)
+	count = models.IntegerField(default=0, blank=True)
 
 class Channel(models.Model): 
 	def __unicode__(self):
