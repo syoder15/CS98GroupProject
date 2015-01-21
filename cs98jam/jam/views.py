@@ -340,7 +340,6 @@ def view_channel_as_admin(request, channel_name):
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
-	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -404,6 +403,7 @@ def new_company(request):
 			)
 			
 			request.user.profile.events.add(evt)
+			request.user.profile.owned_events.add(evt)
 			
 			
 
