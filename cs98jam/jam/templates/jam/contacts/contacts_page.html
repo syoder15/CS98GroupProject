@@ -1,18 +1,33 @@
-<div>
-	<h3> Contact: {{ c_name }}</h3> 
-
-	<h3> Email </h3>
-		{{ contact_email }}
-
-	<h3> Phone Number </h3>
-		{{ phone_number }}
-
-	<h3> Employer </h3>
-	{% if employer_exists %}
-	<a href="{% url 'companies' employer %}">{{ employer }}</a>
-	{% else %}
-	{{ employer }}
-	{% endif %}
-	<h3> Notes </h3>
-		{{ contact_notes }}
+<div class="table-responsive">
+	<table class="table table-contacts"> 
+		<thead> 
+			<tr> 
+				<th class="col-md-3"><h3>Contact Name: </h3></th>
+				<td><h3>{{ c_name }}</h3></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Phone Number:</th> 
+				<td>{{ phone_number }}</td>
+			</tr>
+			<tr>
+				<th>Email:</th> 
+				<td>{{ contact_email }}</td>
+			</tr>
+			<tr>
+				<th>Employer:</th> 
+				<td>{% if employer_exists %}
+					<a href="{% url 'companies' employer %}">{{ employer }}</a>
+				{% else %}
+					{{ employer }}
+				{% endif %}
+				</td>
+			</tr>
+			<tr> 
+				<th>Notes:</th>
+				<td>{{ contact_notes }} </td>
+			</tr>
+		</tbody>
+	</table>
 </div>

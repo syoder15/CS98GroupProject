@@ -61,7 +61,7 @@
 				</form>
 			{% else %}
 				{% for e in events %}
-					<p>{{e}} {{e.next_occurrence.start_time}}</p>
+					<p><a href="{{e.get_absolute_url}}">{{e}} {{e.next_occurrence.start_time}}</a></p>
 				{% endfor %}
 			{% endif %}
 		</div>

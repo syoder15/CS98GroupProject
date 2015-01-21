@@ -34,7 +34,7 @@ upload_form = UploadFileForm
 @login_required
 def index(request):
 	#context = {'username': request.user.username}
-		
+	
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
@@ -59,7 +59,8 @@ def index(request):
 		site = settings.DOMAIN
 		c_name = ""
 
-		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
+		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
+			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -198,6 +199,10 @@ def new_contact(request):
 	form_data = request.POST
 	
 	# avoid adding contacts with the same name!
+	contact_num = form_data.get('phone')
+	print "contact num = " + contact_num
+
+	contact_email = form_data.get('email')
 	contact_name = form_data.get('name')
 	print contact_name
 	
@@ -207,16 +212,28 @@ def new_contact(request):
 			if it does, re-render the form with an appropriate error.
 			if it doesn't, go ahead with business as usual, creating the company DB record
 	'''
-	if request.user.contact_set.filter(name=contact_name).exists():
+	if request.user.contact_set.filter(phone_number=contact_num).exists():
 			#request.user.contact_set.get(name=contact_name)
-		print "INVALID NAME!!!"
-		msg = "Sorry, you've already added a contact of the same name!"
+		print "INVALID NUM!!!"
+		msg = "Sorry, you've already added a contact with that number!"
 
 		# return err response to AJAX via JSON
 		response={}
 		response["error"] = msg
 		print "got here"
 		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
+	elif request.user.contact_set.filter(email=contact_email).exists():
+			#request.user.contact_set.get(name=contact_name)
+		print "INVALID EMAIL!!!"
+		msg = "Sorry, you've already added a contact with that email!"
+
+		# return err response to AJAX via JSON
+		response={}
+		response["error"] = msg
+		print "got here"
+		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
 	else:
 		print "making new contact!"
 
@@ -491,7 +508,7 @@ def companies(request, company_name):
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 		elif('company_name' in data):
 			print "company name in data"
-			#c_name = data.get('company_name')
+			c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
@@ -629,6 +646,7 @@ def contacts(request, contact_name):
 	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
 
 	if (data):
+		edit = False
 		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
@@ -642,8 +660,14 @@ def contacts(request, contact_name):
 		elif(go_home == ("Back")):
 			show_contact = False
 
-		elif('contact_name' in data):
-			contact_name = data.get('contact_name')
+		elif('edit' in data or 'contact_name' in data):
+			if('edit' in data):
+				edit = True
+				contact_name = data.get('edit')
+				show_contact = False
+				print "edit pressed"
+			else:
+				contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
 			phone_number = contact.phone_number
@@ -655,7 +679,7 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
-			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			context = {'edit': edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
@@ -839,7 +863,8 @@ def month_view(
 	year,
 	month,
 	template='swingtime/monthly_view.html',
-	queryset=None
+	queryset=None,
+	filters='false'
 ):
 	'''
 	Render a tradional calendar grid view with temporal navigation variables.
@@ -878,22 +903,22 @@ def month_view(
 	my_events = request.user.profile.events.all() #access all of the uers events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
-		if request.POST.get('Interviews'):
+		if request.POST.get('Interviews') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
 		else:
 			interview = False
 
-		if request.POST.get('Career Fairs'):
+		if request.POST.get('Career Fairs') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
 		else:
 			careerFair = False
 
-		if request.POST.get('Info Sessions'):
+		if request.POST.get('Info Sessions') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
 		else:
 			infoSession = False
 
-		if request.POST.get('Other'):
+		if request.POST.get('Other') or filters is 'true' :
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
 		else:
 			other = False
@@ -1017,7 +1042,6 @@ def event_view(
 	'''
 	event = get_object_or_404(Event, pk=pk)
 	event_form = recurrence_form = None
-	
 	if request.user.profile.events.filter(pk=pk).exists():
 		event_owned = False;
 		if request.user.profile.owned_events.filter(pk=pk).exists():
@@ -1037,10 +1061,10 @@ def event_view(
 			else:
 				events = request.user.profile.events.all()
 				for event in events:
-					if event.title in request.POST:
+					if request.POST.get('title') == event.title:
 						event.delete()
 						break
-				return HttpResponseRedirect("{% url 'swingtime-monthly-view' current_datetime.year current_datetime.month %}")
+				return month_view(request, datetime.today().year, datetime.today().month, 'swingtime/monthly_view.html', None, 'true')
 
 		data = {
 			'event': event,
