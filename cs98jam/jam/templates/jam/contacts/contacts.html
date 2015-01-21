@@ -18,9 +18,10 @@
 		<form class="deleteContact" method='POST' action="">
 			{% csrf_token %}
 			{% for c in contacts %}
-				<input type="submit" name="contact_name" value="{{c}}" class="contactNames"/>
-				<input class="button" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c.name }}?')"/>
-				<br>
+				<div class="contact_names_list">
+					<input type="submit" name="contact_name" value="{{c}}" class="contactNames"/>
+					<button class="submit btn btn-default" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c.name }}?')">Delete</button>
+				</div>
 			{% empty %}
 			<h5> You haven't entered any contacts. Add one <a data-toggle="modal" data-target="#contactModal">here</a>.</h5>
 			{% endfor %}
