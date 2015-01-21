@@ -32,6 +32,11 @@ profileDropDown.on('click', function() {
 	$('.dropdown').toggleClass('visible');
 });
 
+addFileButton.hover(function(){
+	console.log('HOVERING');
+	$("#format_reminder").attr({"opacity" : "1"});
+});
+
 
 addFileButton.on('change', function() {
 	console.log("HERE");
