@@ -34,7 +34,7 @@ upload_form = UploadFileForm
 @login_required
 def index(request):
 	#context = {'username': request.user.username}
-		
+	
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
@@ -59,7 +59,8 @@ def index(request):
 		site = settings.DOMAIN
 		c_name = ""
 
-		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
+		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
+			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
