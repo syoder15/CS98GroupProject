@@ -48,19 +48,17 @@
 <div id="showCompanyPage">
 	{% if show %}
 		{% include "jam/companies/company_page.html" %}
-		<div>
-			<form class="goHome" method="POST" action="">
-			{% csrf_token %}
-				
-			<br />
-			<input class="button" name="back_home" type="submit" value="Back"/>
-				<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a>
+			<div>
+				<form class="goHome" method="POST" action="">
+				{% csrf_token %}
+					
+				<br />
+				<input class="button" name="back_home" type="submit" value="Back"/>
+					<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a>
 
-			</form>
-		</div>
-	{% elif company_edit %}
-		{% include "jam/contacts/company_edit.html" %}
-	{% endif %}
+				</form>
+			</div>
+		{% endif %}
 
 </div>
 

@@ -166,6 +166,7 @@ def profile(request):
 @login_required
 def new_channel(request):
 	if request.method == 'POST':
+		print "GOT HERE TO NEW CHANNEL VIEW"
 		form_data = request.POST
 
 		if form_data.get('name') != "" and not Channel.objects.filter(name=form_data.get('name')).exists():
@@ -196,7 +197,10 @@ def new_channel(request):
 				errors = "A channel with that name already exists: please choose another."
 			context = {"errors": errors}
 			
-			return render(request, 'jam/channels/new_channel.html', context)
+			response={}
+			response["error"] = errors
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+			#return render(request, 'jam/channels/new_channel.html', context)
 
 	else:
 		cats = ChannelCategory.objects.all()
@@ -382,6 +386,7 @@ def new_company(request):
 			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 
+			#probs should get rid of this shit bc its dead code but yolo...soon!
 			context = { 'validity' : validity }
 			return render(request, 'jam/modals/modal_add_company.html', context)
 		

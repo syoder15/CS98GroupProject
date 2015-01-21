@@ -1,6 +1,7 @@
 var contactForm = $('.contact_form');
 var companyForm = $('.company_form');
 var eventForm = $('.event_form');
+var channelForm = $('.channel_form');
 
 // change the site for absolute URL paths depending on whether we're in development 
 // vs. production environment.
@@ -88,6 +89,77 @@ function validateEmailAddress(){
 functions to validate form before submitting. 
 forms will not submit until all errors can be seen to be cleared!
 */
+
+$('.channel-btn').on('click', submitChannelForm);
+function submitChannelForm(event){
+	if (validateName('channel_name_input') != '' || validateName('moniker_input') != '' || validateName('description_input') !=''){
+		return false;
+	}
+	event.preventDefault();
+	var me = $(this);
+	me.off('click');
+	if(me.data('requestRunning')){
+		return;
+	}
+	me.data('requestRunning',true);
+
+	var name = $('#channel_name_input').val();
+	var moniker = $('#moniker_input').val();
+	var description = $('#description_input').val();
+	var category = $('#category_input').val();
+	var is_public = $('#is_public_input').val();
+	var csrftoken = getCookie('csrftoken');
+
+	var donezo = true;
+
+	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	    }
+	});
+  	$.ajax({
+  		type: "POST",
+  		cache:false,
+		url: site + "channels/create/",
+		data: {
+			"name": name,
+			"moniker": moniker,
+			"description": description,
+			"category_names": category,
+			"is_public":is_public
+		},
+		success: function(){
+			donezo = true;
+			$('.server-error').hide();
+			$('#channelModal').modal('hide');
+			$('input').val('');
+			$('textarea').val('');
+		},
+
+		//handles error response
+		error: function(response){
+			console.log('got to error sadly');
+			me.on('click', submitChannelForm);
+			me.data('requestRunning',false);
+			var errors = JSON.parse(response.responseText);
+			for(error in errors){
+				$('.server-error').html(errors[error]);
+			}
+			console.log('about to return false');
+			return false;
+		}
+	}).done(function() {
+		if(donezo){
+			console.log("GOT HERE");
+			$( this ).addClass( "done" );
+			me.on('click', submitChannelForm);
+			location.reload();
+		}
+	});
+};
+
+
+
 $('.contact-btn').on('click', submitContactForm);
 function submitContactForm(event){
 	
@@ -149,6 +221,7 @@ function submitContactForm(event){
 			console.log('got to error sadly');
 			//$("input[type=submit]").attr("disabled", false);
 			me.on('click', submitContactForm);
+			me.data('requestRunning',false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
 				$('.server-error').html(errors[error]);
@@ -245,6 +318,7 @@ function submitCompanyForm(event){
 				$('.server-error').html(errors[error]);
 			}
 			me.on('click', submitCompanyForm);
+			me.data('requestRunning',false);
 			//xhr = undefined;
 			return false;
 
