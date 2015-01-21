@@ -138,11 +138,13 @@ contactForm.submit(function(event){
 		//handles error response
 		error: function(response){
 			//console.log(response);
-
+			console.log('got to error sadly');
+			$("input[type=submit]").attr("disabled", false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
 				$('.server-error').html(errors[error]);
 			}
+			console.log('about to return false');
 			return false;
 		}
 	}).done(function() {

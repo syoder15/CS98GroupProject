@@ -11,3 +11,25 @@
 .editTable {
 	padding-bottom: 1em;
 }
+
+.table-contacts thead tr th, .table-contacts tbody tr th {
+	text-align: right; 
+	border:none;
+	font-size:18px;
+}
+
+.table-contacts thead tr td, .table-contacts tbody tr td {
+	width:100%;
+	white-space: nowrap; 
+	border:none;
+	font-size:18px;
+}
+
+.contact_form label {
+	font-size:18px;
+	vertical-align: center;
+}
+
+.contact_form div input {
+	font-size:16px;
+}

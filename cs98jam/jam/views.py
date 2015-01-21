@@ -15,6 +15,7 @@ from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, Use
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
+from swingtime import models as swingmodel
 from dateutil import parser
 from django import http
 import calendar
@@ -23,8 +24,12 @@ from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
+from dateutil import rrule
+import pytz
+
 
 upload_form = UploadFileForm
+
 # Create your views here.
 @login_required
 def index(request):
@@ -50,7 +55,7 @@ def index(request):
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
-		print "This was a get!"
+	
 		site = settings.DOMAIN
 		c_name = ""
 
@@ -62,7 +67,7 @@ def index(request):
 	elif request.method == "POST":
 		show_feed = True
 		form_data = request.POST
-
+		
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
 		if( go_home == ("Back")):
@@ -71,18 +76,35 @@ def index(request):
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
 		# otherwise, showing clicked channel feed
 		else:
-			print 'here'
-			c_name = form_data.get('channel_name')
-			channel = get_object_or_404(Channel, name=c_name)
-		
+			c_name = None
+			channel = None
+			
+			# Handle post request when a channel's event is being added to the user's events
+			for key in request.POST:
+				split = key.split('-')
+				if len(split) and split[0].isdigit():
+						c_name = split[1]
+						channel = get_object_or_404(Channel, name=c_name)
+						
+						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
+							event = channel.events.filter(pk = split[0]).first()
+							request.user.profile.events.add(event)
+			
+			if channel == None:
+				c_name = form_data.get('channel_name')
+				channel = get_object_or_404(Channel, name=c_name)			
+					
 			is_admin = False
 			if request.user.controlledChannels.filter(name=channel.name).exists():
 				is_admin = True
-
+			
+			added_events = channel.events.all() & request.user.profile.events.all()
+			unadded_events = channel.events.all().exclude(pk__in = added_events.all())
+			
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
-				"adminNotes": channel.adminNotes.order_by("-created_at")}
+				"adminNotes": channel.adminNotes.order_by("-created_at"), 'unadded_e': unadded_events, 'added_e': added_events}
 			
 
 	return render(request, 'jam/index/index_landing_home.html', context)
@@ -176,23 +198,41 @@ def new_contact(request):
 	form_data = request.POST
 	
 	# avoid adding contacts with the same name!
+	contact_num = form_data.get('phone')
+	print "contact num = " + contact_num
+
+	contact_email = form_data.get('email')
 	contact_name = form_data.get('name')
-	print "contact name = " + contact_name
+	print contact_name
+	
+	#print "contact name = " + contact_name
 
 	''' see whether a contact with the same name already exists
 			if it does, re-render the form with an appropriate error.
 			if it doesn't, go ahead with business as usual, creating the company DB record
 	'''
-	if request.user.contact_set.filter(name=contact_name).exists():
+	if request.user.contact_set.filter(phone_number=contact_num).exists():
 			#request.user.contact_set.get(name=contact_name)
-		print "INVALID NAME!!!"
-		msg = "Sorry, you've already added a contact of the same name!"
+		print "INVALID NUM!!!"
+		msg = "Sorry, you've already added a contact with that number!"
 
 		# return err response to AJAX via JSON
 		response={}
 		response["error"] = msg
 		print "got here"
 		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
+	elif request.user.contact_set.filter(email=contact_email).exists():
+			#request.user.contact_set.get(name=contact_name)
+		print "INVALID EMAIL!!!"
+		msg = "Sorry, you've already added a contact with that email!"
+
+		# return err response to AJAX via JSON
+		response={}
+		response["error"] = msg
+		print "got here"
+		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
 	else:
 		print "making new contact!"
 
@@ -316,6 +356,7 @@ def view_channel_as_admin(request, channel_name):
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
+	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -353,15 +394,48 @@ def new_company(request):
 			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 		else: 
+
+			company = Company(name=company_name,
+						  application_deadline=form_data.get('deadline'),
+						  notes=form_data.get('company_notes'),
+						  user=request.user)
+
+			
+			event_types = swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+			
+			if len(event_types) == 0:
+				swingmodel.EventType.objects.create(abbr='due', label='Application Deadline')
+				swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+
+			
+			year = int(application_deadline[0:4])
+			month = int(application_deadline[5:7])
+			day = int(application_deadline[8:10])
+
+			evt = swingmodel.create_event(
+				company_name,
+				event_types[0],
+				start_time=datetime(year,month,day, 12, 0, 0, 0, pytz.timezone('America/New_York')),
+				
+			)
+			
+			request.user.profile.events.add(evt)
+			
+			
+
 			print "making Company"
 			print company_name
 			print form_data.get('deadline')
 			print form_data.get('company_notes')
 			print request.user.username
 			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
+
 			company.save()
 			print 'made company'
 			context = {'username': request.user.username}
+
+
+
 			return render(request, 'jam/index/index_landing_home.html', context)
 
 def is_valid_date(date):
@@ -396,12 +470,15 @@ def companies(request, company_name):
 	show_company = True
 	user = User.objects.get(username = request.user.username)
 
+
 	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 
 	if(data):
+		print "got to post"
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 		if("export" in data):
+			print "export in data"
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
 			f = open(os.path.join(path_name, "companies.txt"), "w")
@@ -410,19 +487,38 @@ def companies(request, company_name):
 			f.close() 
 
 		elif(go_home == ("Back")):
+			print "go home"
 			show_company = False
-
+		elif('company_update' in data):
+			print "APP STATUS"
+			#c_name = data.get('app_status')
+			company_list = data.getlist('app_status[]')
+			for company in companies: 
+				if company.name in company_list: 
+					company = request.user.company_set.get(name=company.name)
+					company.application_status = True
+					print company.name + "is COMPLETE"
+					company.save()
+				else:
+					company.application_status = False
+					print company.name + "IS NOT COMPLETE"
+					company.save()
+			companies = request.user.company_set.all()
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 		elif('company_name' in data):
+			print "company name in data"
 			c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
 			notes = company.notes
 
+
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
+			print "got to the else"
 			for company in companies:
 				if company.name in data:
 					company.delete()
@@ -549,6 +645,7 @@ def contacts(request, contact_name):
 	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
 
 	if (data):
+		edit = False
 		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
@@ -562,8 +659,14 @@ def contacts(request, contact_name):
 		elif(go_home == ("Back")):
 			show_contact = False
 
-		elif('contact_name' in data):
-			contact_name = data.get('contact_name')
+		elif('edit' in data or 'contact_name' in data):
+			if('edit' in data):
+				edit = True
+				contact_name = data.get('edit')
+				show_contact = False
+				print "edit pressed"
+			else:
+				contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
 			phone_number = contact.phone_number
@@ -575,7 +678,7 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
-			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			context = {'edit': edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
@@ -744,7 +847,6 @@ def event_listing(
 	???
 		all values passed in via **extra_context
 	'''
-	form = UploadFileForm
 	extra_context={'username': request.user.username, 'upload_form': upload_form}
 	return render(
 		request,
