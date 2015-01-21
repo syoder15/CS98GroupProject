@@ -1,3 +1,14 @@
+.companies_names_list {
+	margin-top:5px; 
+	width:100%;
+}
+
+.company_name_in_list {
+	vertical-align: center; 
+	float:left;
+	margin-right:10px;
+}
+
 .companyNames {
 	border: 0; 
 	background: transparent;
@@ -6,4 +17,23 @@
 
 .editButton {
 	color: black;
+}
+
+.company_submit_btn {
+	margin-top:5px;
+	width:100%; 
+	float:left;
+}
+
+.table-companies thead tr th, .table-companies tbody tr th {
+	text-align: right; 
+	border:none;
+	font-size:18px;
+}
+
+.table-companies thead tr td, .table-companies tbody tr td {
+	width:100%;
+	white-space: nowrap; 
+	border:none;
+	font-size:18px;
 }
