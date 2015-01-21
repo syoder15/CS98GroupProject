@@ -11,7 +11,6 @@
 {% endblock %}
 -->
 {% block side_col %}
-
 	<div>
 		<button type="button" class="btn btn-primary company-export">Export my companies</button>
 	</div>
@@ -19,21 +18,26 @@
 		<form action="" method="POST" id="company_form">
 		{% csrf_token %}
 		{% for c in companies %}
-			<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
-			<input class="button" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')"  />
-			
-			<label style="float:right">Application Complete</label>
-			{% if c.application_status %}
-			<input type="checkbox" name="app_status[]" style="float:right"  value="{{c}}" checked/>
-			{% else %}
-			<input type="checkbox" name = "app_status[]" style="float:right" value="{{c}}" unchecked/>
-			{% endif %}
-
-			<br />
+			<div class="companies_names_list">
+				<div class="company_name_in_list">
+					<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
+					<button class="btn btn-default" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')">Delete</button>
+				</div>
+				<div style="float:left">
+					<label style="float:right">App Comp</label>
+					{% if c.application_status %}
+						<input type="checkbox" name="app_status[]" style="float:right"  value="{{c}}" checked/>
+					{% else %}
+						<input type="checkbox" name = "app_status[]" style="float:right" value="{{c}}" unchecked/>
+					{% endif %}
+				</div>
+			</div>
 		{% empty %}
 			You haven't entered any companies yet.
 		{% endfor %}
-		<button type="submit" class="btn btn-large" name="company_update">Update</button>
+		<div class="company_submit_btn">
+			<button type="submit" class="btn btn-primary" name="company_update">Update</button>
+		</div>
 		</form>
 	</div>
 
@@ -44,17 +48,19 @@
 <div id="showCompanyPage">
 	{% if show %}
 		{% include "jam/companies/company_page.html" %}
-			<div>
-				<form class="goHome" method="POST" action="">
-				{% csrf_token %}
-					
-				<br />
-				<input class="button" name="back_home" type="submit" value="Back"/>
-					<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a>
+		<div>
+			<form class="goHome" method="POST" action="">
+			{% csrf_token %}
+				
+			<br />
+			<input class="button" name="back_home" type="submit" value="Back"/>
+				<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a>
 
-				</form>
-			</div>
-		{% endif %}
+			</form>
+		</div>
+	{% elif company_edit %}
+		{% include "jam/contacts/company_edit.html" %}
+	{% endif %}
 
 </div>
 
