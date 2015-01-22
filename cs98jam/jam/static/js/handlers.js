@@ -32,9 +32,14 @@ profileDropDown.on('click', function() {
 	$('.dropdown').toggleClass('visible');
 });
 
-addFileButton.hover(function(){
+addFileButton.mouseenter(function(){
 	console.log('HOVERING');
-	$("#format_reminder").attr({"opacity" : "1"});
+	$("#format_reminder").css('opacity', '1.0');
+});
+
+addFileButton.mouseleave(function(){
+	console.log('HOVERING');
+	$("#format_reminder").css('opacity', '0.0');
 });
 
 
