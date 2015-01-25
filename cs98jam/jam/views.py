@@ -44,6 +44,8 @@ def index(request):
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
+	companies = request.user.company_set.order_by("application_deadline").all()
+
 	notificationList = []
 	for c in channels:
 		newNotes = 0
@@ -51,7 +53,13 @@ def index(request):
 			if note.created_at > request.user.last_login:
 				newNotes += 1
 		notificationList.append(newNotes)	
-	
+
+	# application status notifications
+	app_notifications = []
+	for c in companies:
+		if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
+			app_notifications.append("Your " + c.name + " application is not complete. Get on that ASAP!")
+
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
@@ -60,7 +68,7 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
+			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -442,7 +450,7 @@ def new_company(request):
 			evt = swingmodel.create_event(
 				company_name,
 				event_types[0],
-				start_time=datetime(year,month,day, 12, 0, 0, 0, pytz.timezone('America/New_York')),
+				start_time=datetime(year,month,day, 12, 0, 0),
 				
 			)
 			
@@ -505,6 +513,7 @@ def companies(request, company_name):
 		print "got to post"
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
+
 		if("export" in data):
 			print "export in data"
 			user = request.META['LOGNAME']
@@ -513,6 +522,17 @@ def companies(request, company_name):
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+		elif('delete' in data):
+			print 'delete in data'
+			company_name = data.get('delete')
+			company = request.user.company_set.filter(name=company_name)
+			company.delete()
+
+			events = request.user.profile.events.all()
+			for event in events:	
+				if company_name == event.title:
+					event.delete()
+					break
 
 		elif(go_home == ("Back")):
 			print "go home"
@@ -547,7 +567,7 @@ def companies(request, company_name):
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
 			print "got to the else"
-		
+			'''
 			for company in companies:
 				if company.name in data:
 					company.delete()
@@ -560,6 +580,7 @@ def companies(request, company_name):
 				if c_name == event.title:
 					event.delete()
 					break
+			'''
 
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
