@@ -436,7 +436,7 @@ def new_company(request):
 			evt = swingmodel.create_event(
 				company_name,
 				event_types[0],
-				start_time=datetime(year,month,day, 12, 0, 0, 0, pytz.timezone('America/New_York')),
+				start_time=datetime(year,month,day, 12, 0, 0),
 				
 			)
 			
