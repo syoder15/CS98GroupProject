@@ -1,5 +1,37 @@
 <!-- Event Modal -->
+
+{% block styles %}
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/events.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+
 <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<div class="modal-header">
+        	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        	<h4 class="modal-title" id="myModalLabel">New Event</h4>
+      	</div>
+    	<div class="modal-body">
+			<iframe src="{% url 'swingtime-add-event' %}" name="targetframe" allowTransparency="true" scrolling="yes" frameborder="0" id="addEventModal"> </iframe>
+		</div>
+
+		<div class="modal-footer">
+        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<input class="btn btn-primary" type="submit" value="Add New Event"/>
+			<br />
+			<span class="server-error" style="color:red">{{ error }}</span>
+      	</div>
+	</div>
+	</div>
+</div>
+
+{% endblock %}
+
+<!--<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -49,3 +81,4 @@
     </div>
   </div>
 </div>
+-->
