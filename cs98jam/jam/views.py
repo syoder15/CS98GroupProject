@@ -71,25 +71,39 @@ def index(request):
 		
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
-		if( go_home == ("Back")):
+		if(go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
-		# otherwise, showing clicked channel feed
+
 		else:
 			c_name = None
 			channel = None
 			
 			# Handle post request when a channel's event is being added to the user's events
+			# or the user is unsubscribing
 			for key in request.POST:
 				split = key.split('-')
-				if len(split) and split[0].isdigit():
+				print split[0]
+				if len(split) == 2: 
+					if split[0].isdigit():
 						c_name = split[1]
 						channel = get_object_or_404(Channel, name=c_name)
 						
 						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
 							event = channel.events.filter(pk = split[0]).first()
 							request.user.profile.events.add(event)
+							
+					if split[0] == "Unsubscribe":
+						c_name = split[1]
+						channel = get_object_or_404(Channel, name=c_name)
+						channel.subscribers.remove(request.user)
+						show_feed = False
+						channels = request.user.channel_set.order_by("name").all()
+						context = {'username': request.user.username, 
+						'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
+						return render(request, 'jam/index/index_landing_home.html', context)
+					
 			
 			if channel == None:
 				c_name = form_data.get('channel_name')
@@ -745,7 +759,7 @@ def channel_list(request):
 	channels = Channel.objects.order_by('-added').all()
 
 	error = ''
-	if(form_data ):
+	if(form_data):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
 		elif 'search' in form_data:
@@ -754,7 +768,7 @@ def channel_list(request):
 		else: 
 			cat =''
 			new_channel(request) 
-
+		
 		# if no channels are categorized under a given search term, the channels returned are an empty list... 
 		# the HTML will populate with the line "No results found" d
 		
