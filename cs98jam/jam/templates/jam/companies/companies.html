@@ -21,16 +21,17 @@
 			<div class="companies_names_list">
 				<div class="company_name_in_list">
 					<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
-					<button class="btn btn-default" name="{{ c.name }}" type="submit" value="Delete"  onclick="return confirm('Are you sure you want to delete {{ c }}?')">Delete</button>
 				</div>
 				<div style="float:left">
-					<label style="float:right">App Comp</label>
+					<label style="float:right">Complete</label>
 					{% if c.application_status %}
-						<input type="checkbox" name="app_status[]" style="float:right"  value="{{c}}" checked/>
+						<input type="checkbox" class="checkbox" name="app_status[]" style="float:right"  value="{{c}}" checked/>
 					{% else %}
-						<input type="checkbox" name = "app_status[]" style="float:right" value="{{c}}" unchecked/>
+						<input type="checkbox" class="checkbox"  name = "app_status[]" style="float:right" value="{{c}}" unchecked/>
 					{% endif %}
 				</div>
+				<br>
+				<br>
 			</div>
 		{% empty %}
 			You haven't entered any companies yet.
@@ -54,8 +55,8 @@
 					
 				<br />
 				<input class="button" name="back_home" type="submit" value="Back"/>
-					<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a>
-
+				<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a>
+				<button id="delete" name="delete" type="submit" value="{{ company_name }}" onclick="return confirm('Are you sure you want to delete {{ company_name }}?')">Delete</button>
 				</form>
 			</div>
 		{% endif %}
