@@ -44,6 +44,8 @@ def index(request):
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
+	companies = request.user.company_set.order_by("application_deadline").all()
+
 	notificationList = []
 	for c in channels:
 		newNotes = 0
@@ -51,7 +53,13 @@ def index(request):
 			if note.created_at > request.user.last_login:
 				newNotes += 1
 		notificationList.append(newNotes)	
-	
+
+	# application status notifications
+	app_notifications = []
+	for c in companies:
+		if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
+			app_notifications.append("Your " + c.name + " application is not complete. Get on that ASAP!")
+
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
@@ -60,7 +68,7 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
+			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -71,25 +79,39 @@ def index(request):
 		
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
-		if( go_home == ("Back")):
+		if(go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
 			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
-		# otherwise, showing clicked channel feed
+
 		else:
 			c_name = None
 			channel = None
 			
 			# Handle post request when a channel's event is being added to the user's events
+			# or the user is unsubscribing
 			for key in request.POST:
 				split = key.split('-')
-				if len(split) and split[0].isdigit():
+				print split[0]
+				if len(split) == 2: 
+					if split[0].isdigit():
 						c_name = split[1]
 						channel = get_object_or_404(Channel, name=c_name)
 						
 						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
 							event = channel.events.filter(pk = split[0]).first()
 							request.user.profile.events.add(event)
+							
+					if split[0] == "Unsubscribe":
+						c_name = split[1]
+						channel = get_object_or_404(Channel, name=c_name)
+						channel.subscribers.remove(request.user)
+						show_feed = False
+						channels = request.user.channel_set.order_by("name").all()
+						context = {'username': request.user.username, 
+						'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
+						return render(request, 'jam/index/index_landing_home.html', context)
+					
 			
 			if channel == None:
 				c_name = form_data.get('channel_name')
@@ -491,6 +513,7 @@ def companies(request, company_name):
 		print "got to post"
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
+
 		if("export" in data):
 			print "export in data"
 			user = request.META['LOGNAME']
@@ -499,6 +522,17 @@ def companies(request, company_name):
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+		elif('delete' in data):
+			print 'delete in data'
+			company_name = data.get('delete')
+			company = request.user.company_set.filter(name=company_name)
+			company.delete()
+
+			events = request.user.profile.events.all()
+			for event in events:	
+				if company_name == event.title:
+					event.delete()
+					break
 
 		elif(go_home == ("Back")):
 			print "go home"
@@ -533,7 +567,7 @@ def companies(request, company_name):
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
 		else:
 			print "got to the else"
-		
+			'''
 			for company in companies:
 				if company.name in data:
 					company.delete()
@@ -546,6 +580,7 @@ def companies(request, company_name):
 				if c_name == event.title:
 					event.delete()
 					break
+			'''
 
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
@@ -745,7 +780,7 @@ def channel_list(request):
 	channels = Channel.objects.order_by('-added').all()
 
 	error = ''
-	if(form_data ):
+	if(form_data):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
 		elif 'search' in form_data:
@@ -754,7 +789,7 @@ def channel_list(request):
 		else: 
 			cat =''
 			new_channel(request) 
-
+		
 		# if no channels are categorized under a given search term, the channels returned are an empty list... 
 		# the HTML will populate with the line "No results found" d
 		
