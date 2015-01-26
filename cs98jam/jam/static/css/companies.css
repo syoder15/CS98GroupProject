@@ -1,12 +1,12 @@
 .companies_names_list {
-	margin-top:5px; 
-	width:100%;
+	margin-top: 5px;
+	width: 100%;
 }
 
 .company_name_in_list {
-	vertical-align: center; 
-	float:left;
-	margin-right:10px;
+	vertical-align: center;
+	float: left;
+	margin-right: 10px;
 }
 
 .companyNames {
@@ -20,20 +20,29 @@
 }
 
 .company_submit_btn {
-	margin-top:5px;
-	width:100%; 
-	float:left;
+	margin-top: 5px;
+	width: 100%;
+	float: left;
+}
+
+.complete_text {
+	margin-left: 5px;
+	float: right;
+}
+
+.company-export {
+	margin-top: 40px;
 }
 
 .table-companies thead tr th, .table-companies tbody tr th {
-	text-align: right; 
-	border:none;
-	font-size:18px;
+	text-align: right;
+	border: none;
+	font-size: 18px;
 }
 
 .table-companies thead tr td, .table-companies tbody tr td {
-	width:100%;
-	white-space: nowrap; 
-	border:none;
-	font-size:18px;
+	width: 100%;
+	white-space: nowrap;
+	border: none;
+	font-size: 18px;
 }
