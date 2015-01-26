@@ -59,9 +59,20 @@
 					<input class="button" name="back_home" type="submit" value="Back"/>
 				</p>
 				</form>
+				<p>News Articles</p>
+				{% for k, v in article_urls.items %}
+				    <p><a href="{{k}}">{{v}}</a></p>
+				{% endfor %}
 			{% else %}
 				{% for e in events %}
 					<p><a href="{{e.get_absolute_url}}">{{e}} {{e.next_occurrence.start_time}}</a></p>
+				{% endfor %}
+				{% for a in app_list %}
+					<p style="color:red; font-size:2em"> {{ a }} </p>
+				{% endfor %}
+				<p>News Articles</p>
+				{% for k, v in article_urls.items %}
+				    <p><a target="_blank" href="{{k}}">{{v}}</a></p>
 				{% endfor %}
 			{% endif %}
 		</div>

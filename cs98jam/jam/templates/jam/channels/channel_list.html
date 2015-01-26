@@ -14,9 +14,9 @@
 		<p>
 		<form class="search_filters" method = 'POST'>
 			{% csrf_token %}
-			<input type ="submit" name="search_category" value= "{{ category.name }}" style="border: 0; background:transparent" >
+			<input type ="submit" name="search_category" value= "{{ category.name }}" style="border: 0; background:transparent"/>
 		</p>
-
+		</form>
 	{% endfor %}
 
 
@@ -24,7 +24,7 @@
 	<form class="navbar-form navbar-left" role="search" method='POST'>
 		{% csrf_token %}
 	    <div class="form-group">
-	      <input type="text" class="form-control" name="search" placeholder="Search">
+	      <input type="text" class="form-control" name="search" placeholder="Search Categories">
 	    </div>
 	    <input class="btn btn-default button" type="submit" name="search_button" value="Submit"/>
 	</form>

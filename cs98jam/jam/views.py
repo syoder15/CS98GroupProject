@@ -26,6 +26,7 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 import pytz
+import newspaper
 
 
 upload_form = UploadFileForm
@@ -34,7 +35,22 @@ upload_form = UploadFileForm
 @login_required
 def index(request):
 	#context = {'username': request.user.username}
+
+	#money_articles = newspaper.build('http://money.cnn.com/')
+	#import pdb; pdb.set_trace()
+	article_images = []
+	article_urls = {}
 	
+	'''i = 0
+	for article in money_articles.articles:
+		if i == 10:
+			break
+		article.download()
+		article.parse()
+		if article.title != "404 Page Not Found" and article.title != "Error":
+			article_urls[article.url] = article.title
+		i += 1
+	'''
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
@@ -44,6 +60,8 @@ def index(request):
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
+	companies = request.user.company_set.order_by("application_deadline").all()
+
 	notificationList = []
 	for c in channels:
 		newNotes = 0
@@ -51,7 +69,18 @@ def index(request):
 			if note.created_at > request.user.last_login:
 				newNotes += 1
 		notificationList.append(newNotes)	
-	
+
+	# application status notifications
+	app_notifications = []
+	for c in companies:
+		if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
+			if c.application_deadline == datetime.today().date():
+				app_notifications.append("Your " + c.name + " application is due today. Get on that ASAP!")
+			elif c.application_deadline == datetime.today().date() + timedelta(days=1):
+				app_notifications.append("Your " + c.name + " application is due tomorrow. Get on that ASAP!")
+			else: 
+				app_notifications.append("Your " + c.name + " application is due in two days. Get on that ASAP!")
+
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
@@ -60,7 +89,8 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList}
+			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications,
+			'article_urls': article_urls, 'article_images': article_images}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -71,25 +101,40 @@ def index(request):
 		
 		# if user clicked go home, show main homepage
 		go_home = form_data.get('back_home')
-		if( go_home == ("Back")):
+		if(go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
-			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
-		# otherwise, showing clicked channel feed
+			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList,
+			'article_urls': article_urls, 'article_images': article_images}
+
 		else:
 			c_name = None
 			channel = None
 			
 			# Handle post request when a channel's event is being added to the user's events
+			# or the user is unsubscribing
 			for key in request.POST:
 				split = key.split('-')
-				if len(split) and split[0].isdigit():
+				print split[0]
+				if len(split) == 2: 
+					if split[0].isdigit():
 						c_name = split[1]
 						channel = get_object_or_404(Channel, name=c_name)
 						
 						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
 							event = channel.events.filter(pk = split[0]).first()
 							request.user.profile.events.add(event)
+							
+					if split[0] == "Unsubscribe":
+						c_name = split[1]
+						channel = get_object_or_404(Channel, name=c_name)
+						channel.subscribers.remove(request.user)
+						show_feed = False
+						channels = request.user.channel_set.order_by("name").all()
+						context = {'username': request.user.username, 
+						'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
+						return render(request, 'jam/index/index_landing_home.html', context)
+					
 			
 			if channel == None:
 				c_name = form_data.get('channel_name')
@@ -166,17 +211,26 @@ def profile(request):
 @login_required
 def new_channel(request):
 	if request.method == 'POST':
+		print "GOT HERE TO NEW CHANNEL VIEW"
 		form_data = request.POST
 
 		if form_data.get('name') != "" and not Channel.objects.filter(name=form_data.get('name')).exists():
-			category_names = form_data.getlist('category')
+			category_names = form_data.get('category_names')
 			channel = Channel(name=form_data.get('name'), 
 				moniker=form_data.get('moniker'), 
 				description=form_data.get('description'), 
 				is_public=(form_data.get('is_public')))
 			channel.save()
-			for c in category_names:
-				cat = ChannelCategory.objects.get(name = c)
+			for c in category_names.split(","):
+				cat = None
+				c = c.strip(' \t\n\r')
+				if (ChannelCategory.objects.filter(name = c).exists()):
+					cat = ChannelCategory.objects.get(name = c)
+					cat.count += 1
+				else:
+					cat = ChannelCategory(name = c, count = 1)
+				cat.save()
+				cat.save()
 				channel.categories.add(cat)
 			channel.subscribers.add(request.user)
 			channel.admins.add(request.user)
@@ -188,7 +242,10 @@ def new_channel(request):
 				errors = "A channel with that name already exists: please choose another."
 			context = {"errors": errors}
 			
-			return render(request, 'jam/channels/new_channel.html', context)
+			response={}
+			response["error"] = errors
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+			#return render(request, 'jam/channels/new_channel.html', context)
 
 	else:
 		cats = ChannelCategory.objects.all()
@@ -375,6 +432,7 @@ def new_company(request):
 			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 
+			#probs should get rid of this shit bc its dead code but yolo...soon!
 			context = { 'validity' : validity }
 			return render(request, 'jam/modals/modal_add_company.html', context)
 		
@@ -416,7 +474,7 @@ def new_company(request):
 			evt = swingmodel.create_event(
 				company_name,
 				event_types[0],
-				start_time=datetime(year,month,day, 12, 0, 0, 0, pytz.timezone('America/New_York')),
+				start_time=datetime(year,month,day, 12, 0, 0),
 				
 			)
 			
@@ -479,6 +537,7 @@ def companies(request, company_name):
 		print "got to post"
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
+
 		if("export" in data):
 			print "export in data"
 			user = request.META['LOGNAME']
@@ -487,6 +546,17 @@ def companies(request, company_name):
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+		elif('delete' in data):
+			print 'delete in data'
+			company_name = data.get('delete')
+			company = request.user.company_set.filter(name=company_name)
+			company.delete()
+
+			events = request.user.profile.events.all()
+			for event in events:	
+				if company_name == event.title:
+					event.delete()
+					break
 
 		elif(go_home == ("Back")):
 			print "go home"
@@ -521,13 +591,24 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username}
 		else:
 			print "got to the else"
+			'''
 			for company in companies:
 				if company.name in data:
 					company.delete()
+					c_name = company.name
 					break
+
+			events = request.user.profile.events.all()
+			for event in events:
+				
+				if c_name == event.title:
+					event.delete()
+					break
+			'''
+
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 	else:
@@ -538,7 +619,7 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username}
 
 	return render(request, 'jam/companies/companies.html', context)
 
@@ -718,7 +799,7 @@ def contacts(request, contact_name):
 
 def channel_list(request):
 	form_data = request.POST
-	channel_categories = ChannelCategory.objects.all()
+	channel_categories =  ChannelCategory.objects.all().order_by('-count')[:10]
 
 	sub_channels = request.user.channel_set.all()
 
@@ -726,7 +807,7 @@ def channel_list(request):
 	channels = Channel.objects.order_by('-added').all()
 
 	error = ''
-	if(form_data ):
+	if(form_data):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
 		elif 'search' in form_data:
@@ -735,12 +816,12 @@ def channel_list(request):
 		else: 
 			cat =''
 			new_channel(request) 
-
+		
 		# if no channels are categorized under a given search term, the channels returned are an empty list... 
 		# the HTML will populate with the line "No results found" d
-		channels = {}
+		
 		if(cat != '' and ChannelCategory.objects.filter(name=cat).exists()):
-
+			channels = {}
 			channel_category = ChannelCategory.objects.get(name = cat)
 
 			all_channels = Channel.objects.order_by('-added').all()
@@ -756,6 +837,7 @@ def channel_list(request):
 						sub_channels.append(c)
 			channel_categories = []
 			channel_categories.append(channel_category)
+		
 	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username, 'upload_form': upload_form}
 	return render(request,'jam/channels/channel_list.html',context)
 
@@ -1133,7 +1215,7 @@ def occurrence_view(
 		'''
 		event_title = urlify(occurrence.title)
 		event_desc = urlify(occurrence.event.description)
-		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
+		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour +5).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour + 5).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
 
 		return render(request, template, {'occurrence': occurrence, 'form': form, 'upload_form': upload_form, 'google': google_link, 'owned': event_owned})
 

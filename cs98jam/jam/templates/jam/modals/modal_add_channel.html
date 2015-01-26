@@ -9,34 +9,36 @@
       </div>
       <div class="modal-body">
       	{{ errors }}
-        <form class="channel_form form-horizontal" enctype="multipart/form-data" method="POST" >
+        <form name="channel_form" class="channel_form form-horizontal" method="POST" >
 			{% csrf_token %}
 			<div class="form-group"> 
 				<label for="name_input" class="col-sm-4 control-label">Channel Name: </label>
 				<div class="col-sm-8"> 
-					<input id="name_input" class="form-control" name="name" required placeholder="Women in Computer Science"/>
+					<input id="channel_name_input" class="form-control" name="channel_name" placeholder="Women in Computer Science"required/>
+					<span class="error" name="channel_name_input" style="display:none; background-color: white; color: red"> </span>
+
 				</div>
 			</div>
 			<div class="form-group"> 
 				<label for="moniker_input" class="col-sm-4 control-label">Nickname: </label>
 				<div class="col-sm-8">
 					<input id="moniker_input" class="form-control" name="moniker" placeholder="WiCS" required/>
+					<span class="error" name="moniker_input" style="display:none; background-color: white; color: red"> </span>
+
 				</div>
 			</div>
 			<div class="form-group"> 
 				<label for="description_input" class="col-sm-4 control-label">Description: </label>
 				<div class="col-sm-8">
 					<input id="description_input" class="form-control" name="description" placeholder="The best" required/>
+					<span class="error" name="description_input" style="display:none; background-color: white; color: red"> </span>
+
 				</div>
 			</div>
 			<div class="form-group"> 
-				<label for="is_public_input" class="col-sm-4 control-label">Categories (hold command to select multiple): </label>
+				<label for="category_input" class="col-sm-4 control-label">Categories (separate with commas): </label>
 				<div class="col-sm-8">
-					<select multiple="true" name="category">
-					{% for c in categories %}
-						<option value='{{ c.name }}'>{{ c.name }} </option>
-					{% endfor %}
-					</select>
+					<input id="category_input" class="form-control" name="category_names"/>
 				</div>
 			</div>
 			<div class="form-group"> 
@@ -48,7 +50,9 @@
 			</div>
 
 			<div class="modal-footer">
-				<input class="btn btn-primary" type="submit" value="Save"/>
+				<input class="btn btn-primary channel-btn" type="submit" value="Add New Channel"/>
+				<br> 
+				<span class="server-error" style="color:red">{{ error }}</span>
       		</div>
 		</form>
       </div>

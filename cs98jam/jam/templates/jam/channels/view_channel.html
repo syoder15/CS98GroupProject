@@ -18,7 +18,7 @@
 	<p>Description: {{ channel_description }} </p>
 	<p>Categories: 
 		{% for c in categories %}
-			{{ c }} <br>
+			{{ c }}{% if not forloop.last %},{% endif %} 
 		{% endfor %}</p>
 	{% if channel_status %}
 		<p>Status: Public </p>
@@ -33,6 +33,20 @@
 			<p>You are subscribed to this channel!</p>
 			<input class="button" name="Unsubscribe" type="submit" value="Unsubscribe"/>
 			
+			<p style="font-weight: bold;">All Events:</p>
+			<ul>{% for e in unadded_e.all %}
+			<li>{{ e }} - {{e.next_occurrence.start_time}}</li>
+			<form class="addEvent" method="POST">
+				{% csrf_token %}
+				<input class="button" name="{{e.pk}}" type="submit" value="Add"/>
+			</form>
+			{% endfor %}
+			
+			<ul>{% for e in added_e.all %}
+			<li><a href="{{ e.get_absolute_url }}">{{ e }}</a> - {{e.next_occurrence.start_time}}</li>
+			
+			{% endfor %}
+			
 		{% elif channel_status %}
 			<p>
 				<input class="button" name="Subscribe" type="submit" value="Subscribe"/>
@@ -45,19 +59,7 @@
 	</form>
 	
 	
-	<h3>All Events</h3>
-	<ul>{% for e in unadded_e.all %}
-	<li>{{ e }} - {{e.next_occurrence.start_time}}</li>
-	<form class="addEvent" method="POST">
-		{% csrf_token %}
-		<input class="button" name="{{e.pk}}" type="submit" value="Add"/>
-	</form>
-	{% endfor %}
 	
-	<ul>{% for e in added_e.all %}
-	<li><a href="{{ e.get_absolute_url }}">{{ e }}</a> - {{e.next_occurrence.start_time}}</li>
-	
-	{% endfor %}
 </div>
 
 {% endblock %}
