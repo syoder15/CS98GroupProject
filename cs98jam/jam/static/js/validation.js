@@ -18,7 +18,7 @@ if(localTest){
 //validating company form fields
 function validateDeadline(){
 	/*var deadline = $('#' + deadline_id).val();*/
-	var deadline = $('#company_deadline_input');
+	var deadline = $('#company_deadline_input').val();
 	var msg = dateValidation(deadline);
 	if(msg.length > 0){
 		$('.error-message').show();
