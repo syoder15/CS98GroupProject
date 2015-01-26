@@ -1,11 +1,48 @@
-{% extends "../../jam/templates/jam/index/index.html" %}
+<div>
+	<form name="contact_form" class="contact_form form-horizontal" method="POST"> 
+		{% csrf_token %}
+		<div class="form-group"> 
+			<label form="name_input" class="col-md-3 control-label"><h3>Company: </h3></label>
+			<div class="col-md-8"> <h3>
+				<input id="name_input" class="form-control" name="name" value='{{ c_name }}' placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
+				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> </h3>
+			</div>
+		</div>
+		<div class="form-group"> 
+			<label for="phone_number_input" class="col-md-3 control-label">Phone Number: </label>
+			<div class="col-md-8"> 
+				<input id="phone_number_input" class="form-control" placeholder="(555) 555-5555" name="phone" value='{{ phone_number }}' onblur="validatePhone()"/>
+				<span class ="phone_error_message" style="color:red;"> </span>
 
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="email_input" class="col-md-3 control-label">Email: </label>
+			<div class="col-md-8">
+				<input id="email_input" class="form-control" name="email" value='{{ contact_email }}' placeholder="john.smith@gmail.com" onblur="validateEmailAddress()"/>
+				<span class ="email_error_message" style="color:red;"> </span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="company_input" class="col-md-3 control-label">Employer: </label>
+			<div class="col-md-8">
+				<input id="company_input" class="form-control" name="company" value='{{ employer }}' placeholder="Google" onblur = 'validateName(this.id)'required />
+				<span class="error" name="company_input" style="display:none; background-color: white; color: red"> </span>
 
-{% block styles %}
-	{{ block.super }}
-	{% load staticfiles %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
-{% endblock %}
+			</div>
+		</div>
+
+		<div class="form-group"> 
+			<label for="contact_notes_input" class="col-md-3 control-label">Notes on Contact: </label>
+			<div class="col-md-8">
+				<textarea class="form-control" rows="5" id="comment">{{ notes }}</textarea>
+			</div>
+		</div>	
+
+		<input class="button" type="submit" value="Save"/>
+
+	</form>
+</div>
 
 
 {% block content %}
