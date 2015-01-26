@@ -36,11 +36,12 @@ upload_form = UploadFileForm
 def index(request):
 	#context = {'username': request.user.username}
 
-	money_articles = newspaper.build('http://money.cnn.com/')
+	#money_articles = newspaper.build('http://money.cnn.com/')
 	#import pdb; pdb.set_trace()
 	article_images = []
 	article_urls = {}
-	i = 0
+	
+	'''i = 0
 	for article in money_articles.articles:
 		if i == 10:
 			break
@@ -49,7 +50,7 @@ def index(request):
 		if article.title != "404 Page Not Found" and article.title != "Error":
 			article_urls[article.url] = article.title
 		i += 1
-	
+	'''
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
 	for e in events:
