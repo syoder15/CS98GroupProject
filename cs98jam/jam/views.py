@@ -26,6 +26,7 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 import pytz
+import newspaper
 
 
 upload_form = UploadFileForm
@@ -34,6 +35,20 @@ upload_form = UploadFileForm
 @login_required
 def index(request):
 	#context = {'username': request.user.username}
+
+	money_articles = newspaper.build('http://money.cnn.com/')
+	#import pdb; pdb.set_trace()
+	article_images = []
+	article_urls = {}
+	i = 0
+	for article in money_articles.articles:
+		if i == 10:
+			break
+		article.download()
+		article.parse()
+		if article.title != "404 Page Not Found" and article.title != "Error":
+			article_urls[article.url] = article.title
+		i += 1
 	
 	events = request.user.profile.events.order_by("occurrence").all()
 	future_events = []
@@ -68,7 +83,8 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications}
+			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications,
+			'article_urls': article_urls, 'article_images': article_images}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -82,7 +98,8 @@ def index(request):
 		if(go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
-			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
+			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList,
+			'article_urls': article_urls, 'article_images': article_images}
 
 		else:
 			c_name = None
