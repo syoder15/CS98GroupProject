@@ -58,7 +58,12 @@ def index(request):
 	app_notifications = []
 	for c in companies:
 		if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
-			app_notifications.append("Your " + c.name + " application is not complete. Get on that ASAP!")
+			if c.application_deadline == datetime.today().date():
+				app_notifications.append("Your " + c.name + " application is due today. Get on that ASAP!")
+			elif c.application_deadline == datetime.today().date() + timedelta(days=1):
+				app_notifications.append("Your " + c.name + " application is due tomorrow. Get on that ASAP!")
+			else: 
+				app_notifications.append("Your " + c.name + " application is due in two days. Get on that ASAP!")
 
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
@@ -550,7 +555,7 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username}
 		else:
 			print "got to the else"
 			'''
@@ -578,7 +583,7 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username}
 
 	return render(request, 'jam/companies/companies.html', context)
 
@@ -1175,7 +1180,7 @@ def occurrence_view(
 		'''
 		event_title = urlify(occurrence.title)
 		event_desc = urlify(occurrence.event.description)
-		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
+		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour +5).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour + 5).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
 
 		return render(request, template, {'occurrence': occurrence, 'form': form, 'upload_form': upload_form, 'google': google_link, 'owned': event_owned})
 
