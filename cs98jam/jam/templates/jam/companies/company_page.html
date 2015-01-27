@@ -2,11 +2,15 @@
 	<table class="table table-companies"> 
 		<thead> 
 			<tr> 
-				<th class="col-md-3"><h3>Company: {{ company_name }}</h3></th>
-				<td><h3>Application Deadline: {{ application_deadline }}</h3></td>
+				<th><h3>Company: </h3></th>
+				<td><h3>{{ company_name }}</h3></td>
 			</tr>
 		</thead>
 		<tbody>
+			<tr>
+				<th>Application Deadline:</th>
+				<td>{{ application_deadline }}</td>
+			</tr>
 			<tr>
 				<th>Notes:</th> 
 				<td>{{ company_notes }}</td>
@@ -23,7 +27,7 @@
 					</ul>
 				</td>
 			</tr>
-			<tr>
+			<!--<tr>
 				<th>Events:</th> 
 				<td><ul>
 					{% for e in events %}
@@ -35,6 +39,8 @@
 					</ul>
 				</td>
 			</tr>
+			-->
+
 		</tbody>
 	</table>
 </div>
