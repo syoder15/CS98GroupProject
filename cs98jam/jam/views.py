@@ -558,13 +558,13 @@ def companies(request, company_name):
 			c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
-			events = request.user.profile.events.all()
+			events = company.events.all()
 			notes = company.notes
 
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'events': events}
 		else:
 			print "got to the else"
 			'''
@@ -588,7 +588,7 @@ def companies(request, company_name):
 		if company_name != 'all':
 			company = request.user.company_set.get(name=company_name)
 			contacts = Contact.objects.filter(user=request.user, employer=company_name)
-			events = request.user.profile.events.all()
+			
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
@@ -855,6 +855,16 @@ def add_event(
 				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
 				user_profile.events.add(event) #associate the current event with a user's profile
 				user_profile.owned_events.add(event)
+
+				company_field = request.POST.get('description')
+				company_field = company_field.replace(" ", "")
+				companies = company_field.split(',')
+				for c in companies:
+					if len(request.user.company_set.filter(name=c)) > 0:
+						company = request.user.company_set.filter(name=c)
+						company = company[0]
+						company.events.add(event)
+
 			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
 				channel = get_object_or_404(Channel, name=channel_name)
 				channel.events.add(event)
@@ -877,7 +887,7 @@ def add_event(
 		event_form = event_form_class()
 		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
 
-		print recurrence_form
+		#print recurrence_form
 
 
 	return render(
