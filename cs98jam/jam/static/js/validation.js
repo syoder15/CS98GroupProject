@@ -381,13 +381,13 @@ function submitEventForm(event){
   	$.ajax({
   		type: "POST",
   		cache:false,
-		url: site + "add_event/",
+		url: site + "new_event/",
 		data: {
 			"name": name,
 			"type": type,
 			"date": date,
-			"startTime": startTime,
-			"endTime": endTime
+			"start_time": startTime,
+			"end_time": endTime
 		},
 		singleton:true,
         delay:500,

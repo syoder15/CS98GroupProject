@@ -491,6 +491,42 @@ def new_company(request):
 
 			return render(request, 'jam/index/index_landing_home.html', context)
 
+def new_event(request):
+	if request.method == "POST":
+		form_data = request.POST
+
+		event_date = form_data.get('date')
+		validity = is_valid_date(event_date)
+		if(validity!=''):
+	
+			# return bad request if the date is still invalid somehow (but very unlikely!)
+			response={}
+			response["error"] = validity
+			print "got here"
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+		
+		event_name = form_data.get('name')
+
+		event = Event(title=event_name,
+						  event_type=form_data.get('type'),
+						  description=form_data.get('description'),
+						  date=form_data.get('date'),
+						  start_time=form_data.get('start_time'),
+						  end_time=form_data.get('end_time'),
+						  user=request.user)
+
+			#year = int(event_date[0:4])
+			#month = int(event_date[5:7])
+			#day = int(event_date[8:10])
+
+			#company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
+
+		event.save()
+		print 'made event'
+		context = {'username': request.user.username}
+
+		return render(request, 'jam/index/index_landing_home.html', context)
+
 def is_valid_date(date):
 	now = datetime.now()
 
@@ -508,14 +544,6 @@ def is_valid_date(date):
 
 	return ""
 
-
-
-def new_event(request):
-	form_data = request.POST
-	event = Event(name=form_data.get('name'),
-					  date=form_data.get('date'))
-	event.save()
-	return HttpResponse()
 
 def companies(request, company_name):
 	companies = request.user.company_set.all()
