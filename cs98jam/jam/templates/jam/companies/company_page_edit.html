@@ -4,7 +4,7 @@
 		<div class="form-group"> 
 			<label form="name_input" class="col-md-3 control-label"><h3>Company: </h3></label>
 			<div class="col-md-8"> <h3>
-				<input id="name_input" class="form-control" name="name" value='{{ c_name }}' placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
+				<input id="name_input" class="form-control" name="name" value='{{ company_name }}' placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
 				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> </h3>
 			</div>
 		</div>
@@ -43,66 +43,3 @@
 
 	</form>
 </div>
-
-
-{% block content %}
-<div class="container">
-	<div class="row">
-		<!--<div class="col-sm-5">-->
-			<h2> Company: {{ company_name }}</h2> 
-		<!--</div>
-		<div class="col-sm-7">-->
-		<form class="contactInfo" method="POST">
-			{% csrf_token %}
-			<table>
-				<tr>
-					<td >
-						<label for="name_input">Name: </label>
-						{% if company_name %}
-							<input id="company_name_input" name="company_name" value='{{ company_name }}'/>
-						{% else %}
-							<input id="company_name_input" name="company_name" value='Company' required/>
-						{% endif %}
-					</td>
-					<td>&nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<label for="name_input">Application Deadline: </label>
-						{% if application_deadline %}
-							<input id="app_deadline_input" name="app_deadline" value='{{ application_deadline }}'/>
-						{% else %}
-							<input id="app_deadline_input" name="app_deadline" placeholder="12/31/2015" required/>
-						{% endif %}
-					</td>
-				</tr>
-				<tr><td>&nbsp;</td></tr>
-				<tr>
-					<td>
-						<label for="name_input">Notes: </label>
-						{% if notes %}
-							<textarea id="notes_input" rows="2" columns="40" name="notes">{{ notes }}</textarea>
-						{% else %}
-							<textarea id="notes_input" rows="2" columns="40" name="notes" placeholder="Include GPA in resume."></textarea>
-						{% endif %}
-					</td>
-				</tr>
-				<tr>
-					<td class="profileField">
-						<input class="button" type="submit" value="Save"/>
-					</td>
-				</tr>
-			</table>
-			<!--</div>-->
-		</form>
-		</div>
-	</div>	
-</div>
-{% endblock %}
-
-{% block javascript %}
-	<script src="{% static 'js/profile.js' %}"></script>
-	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
-	<script src="{% static 'js/main.js' %}"></script>
-	<script src="{% static 'js/handlers.js' %}"></script>
-	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
-{% endblock %}

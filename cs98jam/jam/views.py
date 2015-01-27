@@ -26,7 +26,7 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 import pytz
-import newspaper
+# import newspaper
 
 
 upload_form = UploadFileForm
@@ -580,16 +580,22 @@ def companies(request, company_name):
 					company.save()
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
-		elif('company_name' in data):
-			print "company name in data"
-			c_name = data.get('company_name')
+		elif('company_name' in data or 'company_edit' in data):
+			if('company_edit' in data): 
+				company_edit = True 
+				show_company = False
+				c_name = data.get('company_edit')
+				print "company edit"
+			else:
+				print "company name in data"
+				c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = request.user.profile.events.all()
 			notes = company.notes
 
 
-			context = {'companies': companies, 'company_name': company.name, 
+			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username}
 		else:
