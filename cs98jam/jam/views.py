@@ -26,6 +26,7 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 
+
 #import pytz
 #import newspaper
 
@@ -477,13 +478,18 @@ def new_company(request):
 			month = int(application_deadline[5:7])
 			day = int(application_deadline[8:10])
 
+			title = str(company_name) + ' Deadline'
+
 			evt = swingmodel.create_event(
-				company_name,
+				title,
 				event_types[0],
+				description=company_name,
 				start_time=datetime(year,month,day, 12, 0, 0),
 				
 			)
-			
+			print '11111'
+			#company.events.add(evt)
+			print '222222'
 			request.user.profile.events.add(evt)
 			
 			
@@ -496,6 +502,7 @@ def new_company(request):
 			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
 
 			company.save()
+			company.events.add(evt)
 			print 'made company'
 			context = {'username': request.user.username}
 
@@ -555,12 +562,13 @@ def companies(request, company_name):
 		elif('delete' in data):
 			print 'delete in data'
 			company_name = data.get('delete')
+			event_title = str(company_name) + ' Deadline'
 			company = request.user.company_set.filter(name=company_name)
 			company.delete()
 
 			events = request.user.profile.events.all()
 			for event in events:	
-				if company_name == event.title:
+				if event_title == event.title:
 					event.delete()
 					break
 
@@ -988,6 +996,7 @@ def month_view(
 		the month integer and items is a (potentially empty) list of occurrence
 		for the day
 
+
 	this_month
 		a datetime.datetime representing the first day of the month
 
@@ -1036,38 +1045,38 @@ def month_view(
 
 
 	
-# 	for event in my_events: #loop through the users events and create a queryset of all of the occurances
-# 		if queryset == None:
-# 			queryset = event.occurrence_set.all()
-# 		else:
-# 			queryset = queryset | event.occurrence_set.all()
+	for event in my_events: #loop through the users events and create a queryset of all of the occurances
+		if queryset == None:
+			queryset = event.occurrence_set.all()
+		else:
+			queryset = queryset | event.occurrence_set.all()
 	
-# 	if queryset == None:
-# 		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+	if queryset == None:
+		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
 	
-# 	#### JAM CODE ####
+	#### JAM CODE ####
 
-# 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
+	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
-# 	def start_day(o):
-# 		return o.start_time.day
+	def start_day(o):
+		return o.start_time.day
 
-# 	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
-# 	data = {
-# 		'today':      datetime.now(),
-# 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-# 		'username': request.user.username,
-# 		'this_month' : dtstart,
-# 		'next_month' : dtstart + timedelta(days=+last_day),
-# 		'last_month' : dtstart + timedelta(days=-1),
-# 		'interview'  : interview,
-# 		'careerFair' : careerFair,
-# 		'infoSession': infoSession,
-# 		'other'		 : other,
-# 		'upload_form'		 : upload_form
-# 	}
+	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
+	data = {
+		'today':      datetime.now(),
+		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
+		'username': request.user.username,
+		'this_month' : dtstart,
+		'next_month' : dtstart + timedelta(days=+last_day),
+		'last_month' : dtstart + timedelta(days=-1),
+		'interview'  : interview,
+		'careerFair' : careerFair,
+		'infoSession': infoSession,
+		'other'		 : other,
+		'upload_form'		 : upload_form
+	}
 
-# 	return render(request, template, data)
+	return render(request, template, data)
 
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''

@@ -54,7 +54,25 @@
 			
 			
 		{% endif %}	
+<<<<<<< HEAD
+    
+    <h4>Notes</h4>
+    {% with event.notes.all as notes %}
+    {% if notes %}
+    <ul>
+        {% for note in notes %}
+        <li>{{ note }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>None</p>
+    {% endif %}
+    {% endwith %}
+
+   <!--  <h4>Occurrences</h4>
+=======
    
+>>>>>>> b803ff18f9c9f8218219ea2bc8187e576743f785
     {% if event.occurrence_set.count %}
     
         {% for o in event.occurrence_set.all %}
@@ -68,7 +86,13 @@
             {% endif %}
         {% endfor %}
     {% else %}
+<<<<<<< HEAD
+    {% endif %} -->
+    
+	
+=======
     {% endif %}
+>>>>>>> b803ff18f9c9f8218219ea2bc8187e576743f785
 {% endblock %}
 
 	
