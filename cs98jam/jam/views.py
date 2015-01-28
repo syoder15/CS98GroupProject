@@ -26,7 +26,7 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 import pytz
-import newspaper
+#import newspaper
 
 
 upload_form = UploadFileForm
@@ -498,6 +498,7 @@ def new_company(request):
 			return render(request, 'jam/index/index_landing_home.html', context)
 
 def new_event(request):
+	print 'blah'
 	if request.method == "POST":
 		form_data = request.POST
 
@@ -513,6 +514,7 @@ def new_event(request):
 		
 		event_name = form_data.get('name')
 
+		# Event model doesn't exist right now
 		event = Event(title=event_name,
 						  event_type=form_data.get('type'),
 						  description=form_data.get('description'),
@@ -521,13 +523,10 @@ def new_event(request):
 						  end_time=form_data.get('end_time'),
 						  user=request.user)
 
-			#year = int(event_date[0:4])
-			#month = int(event_date[5:7])
-			#day = int(event_date[8:10])
-
-			#company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
-
-		event.save()
+		user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+		user_profile.events.add(event) #associate the current event with a user's profile
+		user_profile.owned_events.add(event)
+		
 		print 'made event'
 		context = {'username': request.user.username}
 
