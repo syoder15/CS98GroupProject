@@ -8,13 +8,12 @@
 {% endblock %}
 
 {% block content %}
-	<h3>Event Occurrences</h3>
+	<h3>Event View</h3>
      <h4>
-         <a href="{{ occurrence.event.get_absolute_url }}">{{ occurrence.title }}</a>
+         {{ occurrence.title }}
          &ndash;
          {% with occurrence.start_time as st  %}
-         <a href="{% url 'swingtime-daily-view' st.year st.month st.day %}">
-            {{ st|date:"l, F jS P" }}</a>
+            {{ st|date:"l, F jS P" }}
         </h4>
         {% endwith %}
      <dl>
@@ -23,22 +22,11 @@
          
          <dt>Description:</dt>
          <dd>{{ occurrence.event.description|default:"None" }}</dd>
-         
-         <dt>Note(s:)</dt>
-         <dd>
-             {% with occurrence.event.notes.all as notes %}
-             {% if notes %}
-             <ul>
-                 {% for note in notes %}
-                 <li>{{ note }}</li>
-                 {% endfor %}
-             </ul>
-             {% else %}None
-             {% endif %}
-             {% endwith %}
-         </dd>
-     </dl>
+			
+		 <dt><a href="{{occurrence.event.get_absolute_url}}">Edit Event Details</a></dt>
+	 </dl>
      
+	 
 	{% if owned %}
 	 
 		 <form action="" method="POST">
@@ -57,7 +45,6 @@
 			 </tbody>
 		 </table>
 		 </form>
-
 	 {% endif %}
 	 
      

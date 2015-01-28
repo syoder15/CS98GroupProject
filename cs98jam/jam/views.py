@@ -207,7 +207,6 @@ def new_channel(request):
 				else:
 					cat = ChannelCategory(name = c, count = 1)
 				cat.save()
-				cat.save()
 				channel.categories.add(cat)
 			channel.subscribers.add(request.user)
 			channel.admins.add(request.user)

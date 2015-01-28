@@ -49,11 +49,11 @@ urlpatterns = patterns('',
         name='swingtime-monthly-view'
     ),
 
-    url(
-        r'^calendar/(\d{4})/(0?[1-9]|1[012])/([0-3]?\d)/$', 
-        swingtime.day_view, 
-        name='swingtime-daily-view'
-    ),
+    #url(
+    #    r'^calendar/(\d{4})/(0?[1-9]|1[012])/([0-3]?\d)/$', 
+    #    swingtime.day_view, 
+    #    name='swingtime-daily-view'
+    #),
 
     url(
         r'^events/$',
