@@ -29,6 +29,7 @@ from dateutil import rrule
 #import newspaper
 
 
+
 upload_form = UploadFileForm
 
 # Create your views here.
@@ -89,7 +90,7 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications,
+			'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList, 'app_list': app_notifications,
 			'article_urls': article_urls, 'article_images': article_images}
 
 	#post request can mean 2 things.
@@ -229,7 +230,6 @@ def new_channel(request):
 					cat.count += 1
 				else:
 					cat = ChannelCategory(name = c, count = 1)
-				cat.save()
 				cat.save()
 				channel.categories.add(cat)
 			channel.subscribers.add(request.user)
@@ -414,6 +414,7 @@ def view_channel_as_admin(request, channel_name):
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
 
 def new_company(request):
+	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -483,7 +484,6 @@ def new_company(request):
 			#company.events.add(evt)
 			print '222222'
 			request.user.profile.events.add(evt)
-			request.user.profile.owned_events.add(evt)
 			
 			
 
@@ -539,6 +539,7 @@ def companies(request, company_name):
 	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
 
 	if(data):
+		company_edit = False
 		print "got to post"
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
@@ -570,6 +571,9 @@ def companies(request, company_name):
 		elif('company_update' in data):
 			print "APP STATUS"
 			#c_name = data.get('app_status')
+			if ('company_edit' in data): 
+				company_edit = True 
+				show_company = False 
 			company_list = data.getlist('app_status[]')
 			for company in companies: 
 				if company.name in company_list: 
@@ -583,16 +587,22 @@ def companies(request, company_name):
 					company.save()
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
-		elif('company_name' in data):
-			print "company name in data"
-			c_name = data.get('company_name')
+		elif('company_name' in data or 'company_edit' in data):
+			if('company_edit' in data): 
+				company_edit = True 
+				show_company = False
+				c_name = data.get('company_edit')
+				print "company edit"
+			else:
+				print "company name in data"
+				c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = company.events.all()
 			notes = company.notes
 
 
-			context = {'companies': companies, 'company_name': company.name, 
+			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 'events': events}
 
@@ -735,7 +745,7 @@ def contacts(request, contact_name):
 	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
 
 	if (data):
-		edit = False
+		contact_edit = False
 		go_home = data.get('back_home')
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
@@ -749,12 +759,12 @@ def contacts(request, contact_name):
 		elif(go_home == ("Back")):
 			show_contact = False
 
-		elif('edit' in data or 'contact_name' in data):
-			if('edit' in data):
-				edit = True
-				contact_name = data.get('edit')
+		elif('contact_edit' in data or 'contact_name' in data):
+			if('contact_edit' in data):
+				contact_edit = True
+				contact_name = data.get('contact_edit')
 				show_contact = False
-				print "edit pressed"
+				print "contact_edit pressed"
 			else:
 				contact_name = data.get('contact_name')
 			contact = request.user.contact_set.get(name=contact_name)
@@ -768,7 +778,7 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
-			context = {'edit': edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			context = {'contact_edit': contact_edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
@@ -905,7 +915,7 @@ def add_event(
 				
 			#### JAM CODE ####	
 			recurrence_form.save(event)
-			return http.HttpResponseRedirect(event.get_absolute_url())
+			return http.HttpResponseRedirect(event.occurrence_set.first().get_absolute_url())
 	else:
 		if 'dtstart' in request.GET:
 			try:
@@ -927,7 +937,7 @@ def add_event(
 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
-   ####FROM SWINGWIME ADD COMENTS
+   ####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
 	request,
@@ -963,8 +973,7 @@ def month_view(
 	year,
 	month,
 	template='swingtime/monthly_view.html',
-	queryset=None,
-	filters='false'
+	queryset=None
 ):
 	'''
 	Render a tradional calendar grid view with temporal navigation variables.
@@ -1003,22 +1012,22 @@ def month_view(
 	my_events = request.user.profile.events.all() #access all of the uers events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
-		if request.POST.get('Interviews') or filters is 'true' :
+		if request.POST.get('Interviews'):
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
 		else:
 			interview = False
 
-		if request.POST.get('Career Fairs') or filters is 'true' :
+		if request.POST.get('Career Fairs'):
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
 		else:
 			careerFair = False
 
-		if request.POST.get('Info Sessions') or filters is 'true' :
+		if request.POST.get('Info Sessions'):
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
 		else:
 			infoSession = False
 
-		if request.POST.get('Other') or filters is 'true' :
+		if request.POST.get('Other'):
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
 		else:
 			other = False
@@ -1164,7 +1173,7 @@ def event_view(
 					if request.POST.get('title') == event.title:
 						event.delete()
 						break
-				return month_view(request, datetime.today().year, datetime.today().month, 'swingtime/monthly_view.html', None, 'true')
+				return month_view(request, datetime.today().year, datetime.today().month)
 
 		data = {
 			'event': event,

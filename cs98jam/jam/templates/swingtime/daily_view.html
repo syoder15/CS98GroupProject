@@ -15,7 +15,6 @@
     </thead>
     <tbody>
         {% for tm,cells in timeslots %}
-        {% if }
         <tr>
             <th><a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}">{{ tm|date:"P" }}</a></th>
             {% for cell in cells %}

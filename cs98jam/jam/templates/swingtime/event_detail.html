@@ -8,11 +8,7 @@
 {% endblock %}
 
 {% block content %}
-	
-    <h3>Event Details</h3>
     <div>
-       
-
             <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">
                 <button>Yearly View</button>
             </a>
@@ -26,6 +22,9 @@
                 <button>Add Event</button>
             </a>
 </div>
+		<h3> Edit event details
+		</h3>
+		
 		{% if owned %}
 			<form action="" method="POST">
 			<table>
@@ -55,6 +54,7 @@
 			
 			
 		{% endif %}	
+<<<<<<< HEAD
     
     <h4>Notes</h4>
     {% with event.notes.all as notes %}
@@ -70,25 +70,29 @@
     {% endwith %}
 
    <!--  <h4>Occurrences</h4>
+=======
+   
+>>>>>>> b803ff18f9c9f8218219ea2bc8187e576743f785
     {% if event.occurrence_set.count %}
-    <ol>
+    
         {% for o in event.occurrence_set.all %}
-        <li>
+        
             {% if o.start_time.date == o.end_time.date %}
             <a href="{% url 'swingtime-occurrence' event.id o.id %}">
-                {{ o.start_time|date:"l, F jS, Y" }} {{ o.start_time|date:"P" }} &ndash; {{ o.end_time|date:"P" }}</a>
+                Back to Event</a>
             {% else %}
             <a href="{% url 'swingtime-occurrence' event.id o.id %}">
-                {{ o.start_time|date:"l, F jS, Y P" }} &ndash; 
-                {{ o.end_time|date:"l, F jS, Y P" }}</a>
+                Back to Event</a>
             {% endif %}
-        </li>
         {% endfor %}
-    </ol>
     {% else %}
+<<<<<<< HEAD
     {% endif %} -->
     
 	
+=======
+    {% endif %}
+>>>>>>> b803ff18f9c9f8218219ea2bc8187e576743f785
 {% endblock %}
 
 	

@@ -26,6 +26,22 @@
   	padding-left: 5px;
 }
 
+/*.backgroundCalendar a button {
+	background-color: #428bca; 
+}*/
+
+
+.backgroundCalendar table tr th, 
+.backgroundCalendar table tr td div {
+	color: #428bca; 
+}
+
+.update_filters {
+	padding:2px 10px;
+	float:left;
+	margin-top:10px;
+}
+
 #filterTitle {
 	padding-top: 45px;
 }
