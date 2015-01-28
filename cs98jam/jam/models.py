@@ -16,6 +16,7 @@ class Company(models.Model):
     user = models.ForeignKey(User)
     application_deadline = models.DateField()
     application_status = models.BooleanField(default=False)
+    events = models.ManyToManyField(SwingtimeEvent, blank=True, related_name="company_events")
 
 class Contact(models.Model):
 
