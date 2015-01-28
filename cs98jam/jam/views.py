@@ -28,6 +28,12 @@ from dateutil import rrule
 #import pytz
 #import newspaper
 
+# OH HOT DAMN, ABSTRACTION
+from jam.companies_view import *
+from jam.events_view import *
+from jam.contacts_view import *
+from jam.events_view import *
+from jam.channels_view import *
 
 upload_form = UploadFileForm
 
@@ -951,107 +957,107 @@ def event_listing(
 	)
 
 
-def month_view(
-	request,
-	year,
-	month,
-	template='swingtime/monthly_view.html',
-	queryset=None,
-	filters='false'
-):
-	'''
-	Render a tradional calendar grid view with temporal navigation variables.
+# def month_view(
+# 	request,
+# 	year,
+# 	month,
+# 	template='swingtime/monthly_view.html',
+# 	queryset=None,
+# 	filters='false'
+# ):
+# 	'''
+# 	Render a tradional calendar grid view with temporal navigation variables.
 
-	Context parameters:
+# 	Context parameters:
 
-	today
-		the current datetime.datetime value
+# 	today
+# 		the current datetime.datetime value
 
-	calendar
-		a list of rows containing (day, items) cells, where day is the day of
-		the month integer and items is a (potentially empty) list of occurrence
-		for the day
+# 	calendar
+# 		a list of rows containing (day, items) cells, where day is the day of
+# 		the month integer and items is a (potentially empty) list of occurrence
+# 		for the day
 
-	this_month
-		a datetime.datetime representing the first day of the month
+# 	this_month
+# 		a datetime.datetime representing the first day of the month
 
-	next_month
-		this_month + 1 month
+# 	next_month
+# 		this_month + 1 month
 
-	last_month
-		this_month - 1 month
+# 	last_month
+# 		this_month - 1 month
 
-	'''
-	year, month = int(year), int(month)
-	cal         = calendar.monthcalendar(year, month)
-	dtstart     = datetime(year, month, 1)
-	last_day    = max(cal[-1])
-	interview   = True
-	careerFair  = True
-	infoSession = True
-	other       = True
-   # dtend       = datetime(year, month, last_day)
+# 	'''
+# 	year, month = int(year), int(month)
+# 	cal         = calendar.monthcalendar(year, month)
+# 	dtstart     = datetime(year, month, 1)
+# 	last_day    = max(cal[-1])
+# 	interview   = True
+# 	careerFair  = True
+# 	infoSession = True
+# 	other       = True
+#    # dtend       = datetime(year, month, last_day)
 
-	#### JAM CODE ####
-	my_events = request.user.profile.events.all() #access all of the uers events
-	my_new_events = request.user.profile.events.none()
-	if request.method == "POST":
-		if request.POST.get('Interviews') or filters is 'true' :
-			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
-		else:
-			interview = False
+# 	#### JAM CODE ####
+# 	my_events = request.user.profile.events.all() #access all of the uers events
+# 	my_new_events = request.user.profile.events.none()
+# 	if request.method == "POST":
+# 		if request.POST.get('Interviews') or filters is 'true' :
+# 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
+# 		else:
+# 			interview = False
 
-		if request.POST.get('Career Fairs') or filters is 'true' :
-			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
-		else:
-			careerFair = False
+# 		if request.POST.get('Career Fairs') or filters is 'true' :
+# 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
+# 		else:
+# 			careerFair = False
 
-		if request.POST.get('Info Sessions') or filters is 'true' :
-			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
-		else:
-			infoSession = False
+# 		if request.POST.get('Info Sessions') or filters is 'true' :
+# 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
+# 		else:
+# 			infoSession = False
 
-		if request.POST.get('Other') or filters is 'true' :
-			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
-		else:
-			other = False
+# 		if request.POST.get('Other') or filters is 'true' :
+# 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
+# 		else:
+# 			other = False
 
-		my_events = my_new_events
+# 		my_events = my_new_events
 
 
 	
-	for event in my_events: #loop through the users events and create a queryset of all of the occurances
-		if queryset == None:
-			queryset = event.occurrence_set.all()
-		else:
-			queryset = queryset | event.occurrence_set.all()
+# 	for event in my_events: #loop through the users events and create a queryset of all of the occurances
+# 		if queryset == None:
+# 			queryset = event.occurrence_set.all()
+# 		else:
+# 			queryset = queryset | event.occurrence_set.all()
 	
-	if queryset == None:
-		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+# 	if queryset == None:
+# 		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
 	
-	#### JAM CODE ####
+# 	#### JAM CODE ####
 
-	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
+# 	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
-	def start_day(o):
-		return o.start_time.day
+# 	def start_day(o):
+# 		return o.start_time.day
 
-	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
-	data = {
-		'today':      datetime.now(),
-		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-		'username': request.user.username,
-		'this_month' : dtstart,
-		'next_month' : dtstart + timedelta(days=+last_day),
-		'last_month' : dtstart + timedelta(days=-1),
-		'interview'  : interview,
-		'careerFair' : careerFair,
-		'infoSession': infoSession,
-		'other'		 : other,
-		'upload_form'		 : upload_form
-	}
+# 	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
+# 	data = {
+# 		'today':      datetime.now(),
+# 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
+# 		'username': request.user.username,
+# 		'this_month' : dtstart,
+# 		'next_month' : dtstart + timedelta(days=+last_day),
+# 		'last_month' : dtstart + timedelta(days=-1),
+# 		'interview'  : interview,
+# 		'careerFair' : careerFair,
+# 		'infoSession': infoSession,
+# 		'other'		 : other,
+# 		'upload_form'		 : upload_form
+# 	}
 
-	return render(request, template, data)
+# 	return render(request, template, data)
 
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''
@@ -1265,14 +1271,4 @@ def manage_account(request):
 	if form_data:
 		user.email = form_data.get('new_email')
 		user.save()
-		freq = form_data.get('notif_freq')
-		# figure out notification val
-		notifs = 0
-		if(freq == "notif_four"):
-			notifs = 42
-		elif(freq == "notif_daily"):
-			notifs = 7
-		elif(freq == "notif_weekly"):
-			notifs = 1
-		user_profile.notification_frequency = notifs
 	return render(request, 'jam/user/manage_account.html', context)
