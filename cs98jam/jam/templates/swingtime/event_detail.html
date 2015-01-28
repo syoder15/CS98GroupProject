@@ -69,7 +69,7 @@
     {% endif %}
     {% endwith %}
 
-    <h4>Occurrences</h4>
+   <!--  <h4>Occurrences</h4>
     {% if event.occurrence_set.count %}
     <ol>
         {% for o in event.occurrence_set.all %}
@@ -86,25 +86,9 @@
         {% endfor %}
     </ol>
     {% else %}
-    {% endif %}
+    {% endif %} -->
     
 	
-	{% if owned %}
-		<h4>Add Occurrences</h4>
-		<form action="" method="post">
-		<table>
-			<tfoot>
-				<tr>
-					<td colspan="2"><input type="submit" name="_add" value="Add" /></td>
-				</tr>
-			</tfoot>
-			<tbody>
-			{% include "swingtime/recurring_form_part.html" %}
-			</tbody>
-		</table>
-		</form>
-   <!-- </form> Superfluous?? !-->
-   {% endif %}
 {% endblock %}
 
 	

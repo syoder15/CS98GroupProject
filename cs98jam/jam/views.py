@@ -25,8 +25,8 @@ from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
 from dateutil import rrule
-import pytz
-import newspaper
+#import pytz
+#import newspaper
 
 
 upload_form = UploadFileForm
@@ -470,13 +470,18 @@ def new_company(request):
 			month = int(application_deadline[5:7])
 			day = int(application_deadline[8:10])
 
+			title = str(company_name) + ' Deadline'
+
 			evt = swingmodel.create_event(
-				company_name,
+				title,
 				event_types[0],
+				description=company_name,
 				start_time=datetime(year,month,day, 12, 0, 0),
 				
 			)
-			
+			print '11111'
+			#company.events.add(evt)
+			print '222222'
 			request.user.profile.events.add(evt)
 			request.user.profile.owned_events.add(evt)
 			
@@ -490,6 +495,7 @@ def new_company(request):
 			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
 
 			company.save()
+			company.events.add(evt)
 			print 'made company'
 			context = {'username': request.user.username}
 
@@ -548,12 +554,13 @@ def companies(request, company_name):
 		elif('delete' in data):
 			print 'delete in data'
 			company_name = data.get('delete')
+			event_title = str(company_name) + ' Deadline'
 			company = request.user.company_set.filter(name=company_name)
 			company.delete()
 
 			events = request.user.profile.events.all()
 			for event in events:	
-				if company_name == event.title:
+				if event_title == event.title:
 					event.delete()
 					break
 
