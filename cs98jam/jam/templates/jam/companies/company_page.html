@@ -31,7 +31,7 @@
 				<th>Events:</th> 
 				<td><ul>
 					{% for e in events %}
-						<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+						<li><a href="{{ e.occurrence_set.first.get_absolute_url }}">{{ e }}</a></li>
 
 					{% empty %}
 						<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
