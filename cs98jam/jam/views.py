@@ -25,8 +25,8 @@ from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
 from dateutil import rrule
-import pytz
-import newspaper
+#import pytz
+#import newspaper
 
 
 upload_form = UploadFileForm
