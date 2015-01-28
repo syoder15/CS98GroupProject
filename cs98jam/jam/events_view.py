@@ -87,7 +87,7 @@ def add_event(
 				
 			#### JAM CODE ####	
 			recurrence_form.save(event)
-			return http.HttpResponseRedirect(event.get_absolute_url())
+			return http.HttpResponseRedirect(event.occurrence_set.first().get_absolute_url())
 	else:
 		if 'dtstart' in request.GET:
 			try:
@@ -109,7 +109,7 @@ def add_event(
 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
-   ####FROM SWINGWIME ADD COMENTS
+   ####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
 	request,
@@ -140,13 +140,13 @@ def event_listing(
 	)
 
 
+
 def month_view(
 	request,
 	year,
 	month,
 	template='swingtime/monthly_view.html',
-	queryset=None,
-	filters='false'
+	queryset=None
 ):
 	'''
 	Render a tradional calendar grid view with temporal navigation variables.
@@ -160,6 +160,7 @@ def month_view(
 		a list of rows containing (day, items) cells, where day is the day of
 		the month integer and items is a (potentially empty) list of occurrence
 		for the day
+
 
 	this_month
 		a datetime.datetime representing the first day of the month
@@ -185,22 +186,22 @@ def month_view(
 	my_events = request.user.profile.events.all() #access all of the uers events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
-		if request.POST.get('Interviews') or filters is 'true' :
+		if request.POST.get('Interviews'):
 			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
 		else:
 			interview = False
 
-		if request.POST.get('Career Fairs') or filters is 'true' :
+		if request.POST.get('Career Fairs'):
 			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
 		else:
 			careerFair = False
 
-		if request.POST.get('Info Sessions') or filters is 'true' :
+		if request.POST.get('Info Sessions'):
 			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
 		else:
 			infoSession = False
 
-		if request.POST.get('Other') or filters is 'true' :
+		if request.POST.get('Other'):
 			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
 		else:
 			other = False
@@ -346,7 +347,7 @@ def event_view(
 					if request.POST.get('title') == event.title:
 						event.delete()
 						break
-				return month_view(request, datetime.today().year, datetime.today().month, 'swingtime/monthly_view.html', None, 'true')
+				return month_view(request, datetime.today().year, datetime.today().month)
 
 		data = {
 			'event': event,
@@ -400,6 +401,16 @@ def occurrence_view(
 		st = occurrence.start_time
 		et = occurrence.end_time
 
+		'''title_list = occurrence.title.split(' ')
+		event_title = ""
+		i = 0
+		for word in title_list:
+			i+=1
+			if i != (len(title_list)):
+				event_title = event_title + word + "+"
+			else:
+				event_title += word
+		'''
 		event_title = urlify(occurrence.title)
 		event_desc = urlify(occurrence.event.description)
 		google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(st.year) + str(st.month).zfill(2) + str(st.day).zfill(2) + "T" + str(st.hour +5).zfill(2) + str(st.minute).zfill(2) + "00Z/" + str(et.year) +  str(et.month).zfill(2) + str(et.day).zfill(2) + "T" + str(et.hour + 5).zfill(2) + "" +  str(et.minute).zfill(2) + "00Z&details=" + event_desc
@@ -423,6 +434,13 @@ def urlify(desc):
 		else:
 			url += word
 	return url
+
+def new_event(request):
+	form_data = request.POST
+	event = Event(name=form_data.get('name'),
+					  date=form_data.get('date'))
+	event.save()
+	return HttpResponse()
 
 	
 #########################################################################################################

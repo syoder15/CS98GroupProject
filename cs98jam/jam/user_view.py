@@ -206,3 +206,21 @@ def profile(request):
 
 	context = {'profile': profile, 'username': request.user.username}
 	return render(request, 'jam/user/profile.html', context)
+
+
+'''account management page
+link to reset password, update email,
+and change notification frequency'''
+def manage_account(request):
+	form_data = request.POST
+
+	site = settings.DOMAIN
+	user_profile = UserProfile.objects.filter(user=request.user)
+
+	user = request.user
+	context ={'site': site, 'profile': user_profile, 'email': user.email}
+
+	if form_data:
+		user.email = form_data.get('new_email')
+		user.save()
+	return render(request, 'jam/user/manage_account.html', context)
