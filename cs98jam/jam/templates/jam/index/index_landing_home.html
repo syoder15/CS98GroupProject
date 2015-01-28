@@ -65,7 +65,7 @@
 				{% endfor %}
 			{% else %}
 				{% for e in events %}
-					<p><a href="{{e.get_absolute_url}}">{{e}} {{e.next_occurrence.start_time}}</a></p>
+					<p><a href="{{e.next_occurrence.get_absolute_url}}">{{e}} {{e.next_occurrence.start_time}}</a></p>
 				{% endfor %}
 				{% for a in app_list %}
 					<p style="color:red; font-size:2em"> {{ a }} </p>

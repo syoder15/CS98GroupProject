@@ -81,8 +81,8 @@
                         <td{% ifequal day today.day %}{% ifequal this_month.month today.month %} class="today"{% endifequal %}{% endifequal %}>
                         {% if day %}
                             <div class="day-ordinal">
-                                <!--<a href="{% url 'swingtime-daily-view' this_month.year this_month.month day %}">-->
-                                {{ day }}<!--</a>-->
+                                
+                                {{ day }}
                             </div>
                             {% if items %}
                             <ul class="eventBullet">
