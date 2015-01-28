@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block side_col %}
-	<h3 class="companies_header">Companies I'm applying to</h3>
+	<h3 class="companies_header">My Companies</h3>
 	<div class="list-group">
 		<form action="" method="POST" id="company_form">
 		{% csrf_token %}
@@ -20,7 +20,7 @@
 				<div class="company_name_in_list">
 					<input type="submit" name="company_name" value="{{c}}" class="companyNames"/>
 				</div>
-				<div style="float:left">
+				<div class="complete_checkbox">
 					<label class="complete_text">Complete</label>
 					{% if c.application_status %}
 						<input type="checkbox" class="checkbox" name="app_status[]" style="float:right"  value="{{c}}" checked/>
@@ -38,8 +38,8 @@
 			<button type="submit" class="btn btn-primary" name="company_update">Update</button>
 		</div>
 		</form>
-		<div>
-			<button type="button" class="btn btn-primary company-export">Export my companies</button>
+		<div class="export_company_btn">
+			<button type="button" class="btn btn-default company-export">Export my companies</button>
 		</div>
 	</div>
 
@@ -55,10 +55,10 @@
 				{% csrf_token %}
 					
 				<br />
-				<input class="button" name="back_home" type="submit" value="Back"/>
+				<input class="btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
 <!-- 				<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a> -->
-				<button id="company_edit" name="company_edit" type="submit" value="{{company_name}}">Edit</button>
-				<button id="delete" name="delete" type="submit" value="{{ company_name }}" onclick="return confirm('Are you sure you want to delete {{ company_name }}?')">Delete</button>
+				<button class="btn btn-default btn-small" id="company_edit" name="company_edit" type="submit" value="{{company_name}}">Edit</button>
+				<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ company_name }}" onclick="return confirm('Are you sure you want to delete {{ company_name }}?')">Delete</button>
 				</form>
 			</div>
 	{% elif company_edit %}
