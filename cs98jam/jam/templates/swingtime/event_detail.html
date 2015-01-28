@@ -22,19 +22,7 @@
                 <button>Add Event</button>
             </a>
 </div>
-		<h3> {% if event.occurrence_set.count %}
-        {% for o in event.occurrence_set.all %}
-            {% if o.start_time.date == o.end_time.date %}
-                {{ o.start_time|date:"l, F jS, Y" }} {{ o.start_time|date:"P" }} &ndash; {{ o.end_time|date:"P" }}
-            {% else %}
-                {{ o.start_time|date:"l, F jS, Y P" }} &ndash; 
-                {{ o.end_time|date:"l, F jS, Y P" }}
-            {% endif %}
-        
-        {% endfor %}
-		
-		{% else %}
-		{% endif %}
+		<h3> Edit event details
 		</h3>
 		
 		{% if owned %}

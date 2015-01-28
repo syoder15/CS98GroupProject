@@ -10,18 +10,20 @@
 {% block content %}
 	<h3>Event View</h3>
      <h4>
-         {{ occurrence.title }}
-         &ndash;
-         {% with occurrence.start_time as st  %}
-         <p>
-            {{ st|date:"l, F jS P" }}</p>
-        </h4>
-        {% endwith %}
+        <p>{{ occurrence.title }}</p>
+		<p>
+        {% with occurrence.start_time as st  %}
+            {{ st|date:"l, F jS: P" }}
+        {% endwith %} -
+		{% with occurrence.end_time as st  %}
+            {{ st|date:"P" }}
+        {% endwith %}</p>
+	</h4>
      <dl>
          <dt>Event type:</dt>
          <dd>{{ occurrence.event.event_type }}</dd>
          
-         <dt>Description:</dt>
+         <dt>Companies:</dt>
          <dd>{{ occurrence.event.description|default:"None" }}</dd>
 			
 		 <dt><a href="{{occurrence.event.get_absolute_url}}">Edit Event Details</a></dt>
