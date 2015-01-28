@@ -8,37 +8,28 @@
 {% endblock %}
 
 {% block content %}
-	<h3>Event Occurrences</h3>
+	<h3>Event View</h3>
      <h4>
-         <a href="{{ occurrence.event.get_absolute_url }}">{{ occurrence.title }}</a>
-         &ndash;
-         {% with occurrence.start_time as st  %}
-         <p>
-            {{ st|date:"l, F jS P" }}</p>
-        </h4>
-        {% endwith %}
+        <p>{{ occurrence.title }}</p>
+		<p>
+        {% with occurrence.start_time as st  %}
+            {{ st|date:"l, F jS: P" }}
+        {% endwith %} -
+		{% with occurrence.end_time as st  %}
+            {{ st|date:"P" }}
+        {% endwith %}</p>
+	</h4>
      <dl>
          <dt>Event type:</dt>
          <dd>{{ occurrence.event.event_type }}</dd>
          
-         <dt>Description:</dt>
+         <dt>Companies:</dt>
          <dd>{{ occurrence.event.description|default:"None" }}</dd>
-         
-         <dt>Note(s:)</dt>
-         <dd>
-             {% with occurrence.event.notes.all as notes %}
-             {% if notes %}
-             <ul>
-                 {% for note in notes %}
-                 <li>{{ note }}</li>
-                 {% endfor %}
-             </ul>
-             {% else %}None
-             {% endif %}
-             {% endwith %}
-         </dd>
-     </dl>
+			
+		 <dt><a href="{{occurrence.event.get_absolute_url}}">Edit Event Details</a></dt>
+	 </dl>
      
+	 
 	{% if owned %}
 	 
 		 <form action="" method="POST">
@@ -57,7 +48,6 @@
 			 </tbody>
 		 </table>
 		 </form>
-
 	 {% endif %}
 	 
      

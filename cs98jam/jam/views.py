@@ -95,7 +95,7 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications,
+			'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList, 'app_list': app_notifications,
 			'article_urls': article_urls, 'article_images': article_images}
 
 	#post request can mean 2 things.
@@ -235,7 +235,6 @@ def new_channel(request):
 					cat.count += 1
 				else:
 					cat = ChannelCategory(name = c, count = 1)
-				cat.save()
 				cat.save()
 				channel.categories.add(cat)
 			channel.subscribers.add(request.user)
@@ -904,7 +903,7 @@ def add_event(
 				
 			#### JAM CODE ####	
 			recurrence_form.save(event)
-			return http.HttpResponseRedirect(event.get_absolute_url())
+			return http.HttpResponseRedirect(event.occurrence_set.first().get_absolute_url())
 	else:
 		if 'dtstart' in request.GET:
 			try:
@@ -926,7 +925,7 @@ def add_event(
 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
-   ####FROM SWINGWIME ADD COMENTS
+   ####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
 	request,
