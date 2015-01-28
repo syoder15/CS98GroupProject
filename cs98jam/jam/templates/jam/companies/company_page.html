@@ -2,7 +2,7 @@
 	<table class="table table-companies"> 
 		<thead> 
 			<tr> 
-				<th><h3>Company: </h3></th>
+				<th class="col-md-3"><h3>Company: </h3></th>
 				<td><h3>{{ company_name }}</h3></td>
 			</tr>
 		</thead>
@@ -27,11 +27,11 @@
 					</ul>
 				</td>
 			</tr>
-			<!--<tr>
+			<tr>
 				<th>Events:</th> 
 				<td><ul>
 					{% for e in events %}
-						<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+						<li><a href="{{ e.occurrence_set.first.get_absolute_url }}">{{ e }}</a></li>
 
 					{% empty %}
 						<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
@@ -39,7 +39,7 @@
 					</ul>
 				</td>
 			</tr>
-			-->
+			
 
 		</tbody>
 	</table>
