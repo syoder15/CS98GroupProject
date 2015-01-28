@@ -13,7 +13,8 @@
          {{ occurrence.title }}
          &ndash;
          {% with occurrence.start_time as st  %}
-            {{ st|date:"l, F jS P" }}
+         <p>
+            {{ st|date:"l, F jS P" }}</p>
         </h4>
         {% endwith %}
      <dl>
