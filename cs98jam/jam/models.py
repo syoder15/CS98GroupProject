@@ -31,13 +31,25 @@ class Contact(models.Model):
     user = models.ForeignKey(User)
 
 
-# class Event(models.Model):
+class Event(models.Model):
 
-#     def __unicode__(self):
-#         return self.name
+	def __unicode__(self):
+		return self.name
+	
+	EVENT_TYPE = (
+		('int', 'Interview'),
+		('fair', 'Career Fair'),
+		('info', 'Info Session'),
+		('other', 'Other')
+	)
 
-#     name = models.CharField(max_length=50)
-#     date = models.DateField()
+	name = models.CharField(max_length=50)
+	description = models.CharField(max_length=150)
+	event_type = models.CharField(max_length=5, choices=EVENT_TYPE)
+	event_date = models.DateField()
+	start_time = models.TimeField()
+	end_time = models.TimeField()
+	user = models.ForeignKey(User)
 
 
 class ChannelCategory(models.Model):

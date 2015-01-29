@@ -110,11 +110,10 @@ def add_event(
 	)
 
 def new_event(request):
-	print 'blah'
 	if request.method == "POST":
 		form_data = request.POST
 
-		event_date = form_data.get('date')
+		event_date = form_data.get('event_date')
 		validity = is_valid_date(event_date)
 		if(validity!=''):
 	
@@ -126,18 +125,23 @@ def new_event(request):
 		
 		event_name = form_data.get('name')
 
+		print form_data.get('event_type')
+
 		# Event model doesn't exist right now
-		event = Event(title=event_name,
-						  event_type=form_data.get('type'),
+		event = Event(name=event_name,
+						  #event_type=form_data.get('event_type'),
+						  event_type='other',
 						  description=form_data.get('description'),
-						  date=form_data.get('date'),
+						  event_date=form_data.get('date'),
 						  start_time=form_data.get('start_time'),
 						  end_time=form_data.get('end_time'),
 						  user=request.user)
 
-		user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-		user_profile.events.add(event) #associate the current event with a user's profile
-		user_profile.owned_events.add(event)
+		event.save()
+
+		#user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+		#user_profile.events.add(event) #associate the current event with a user's profile
+		#user_profile.owned_events.add(event)
 		
 		print 'made event'
 		context = {'username': request.user.username}
@@ -470,12 +474,22 @@ def urlify(desc):
 			url += word
 	return url
 
-def new_event(request):
-	form_data = request.POST
-	event = Event(name=form_data.get('name'),
-					  date=form_data.get('date'))
-	event.save()
-	return HttpResponse()
+def is_valid_date(date):
+	now = datetime.now()
+
+	year = int(date[0:4])
+	month = int(date[5:7])
+	day = int(date[8:10])
+
+
+	if(len(date) < 10):
+		return "Please enter a date in YYYY-MM-DD format"
+	elif ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
+		return 'You cannot enter a date that is in the past.'
+	elif ( month >  12 or day > 31):
+		return 'You must enter a valid date. Please try again.'
+
+	return ""
 
 	
 #########################################################################################################

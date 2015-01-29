@@ -42,6 +42,8 @@ function timeValidation(time) {
 		alert("You must enter a valid time including either 'AM' or 'PM'.");
 		return false;
 	} 
+
+	return true;
 };
 
 function startEndTimeValidation(startTime, endTime) {
@@ -69,6 +71,8 @@ function startEndTimeValidation(startTime, endTime) {
 		alert("Your start time must be before your end time. Please try again.");
 		return false;
 	}
+
+	return true;
 };
 
 /*
@@ -103,7 +107,7 @@ function dateValidation(date) {
 
 	} 
 
-	return '';
+	return true;
 };
 
 function isValidDate(formName)

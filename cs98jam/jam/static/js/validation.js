@@ -356,7 +356,6 @@ function submitEventForm(event){
 		return false;
 	}
 	
-  	//NEED TO VALIDATE FIELDS
   	var name = $('#event_name_input').val();
   	var type = $('#event_type_input').val();
   	var date = $('#event_date_input').val();
@@ -364,7 +363,6 @@ function submitEventForm(event){
   	var startTime = $('#event_start_time_input').val();
   	var endTime = $('#event_end_time_input').val();
 	var csrftoken = getCookie('csrftoken');
-	  	document.write(type);
 
 	if ( dateValidation(date)==false || timeValidation(startTime)==false || 
 		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
@@ -387,8 +385,8 @@ function submitEventForm(event){
 		data: {
 			"name": name,
 			"description": description,
-			"type": type,
-			"date": date,
+			"event_type": type,
+			"event_date": date,
 			"start_time": startTime,
 			"end_time": endTime
 		},

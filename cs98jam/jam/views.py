@@ -1,49 +1,3 @@
-'''from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render_to_response, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import send_mail
-from jam.forms import UploadFileForm
-from jam.input import read_from_file
-from django.conf import settings
-import os
-import json
-
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
-from django.http import HttpResponseRedirect
-
-from swingtime import utils, forms
-from swingtime import models as swingmodel
-from dateutil import parser
-from django import http
-import calendar
-from datetime import datetime, timedelta, time
-from swingtime.models import Occurrence, Event
-from itertools import chain, groupby
-from django.db import models
-from django.utils import timezone
-from dateutil import rrule
-<<<<<<< HEAD
-import pytz
-#import newspaper
-
-
-upload_form = UploadFileForm
-
-# Create your views here.
-@login_required
-def index(request):
-	#context = {'username': request.user.username}
-
-	#money_articles = newspaper.build('http://money.cnn.com/')
-	#import pdb; pdb.set_trace()
-	article_images = []
-	article_urls = {}
-=======
-'''
-
 #import pytz
 #import newspaper
 
@@ -66,7 +20,6 @@ from jam.user_view import *
 # 	#import pdb; pdb.set_trace()
 # 	article_images = []
 # 	article_urls = {}
->>>>>>> 20eac109967b8a4b7ce035353d16fcf106d6ab16
 	
 # 	'''i = 0
 # 	for article in money_articles.articles:
@@ -632,7 +585,6 @@ from jam.user_view import *
 
 # 			events = request.user.profile.events.all()
 # 			for event in events:
->>>>>>> 20eac109967b8a4b7ce035353d16fcf106d6ab16
 				
 # 				if c_name == event.title:
 # 					event.delete()
