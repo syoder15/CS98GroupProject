@@ -251,6 +251,7 @@ function submitCompanyForm(event){
 	event.preventDefault();
 	var me = $(this);
 	me.off('click');
+	console.log("GOT HERE");
 
 	if( me.data('requestRunning')){
 		return;
@@ -259,7 +260,6 @@ function submitCompanyForm(event){
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateDeadline() != true || validateName('company_name_input') != ""){
-		console.log(validateDeadline());
 		return false;
 	}
 
@@ -361,6 +361,7 @@ function submitEventForm(event){
   	var type = $('#event_type_input').val();
   	var date = $('#event_date_input').val();
   	var description = $('#event_description_input').val();
+  	var companies = $('#event_companies_input').val();
   	var startTime = $('#event_start_time_input').val();
   	var endTime = $('#event_end_time_input').val();
 	var csrftoken = getCookie('csrftoken');
@@ -386,6 +387,7 @@ function submitEventForm(event){
 		data: {
 			"name": name,
 			"description": description,
+			"companies": companies,
 			"event_type": type,
 			"event_date": date,
 			"start_time": startTime,

@@ -30,7 +30,6 @@ from dateutil import rrule
 upload_form = UploadFileForm
 
 def new_company(request):
-	print 'here'
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -76,11 +75,11 @@ def new_company(request):
 						  user=request.user)
 
 			
-			event_types = swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+			#event_types = swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
 			
-			if len(event_types) == 0:
-				swingmodel.EventType.objects.create(abbr='due', label='Application Deadline')
-				swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+			#if len(event_types) == 0:
+			#	swingmodel.EventType.objects.create(abbr='due', label='Application Deadline')
+			#	swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
 
 			
 			year = int(application_deadline[0:4])
@@ -91,8 +90,9 @@ def new_company(request):
 			print "before evt"
 			evt = jam_event(
 				name=title,
-				event_type=event_types[0],
-				description=company_name,
+				event_type='app',
+				description='',
+				companies=company_name,
 				start_time='12:00',
 				end_time='13:00',
 				event_date=application_deadline,
@@ -207,7 +207,7 @@ def companies(request, company_name):
 
 			events = request.user.profile.events.all()
 			for event in events:	
-				if event_title == event.title:
+				if event_title == event.name:
 					event.delete()
 					break
 

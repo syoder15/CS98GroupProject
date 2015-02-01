@@ -2,6 +2,18 @@
    background: #4166F5;
 }*/
 
+/*.table-profile thead tr th, */
+.table-profile tbody tr th {
+	float:right;
+	font-size:16px;
+	border:none;
+}
+
+.table-profile tbody tr td {
+	font-size:16px;
+	border:none;
+}
+
 .profile-header {
 	margin:0px;
 	height:300px;

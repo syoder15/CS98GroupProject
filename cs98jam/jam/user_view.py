@@ -209,7 +209,7 @@ def profile(request):
 							  grad_month=form_data.get('grad_month'),
 							  grad_year=form_data.get('grad_year'))
 
-		profile.save()
+		# profile.save()
 
 		#return render(request, 'jam/index/index.html', {})
 
