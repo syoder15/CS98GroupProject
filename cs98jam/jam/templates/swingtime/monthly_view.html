@@ -53,7 +53,8 @@
 				<a href="{% url 'swingtime-monthly-view' next_month.year next_month.month %}" 
                    title="Next Month">&rarr;</a>
             </h4>
-
+            <br />
+            <!--
             <a href="{% url 'swingtime-yearly-view' current_datetime.year %}" class="calLink">
                 <button>Yearly View</button>
             </a>
@@ -66,6 +67,7 @@
             <a href="{% url 'swingtime-add-event' %}?dtstart={{ tm.isoformat }}" class="calLink">
                 <button>Add Event</button>
             </a>
+        -->
         </div>
 
             <table class="month-view">
@@ -90,8 +92,8 @@
                                 <li>
                                     <a href="{{ item.get_absolute_url }}">
                                         <span class="event-times">{{ item.start_time|time }}</span>
-                                        {{ item.title }}</a>
-                                        {{ item.event_type_id }}
+                                        {{ item.name }}</a>
+                                        <!--{{ item.event_type }}-->
                                 </li>
                                 {% endfor %}
                             </ul>

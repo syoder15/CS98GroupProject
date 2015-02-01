@@ -88,7 +88,7 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': events, 'notificationList': notificationList, 'app_list': app_notifications,
+			'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList, 'app_list': app_notifications,
 			'article_urls': article_urls, 'article_images': article_images}
 
 	#post request can mean 2 things.
@@ -103,7 +103,7 @@ def index(request):
 		if(go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
-			'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList,
+			'channels': channels,'show': show_feed, 'events': future_events, 'notificationList': notificationList,
 			'article_urls': article_urls, 'article_images': article_images}
 
 		else:
@@ -142,6 +142,14 @@ def index(request):
 			is_admin = False
 			if request.user.controlledChannels.filter(name=channel.name).exists():
 				is_admin = True
+			
+			
+			
+			for e in channel.events.all():
+				print "HEREFIRST"
+				if e.next_occurrence() == None:
+					channel.events.remove(e)
+			
 			
 			added_events = channel.events.all() & request.user.profile.events.all()
 			unadded_events = channel.events.all().exclude(pk__in = added_events.all())
