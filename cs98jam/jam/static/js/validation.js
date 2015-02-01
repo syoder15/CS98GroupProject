@@ -364,10 +364,10 @@ function submitEventForm(event){
   	var endTime = $('#event_end_time_input').val();
 	var csrftoken = getCookie('csrftoken');
 
-	if ( dateValidation(date)==false || timeValidation(startTime)==false || 
+	/*if ( dateValidation(date)==false || timeValidation(startTime)==false || 
 		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
 		return false;
-	}
+	}*/
 
 	var formName = $('.event_form').attr('name');
 
@@ -405,7 +405,7 @@ function submitEventForm(event){
 		//handles error response
 		error: function(response){
 			//console.log(response);
-			console.log("ERRORERROR" + name)
+			console.log("ERRORERROR" + name);
 			//$("input[type=submit]").prop("disabled", false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
