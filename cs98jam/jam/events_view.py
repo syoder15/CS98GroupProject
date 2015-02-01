@@ -11,7 +11,7 @@ from django.conf import settings
 import os
 import json
 
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory, Event as jam_event
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -109,7 +109,48 @@ def add_event(
 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
-   ####FROM SWINGTIME ADD COMMENTS
+def new_event(request):
+	if request.method == "POST":
+		form_data = request.POST
+
+		event_date = form_data.get('event_date')
+		print event_date
+		validity = is_valid_date(event_date)
+		print "validity is " + validity
+		if(validity!=''):
+	
+			# return bad request if the date is still invalid somehow (but very unlikely!)
+			response={}
+			response["error"] = validity
+			print "got here"
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+		
+		event_name = form_data.get('name')
+
+		print form_data.get('event_type')
+
+		# Event model doesn't exist right now
+		print "making event"
+		event = jam_event(name=event_name,
+						  event_type=form_data.get('event_type'),
+						  description=form_data.get('description'),
+						  event_date=form_data.get('event_date'),
+						  start_time=form_data.get('start_time'),
+						  end_time=form_data.get('end_time'),
+						  user=request.user)
+		print "made event"
+		event.save()
+		print "saved event"
+		#user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+		#user_profile.events.add(event) #associate the current event with a user's profile
+		#user_profile.owned_events.add(event)
+		
+		print 'made event'
+		context = {'username': request.user.username}
+
+		return render(request, 'jam/index/index_landing_home.html', context)
+
+####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
 	request,
@@ -183,50 +224,49 @@ def month_view(
    # dtend       = datetime(year, month, last_day)
 
 	#### JAM CODE ####
-	my_events = request.user.profile.events.all() #access all of the uers events
+	#my_events = request.user.profile.events.all() #access all of the users events
+	my_events = request.user.event_set.all()
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
-			my_new_events = my_events.filter(event_type_id = 1) | my_new_events
+			my_new_events = my_events.filter(event_type = 'int') | my_new_events
 		else:
 			interview = False
 
 		if request.POST.get('Career Fairs'):
-			my_new_events = my_events.filter(event_type_id = 2) | my_new_events
+			my_new_events = my_events.filter(event_type = 'fair') | my_new_events
 		else:
 			careerFair = False
 
 		if request.POST.get('Info Sessions'):
-			my_new_events = my_events.filter(event_type_id = 3) | my_new_events
+			my_new_events = my_events.filter(event_type = 'info') | my_new_events
 		else:
 			infoSession = False
 
 		if request.POST.get('Other'):
-			my_new_events = my_events.filter(event_type_id = 4) | my_new_events
+			my_new_events = my_events.filter(event_type = 'other') | my_new_events
 		else:
 			other = False
 
 		my_events = my_new_events
-
-
 	
-	for event in my_events: #loop through the users events and create a queryset of all of the occurances
-		if queryset == None:
-			queryset = event.occurrence_set.all()
-		else:
-			queryset = queryset | event.occurrence_set.all()
+	#for event in my_events: #loop through the users events and create a queryset of all of the occurances
+	#	if queryset == None:
+	#		queryset = event.occurrence_set.all()
+	#	else:
+	#		queryset = queryset | event.occurrence_set.all()
 	
-	if queryset == None:
-		queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
+	#if queryset == None:
+	#	queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
 	
 	#### JAM CODE ####
 
-	occurrences = queryset.filter(start_time__year=year, start_time__month=month)
+	#occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
 	def start_day(o):
-		return o.start_time.day
+		return o.event_date.day
 
-	by_day = dict([(dt, list(o)) for dt,o in groupby(occurrences, start_day)])
+	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_day)])
 	data = {
 		'today':      datetime.now(),
 		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
@@ -435,12 +475,22 @@ def urlify(desc):
 			url += word
 	return url
 
-def new_event(request):
-	form_data = request.POST
-	event = Event(name=form_data.get('name'),
-					  date=form_data.get('date'))
-	event.save()
-	return HttpResponse()
+def is_valid_date(date):
+	now = datetime.now()
+
+	year = int(date[0:4])
+	month = int(date[5:7])
+	day = int(date[8:10])
+
+
+	if(len(date) < 10):
+		return "Please enter a date in YYYY-MM-DD format"
+	elif ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
+		return 'You cannot enter a date that is in the past.'
+	elif ( month >  12 or day > 31):
+		return 'You must enter a valid date. Please try again.'
+
+	return ""
 
 	
 #########################################################################################################

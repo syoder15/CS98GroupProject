@@ -1,32 +1,3 @@
-'''from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render_to_response, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import send_mail
-from jam.forms import UploadFileForm
-from jam.input import read_from_file
-from django.conf import settings
-import os
-import json
-
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
-from django.http import HttpResponseRedirect
-
-from swingtime import utils, forms
-from swingtime import models as swingmodel
-from dateutil import parser
-from django import http
-import calendar
-from datetime import datetime, timedelta, time
-from swingtime.models import Occurrence, Event
-from itertools import chain, groupby
-from django.db import models
-from django.utils import timezone
-from dateutil import rrule
-'''
-
 #import pytz
 #import newspaper
 
@@ -493,8 +464,6 @@ from jam.user_view import *
 # 			print '222222'
 # 			request.user.profile.events.add(evt)
 			
-			
-
 # 			print "making Company"
 # 			print company_name
 # 			print form_data.get('deadline')
@@ -527,15 +496,6 @@ from jam.user_view import *
 # 		return 'You must enter a valid date. Please try again.'
 
 # 	return ""
-
-
-
-# def new_event(request):
-# 	form_data = request.POST
-# 	event = Event(name=form_data.get('name'),
-# 					  date=form_data.get('date'))
-# 	event.save()
-# 	return HttpResponse()
 
 # def companies(request, company_name):
 # 	companies = request.user.company_set.all()

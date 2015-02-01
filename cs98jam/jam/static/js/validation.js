@@ -17,6 +17,7 @@ if(localTest){
 
 //validating company form fields
 function validateDeadline(){
+	/*var deadline = $('#' + deadline_id).val();*/
 	var deadline = $('#company_deadline_input').val();
 	var msg = dateValidation(deadline);
 	if(msg.length > 0){
@@ -327,6 +328,98 @@ function submitCompanyForm(event){
 		//
 		if(donezo){
 			me.on('click', submitCompanyForm);
+			//$("input[type=submit]").prop("disabled", false);
+			console.log("GOT HERE");
+			$( this ).addClass( "done" );
+			location.reload();
+		}
+		else{
+			return false;
+		}
+	});
+};
+
+$('.event-btn').on('click', submitEventForm);
+
+function submitEventForm(event){	
+	event.preventDefault();
+	var me = $(this);
+	me.off('click');
+
+	if( me.data('requestRunning')){
+		return;
+	}
+
+	me.data('requestRunning', true);
+	// if there are any client-side errors apparent, do NOT go through AJAX validation
+	if (validateName('event_name_input') != ""){
+		return false;
+	}
+	
+  	var name = $('#event_name_input').val();
+  	var type = $('#event_type_input').val();
+  	var date = $('#event_date_input').val();
+  	var description = $('#event_description_input').val();
+  	var startTime = $('#event_start_time_input').val();
+  	var endTime = $('#event_end_time_input').val();
+	var csrftoken = getCookie('csrftoken');
+
+	/*if ( dateValidation(date)==false || timeValidation(startTime)==false || 
+		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		return false;
+	}*/
+
+	var formName = $('.event_form').attr('name');
+
+	var donezo = false;
+
+  	$.ajaxSetup({
+	    beforeSend: function(xhr, settings) {
+		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	    }
+	});
+  	$.ajax({
+  		type: "POST",
+  		cache:false,
+		url: site + "new_event/",
+		data: {
+			"name": name,
+			"description": description,
+			"event_type": type,
+			"event_date": date,
+			"start_time": startTime,
+			"end_time": endTime
+		},
+		singleton:true,
+        delay:500,
+        blocking:true,
+		success: function(){
+			donezo = true;
+			console.log("SUCCESS")
+			$('.server-error').hide();
+			$('#eventModal').modal('hide');
+			$('input').val('');
+			$('textarea').val('');
+		},
+
+		//handles error response
+		error: function(response){
+			//console.log(response);
+			console.log("ERRORERROR" + name);
+			//$("input[type=submit]").prop("disabled", false);
+			var errors = JSON.parse(response.responseText);
+			for(error in errors){
+				$('.server-error').html(errors[error]);
+			}
+			me.on('click', submitEventForm);
+			me.data('requestRunning',false);
+			return false;
+
+		}
+	}).done(function() {
+		//
+		if(donezo){
+			me.on('click', submitEventForm);
 			//$("input[type=submit]").prop("disabled", false);
 			console.log("GOT HERE");
 			$( this ).addClass( "done" );

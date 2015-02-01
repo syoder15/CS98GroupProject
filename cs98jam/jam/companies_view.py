@@ -11,7 +11,7 @@ from django.conf import settings
 import os
 import json
 
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory, Event as jam_event
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -26,10 +26,10 @@ from django.db import models
 from django.utils import timezone
 from dateutil import rrule
 
+
 upload_form = UploadFileForm
 
 def new_company(request):
-	print "inside new company"
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -87,18 +87,22 @@ def new_company(request):
 			day = int(application_deadline[8:10])
 
 			title = str(company_name) + ' Deadline'
-
-			evt = swingmodel.create_event(
-				title,
-				event_types[0],
+			print "before evt"
+			evt = jam_event(
+				name=title,
+				event_type=event_types[0],
 				description=company_name,
-				start_time=datetime(year,month,day, 12, 0, 0),
-				
+				start_time='12:00',
+				end_time='13:00',
+				event_date=application_deadline,
+				user=request.user
 			)
-			print '11111'
-			#company.events.add(evt)
-			print '222222'
+			evt.save()
+			print "after evt"
 			request.user.profile.events.add(evt)
+			print "after events"
+			request.user.profile.owned_events.add(evt)
+			print "after owned events"
 			
 			
 
