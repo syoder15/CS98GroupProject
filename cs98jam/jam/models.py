@@ -4,32 +4,6 @@ from django.utils import timezone
 from swingtime.models import Event as SwingtimeEvent
 
 
-# Create your models here.
-class Company(models.Model):
-    
-    def __unicode__(self):
-        return self.name
- 	class Meta:
- 		verbose_name_plural =_('Companies')
-    name = models.CharField(max_length=50)
-    notes = models.TextField(blank=True)
-    user = models.ForeignKey(User)
-    application_deadline = models.DateField()
-    application_status = models.BooleanField(default=False)
-    events = models.ManyToManyField(SwingtimeEvent, blank=True, related_name="company_events")
-
-class Contact(models.Model):
-
-    def __unicode__(self):
-        return self.name
-
-    name = models.CharField(max_length=50)
-    phone_number = models.IntegerField(default=0)
-    email = models.CharField(max_length=50)
-    employer = models.CharField(max_length=50)
-    notes = models.TextField(blank=True)
-    user = models.ForeignKey(User)
-
 
 class Event(models.Model):
 
@@ -43,6 +17,31 @@ class Event(models.Model):
 	start_time = models.TimeField()
 	end_time = models.TimeField()
 	user = models.ForeignKey(User)
+# Create your models here.
+class Company(models.Model):
+    
+    def __unicode__(self):
+        return self.name
+ 	class Meta:
+ 		verbose_name_plural =_('Companies')
+    name = models.CharField(max_length=50)
+    notes = models.TextField(blank=True)
+    user = models.ForeignKey(User)
+    application_deadline = models.DateField()
+    application_status = models.BooleanField(default=False)
+    events = models.ManyToManyField(Event, blank=True, related_name="company_events")
+
+class Contact(models.Model):
+
+    def __unicode__(self):
+        return self.name
+
+    name = models.CharField(max_length=50)
+    phone_number = models.IntegerField(default=0)
+    email = models.CharField(max_length=50)
+    employer = models.CharField(max_length=50)
+    notes = models.TextField(blank=True)
+    user = models.ForeignKey(User)
 
 
 class ChannelCategory(models.Model):
@@ -101,8 +100,8 @@ class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name="profile")
 	activation_key = models.CharField(max_length=40)
 	key_expires = models.DateTimeField()
-	events = models.ManyToManyField(SwingtimeEvent, blank=True)
-	owned_events = models.ManyToManyField(SwingtimeEvent, blank=True, related_name="owned_events") 
+	events = models.ManyToManyField(Event, blank=True)
+	owned_events = models.ManyToManyField(Event, blank=True, related_name="owned_events") 
 	# notification freq, defined as how many emails sent per week
 	# 42 means 4-hour feed, 7 means daily digest, and 1 means week in review 
 	notification_frequency = models.IntegerField(default=0)
