@@ -47,3 +47,15 @@ listItem.on('click', function(){
 	$(this).children('p.list-group-item-text').removeClass('hidden');
 	$(this).siblings().children('p.list-group-item-text').addClass('hidden');
 });
+
+function parseFile(nameOfFile){
+	jQuery.get(nameOfFile, function(data){
+		var lines = data.split("\n");
+		for (var i = 0; i < lines.length; i++){
+			var splitLine = lines[i].split(", ");
+			var companyName = splitLine[0];
+			var applicationDate = splitLine[1];
+			//ADD COMPANY WITH THIS INFORMATION NOW
+		}
+	});
+}

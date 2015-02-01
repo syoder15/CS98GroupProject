@@ -61,7 +61,7 @@ class Channel(models.Model):
 	is_public = models.BooleanField(default=False)
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
-	events = models.ManyToManyField(SwingtimeEvent, blank=True)
+	events = models.ManyToManyField(Event, blank=True)
 	added = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	categories = models.ManyToManyField(ChannelCategory, related_name="channelCategories", blank=True, null=True)

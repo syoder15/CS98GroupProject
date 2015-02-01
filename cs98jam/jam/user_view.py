@@ -51,8 +51,6 @@ def index(request):
 		i += 1
 	'''
 	events = request.user.event_set.all()
-	print events
-	print "events"
 	future_events = []
 	for e in events:
 		if (e.event_date >= datetime.now().date()):
@@ -211,7 +209,7 @@ def profile(request):
 							  grad_month=form_data.get('grad_month'),
 							  grad_year=form_data.get('grad_year'))
 
-		profile.save()
+		# profile.save()
 
 		#return render(request, 'jam/index/index.html', {})
 
