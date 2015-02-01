@@ -51,8 +51,6 @@ def index(request):
 		i += 1
 	'''
 	events = request.user.event_set.all()
-	print events
-	print "events"
 	future_events = []
 	for e in events:
 		if (e.event_date >= datetime.now().date()):
