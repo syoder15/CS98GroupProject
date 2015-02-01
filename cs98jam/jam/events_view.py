@@ -134,6 +134,7 @@ def new_event(request):
 		event = jam_event(name=event_name,
 						  event_type=form_data.get('event_type'),
 						  description=form_data.get('description'),
+						  companies=form_data.get('companies'),
 						  event_date=form_data.get('event_date'),
 						  start_time=form_data.get('start_time'),
 						  end_time=form_data.get('end_time'),
@@ -141,6 +142,16 @@ def new_event(request):
 		print "made event"
 		event.save()
 		print "saved event"
+
+		company_field = form_data.get('companies')
+		if company_field != '':
+			company_field = company_field.replace(" ", "")
+			companies = company_field.split(',')
+			for c in companies:
+				if len(request.user.company_set.filter(name=c)) > 0:
+					company = request.user.company_set.filter(name=c)
+					company = company[0]
+					company.events.add(event)
 		#user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
 		#user_profile.events.add(event) #associate the current event with a user's profile
 		#user_profile.owned_events.add(event)
@@ -384,7 +395,7 @@ def event_view(
 			else:
 				events = request.user.profile.events.all()
 				for event in events:
-					if request.POST.get('title') == event.title:
+					if request.POST.get('title') == event.name:
 						event.delete()
 						break
 				return month_view(request, datetime.today().year, datetime.today().month)

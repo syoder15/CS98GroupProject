@@ -12,6 +12,7 @@ class Event(models.Model):
 
 	name = models.CharField(max_length=50)
 	description = models.CharField(max_length=150)
+	companies = models.CharField(max_length=200, default='')
 	event_type = models.CharField(max_length=5)
 	event_date = models.DateField()
 	start_time = models.TimeField()
