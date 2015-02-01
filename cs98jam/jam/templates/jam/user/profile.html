@@ -1,14 +1,127 @@
 {% extends "../../jam/templates/jam/index/index.html" %}
 
+{% load staticfiles %}
+{% load notification_custom %}
+
 
 {% block styles %}
 	{{ block.super }}
 	{% load staticfiles %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}" />
 {% endblock %}
 
 
 {% block content %}
+<!-- Cover photo and profile -->
+<div class="container-fluid"> 
+	<div class="banner-picture row">
+		<div class="col-sm-4">
+			<div class="profile-picture-container" style="border:1px black solid;">
+				<img src="http://cuteanimalpicturesandvideos.com/wp-content/uploads/super-cute-puppy-look-awww-photo.jpg" id="" class="profile-picture"></img>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="profile-bar">
+				<h3 class="profile-name"> 
+					{{ username }}
+				</h3> 
+			</div>
+		</div> 
+	</div> 
+
+	{% if show %}
+		<div class="table-responsive">
+			<table class="table table-profile"> 
+				<!-- <thead> 
+					<tr> 
+						<th class="col-md-4"><h3>Username: </h3></th>
+						<td><h3>{{ username }}</h3></td>
+					</tr>
+				</thead> -->
+				<tbody>
+					<tr>
+						<th>Gender:</th> 
+						<td>{{ user.gender }}</td>
+					</tr>
+					<tr>
+						<th>Email:</th>
+						<td>{{ user.email }}</td>
+					</tr>
+					<tr>
+						<th>Phone Number:</th> 
+						<td>{{ user.phone_number }}</td>
+					</tr>
+					<tr>
+						<th>Address:</th> 
+						<td>{{ user.address }}</td>
+					</tr>
+					<tr>
+						<th>Graduation Date:</th> 
+						<td>{{ user.grad_date_month }} {{ user.grad_date_year }}</td>
+					</tr>			
+					<tr> 
+						<th> </th>
+						<td>
+							<button class="btn btn-default btn-small" id="profile_edit" name="profile_edit" type="submit" value="profile_edit">Edit</button>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	{% elif profile_edit %}
+		{% include "jam/user/profile_edit.html" %}
+	{% endif %}
+
+</div>
+{% endblock %}
+
+
+
+
+{% block main_col %}
+<div id="showCompanyPage">
+	{% if show %}
+		{% include "jam/companies/company_page.html" %}
+			<div>
+				<form class="goHome" method="POST" action="">
+				{% csrf_token %}
+					
+				<br />
+				<input class="btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
+<!-- 				<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a> -->
+				<button class="btn btn-default btn-small" id="company_edit" name="company_edit" type="submit" value="{{company_name}}">Edit</button>
+				<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ company_name }}" onclick="return confirm('Are you sure you want to delete {{ company_name }}?')">Delete</button>
+				</form>
+			</div>
+	{% elif company_edit %}
+		{% include "jam/companies/company_page_edit.html" %}
+	{% endif %}	
+
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'js/companies.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- 
+
+
 <div class="container-fluid"> 
 	<div class="banner-picture row">
 		<div class="col-sm-4">
@@ -48,7 +161,7 @@
 <div class="centered">
 	<div>
 		<!--{% csrf_token %}-->
-		<br>
+		<!-- <br>
 		<h2 style="text-align:left">Contact Information</h2>
 		<br>
 
@@ -200,16 +313,4 @@
 	</div>
 </div>
 
-{% endblock %}
 
-
-{% block javascript %}
-	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
-	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
-	<script src="{% static 'js/main.js' %}"></script>
-	<script src="{% static 'js/handlers.js' %}"></script>
-	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
-
-	<!--{{ block.super }}
-	<script src="{% static 'js/profile.js' %}"></script>-->
-{% endblock %}
