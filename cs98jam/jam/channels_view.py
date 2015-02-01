@@ -154,7 +154,7 @@ def view_channel_as_admin(request, channel_name):
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 'events': channel.events,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
-		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at")}
+		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at"), 'username': request.user.username}
 
 
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
