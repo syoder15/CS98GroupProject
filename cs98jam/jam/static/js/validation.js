@@ -258,7 +258,8 @@ function submitCompanyForm(event){
 
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
-	if (validateDeadline() != "" || validateName('company_name_input') != ""){
+	if (validateDeadline() != true || validateName('company_name_input') != ""){
+		console.log(validateDeadline());
 		return false;
 	}
 

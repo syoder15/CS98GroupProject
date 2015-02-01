@@ -30,6 +30,7 @@ from dateutil import rrule
 upload_form = UploadFileForm
 
 def new_company(request):
+	print 'here'
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
