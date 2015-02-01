@@ -50,12 +50,13 @@ def index(request):
 			article_urls[article.url] = article.title
 		i += 1
 	'''
-	events = request.user.profile.events.order_by("occurrence").all()
+	events = request.user.event_set.all()
 	future_events = []
 	for e in events:
-		for u in e.upcoming_occurrences():
-			if u.start_time >= timezone.now():
-				future_events.append(e)
+		if (e.event_date >= datetime.now().date()):
+			if (e.event_date == datetime.now().date()) and (e.start_time <= datetime.now().time()):
+				continue #if the event already happened today, don't add it
+			future_events.append(e)
 	# show only channels in sidebar that user is subscribed to
 	channels = request.user.channel_set.order_by("name").all()
 
