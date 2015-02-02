@@ -39,6 +39,30 @@
 					</ul>
 				</td>
 			</tr>
+
+			<tr>
+				<th>Application status:</th>
+				<td> 
+					<form>
+					{% if status %}
+						<p> Complete! </p>
+					{% else %}
+						<p> Incomplete </p>
+					{% endif %}
+					</form>
+				</td>
+			</tr>
+			
+			<tr>
+				{% if has_link %}
+				<th> Application Link: </th>
+				<td>
+					<a href="{{link}}" target="_blank">{{link}}</a>
+				</td>
+				{% endif %}
+
+			</tr>
+
 			
 
 		</tbody>
