@@ -210,10 +210,21 @@ def profile(request):
 							  grad_year=form_data.get('grad_year'))
 
 		# profile.save()
+		# remember to cause profile to save again!!! 
 
 		#return render(request, 'jam/index/index.html', {})
 
-	context = {'profile': profile, 'username': request.user.username}
+	profile_edit = False 
+	show_profile = True 
+	data = request.POST 
+
+	if(data): 
+		if ('profile_edit' in data): 
+			profile_edit = True 
+			show_profile = False 
+			print "in profile edit in data" 
+
+	context = {'show_profile' : show_profile, 'profile_edit': profile_edit, 'profile': profile, 'username': request.user.username}
 	return render(request, 'jam/user/profile.html', context)
 
 

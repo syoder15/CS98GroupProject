@@ -368,10 +368,10 @@ function submitEventForm(event){
   	var endTime = $('#event_end_time_input').val();
 	var csrftoken = getCookie('csrftoken');
 
-	/*if ( dateValidation(date)==false || timeValidation(startTime)==false || 
+	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
 		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
 		return false;
-	}*/
+	}
 
 	var formName = $('.event_form').attr('name');
 
