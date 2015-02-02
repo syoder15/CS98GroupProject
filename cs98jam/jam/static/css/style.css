@@ -4,8 +4,9 @@ ul, li {
     padding: 0;
 } 
 
-html,body, section {
-	height:100%;
+html, body, section {
+	background-color: #efefef !important;
+	height: 100%;
 }
 
 .page-wrap {
@@ -71,7 +72,6 @@ a:link, a:visited {
 .centered {
 	position:absolute;
 	top:0px;
-	background-color: transparent;
 	display: inline-block;
 	height: 300px;
 	margin-top: 200px;
