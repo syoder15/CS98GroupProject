@@ -52,11 +52,11 @@ function startEndTimeValidation(startTime, endTime) {
 	var startMin = startTime[1].split(" ");
 	var endMin = endTime[1].split(" ");
 
-	if (startMin[1] == 'PM') {
+	if (startMin[1].toLowerCase() == 'pm') {
 		startTime[0] += 12;
 	}
 
-	if (endMin[1] == 'PM') {
+	if (endMin[1].toLowerCase == 'pm') {
 		endTime[0] += 12;
 	}
 
