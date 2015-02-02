@@ -204,6 +204,18 @@ def companies(request, company_name):
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+		elif('save' in data):
+			company_name = data.get('name')
+			company = request.user.company_set.filter(name=company_name).first()
+
+			print "about to save company"
+			company.name = company_name
+			company.application_deadline=data.get('application_deadline')
+			company.notes=data.get('notes')
+			company.link = data.get('app_link')
+			company.save()
+			print "saved company"
+
 		elif('delete' in data):
 			print 'delete in data'
 			company_name = data.get('delete')
@@ -246,11 +258,16 @@ def companies(request, company_name):
 				company_edit = True 
 				show_company = False
 				c_name = data.get('company_edit')
+				company = request.user.company_set.get(name=c_name)
+				app_deadline = company.application_deadline.strftime('%Y-%m-%d')
+
 				# print "company edit"
 			else:
 				# print "company name in data"
 				c_name = data.get('company_name')
-			company = request.user.company_set.get(name=c_name)
+				company = request.user.company_set.get(name=c_name)
+				app_deadline = company.application_deadline
+				
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = company.events.all()
 			notes = company.notes
@@ -262,7 +279,6 @@ def companies(request, company_name):
 
 			# print "has link's value is " + str(has_link)
 			# print "link = " + link
-
 
 			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'status': company.application_status, 'show': show_company,

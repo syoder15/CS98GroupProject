@@ -6,24 +6,26 @@ from swingtime import views as swingtime
 urlpatterns = patterns('', 
     url(r'^$', views.index, name='index'),
     url(r'^profile', views.profile, name='profile'),
+    url(r'^account_management', views.manage_account, name='manage_account'),
+
     url(r'^companies/(?P<company_name>.+)/$', views.companies, name='companies'),
-    url(r'^contacts/(?P<contact_name>.+)/$', views.contacts, name='contacts'),
-    url(r'^new_contact/', views.new_contact, name='new_contact'),
-    url(r'^new_company/', views.new_company, name='new_company'),
-    url(r'^new_event/', views.new_event, name='new_event'),
     url(r'^company/(?P<company_name>.+)/$', views.company_page, name='company_page'),
-    url(r'^contacts/(?P<contact_name>.+)/$', views.contacts_page, name='contacts_page'),
     url(r'^edit/company/(?P<company_name>.+)/$', views.edit_company, name='edit_company'),
-    # url(r'^edit/contact/(?P<contact_name>.+)/$', views.edit_contact, name='edit_contact'),
-    url(r'^new_event/', views.new_event, name='new_event'),
+    url(r'^new_company/', views.new_company, name='new_company'),
     #url(r'companies/export_companies/', views.export_companies, name='export_companies'),
-	url(r'^channels/create/', views.new_channel, name='new_channel'),
+
+    url(r'^contacts/(?P<contact_name>.+)/$', views.contacts, name='contacts'),
+    url(r'^contacts/(?P<contact_name>.+)/$', views.contacts_page, name='contacts_page'),
+    url(r'^new_contact/', views.new_contact, name='new_contact'),
+    # url(r'^edit/contact/(?P<contact_name>.+)/$', views.edit_contact, name='edit_contact'),
+
+    url(r'^new_event/', views.new_event, name='new_event'),
+    url(r'^events/(?P<event_name>.+)/$', views.events_page, name='events_page'),
+    
+    url(r'^channels/create/', views.new_channel, name='new_channel'),
     url(r'^channels/activate/(?P<channel_name>.+)/(?P<user_name>.+)/$', views.activate_subscriber, name='activate_subscriber'),
 	url(r'^channels/view/(?P<channel_name>.+)/$', views.view_channel, name="view_channel"),
 	url(r'^channels/view_as_admin/(?P<channel_name>.+)/$', views.view_channel_as_admin, name="view_channel_as_admin"),
-
-    #url(r'^events/monthly/$', swingtime.month_view, name='swingtime-monthly-view'),
-    url(r'^account_management', views.manage_account, name='manage_account'),
     url(r'^channels/list', views.channel_list, name='channel_list'),
 
 ##########################################################################################################################
