@@ -48,6 +48,22 @@ def contacts(request, contact_name):
 				f.write(str(contact) + ", " + str(contact.employer) + "\n")
 			f.close()
 		
+		elif('save' in data):
+			contact_name = data.get('contact_name')
+
+			print "about to save contact"
+			contact = request.user.contact_set.filter(name=contact_name).first()
+			print "Contact name is " + contact.name 
+
+			contact.name = data.get('name')
+			contact.email=data.get('email')
+			contact.phone_number=data.get('phone')
+			contact.employer=data.get('employer')
+			contact.notes=data.get('notes')
+
+			contact.save()
+			print "saved contact"
+
 		elif(go_home == ("Back")):
 			show_contact = False
 
