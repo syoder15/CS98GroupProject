@@ -192,6 +192,32 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+def events_page(request, event_name):
+	events = request.user.event_set.all()
+	event = request.user.event_set.filter(name=event_name).first()
+	event_type = event.event_type
+	event_description = event.description
+	event_date = event.event_date
+	start_time = event.start_time
+	end_time = event.end_time
+
+	if event_type == 'fair': 
+		event_type = 'Career Fair'
+	if (event_type == 'int'):
+		event_type = 'Interview'
+	if (event_type == 'app'): 
+		event_type = 'Application Deadline'
+	if (event_type == 'other'): 
+		event_type = 'Other'
+	if (event_type == 'info'): 
+		event_type = 'Info Session'
+
+	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type}
+
+	return render(request, 'swingtime/event_detail_page.html', context)
+
+
 ####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
@@ -262,6 +288,7 @@ def month_view(
 	interview   = True
 	careerFair  = True
 	infoSession = True
+	app_deadline= True
 	other       = True
    # dtend       = datetime(year, month, last_day)
 
@@ -280,6 +307,11 @@ def month_view(
 		else:
 			careerFair = False
 
+		if request.POST.get('Application Deadline'):
+			my_new_events = my_events.filter(event_type = 'app') | my_new_events
+		else:
+			app_deadline = False
+
 		if request.POST.get('Info Sessions'):
 			my_new_events = my_events.filter(event_type = 'info') | my_new_events
 		else:
@@ -291,36 +323,24 @@ def month_view(
 			other = False
 
 		my_events = my_new_events
-	
-	#for event in my_events: #loop through the users events and create a queryset of all of the occurances
-	#	if queryset == None:
-	#		queryset = event.occurrence_set.all()
-	#	else:
-	#		queryset = queryset | event.occurrence_set.all()
-	
-	#if queryset == None:
-	#	queryset = queryset._clone() if queryset else Occurrence.objects.filter(start_time = "1970-01-01 00:00")
-	
-	#### JAM CODE ####
-
-	#occurrences = queryset.filter(start_time__year=year, start_time__month=month)
 
 	def start_day(o):
 		return o.event_date.day
 
 	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_day)])
 	data = {
-		'today':      datetime.now(),
-		'calendar':   [[(d, by_day.get(d, [])) for d in row] for row in cal],
-		'username': request.user.username,
-		'this_month' : dtstart,
-		'next_month' : dtstart + timedelta(days=+last_day),
-		'last_month' : dtstart + timedelta(days=-1),
-		'interview'  : interview,
-		'careerFair' : careerFair,
-		'infoSession': infoSession,
-		'other'		 : other,
-		'upload_form'		 : upload_form
+		'today'		  : datetime.now(),
+		'calendar'	  : [[(d, by_day.get(d, [])) for d in row] for row in cal],
+		'username'	  : request.user.username,
+		'this_month'  : dtstart,
+		'next_month'  : dtstart + timedelta(days=+last_day),
+		'last_month'  : dtstart + timedelta(days=-1),
+		'interview'   : interview,
+		'careerFair'  : careerFair,
+		'infoSession' : infoSession,
+		'app_deadline': app_deadline,
+		'other'		  : other,
+		'upload_form' : upload_form
 	}
 
 	return render(request, template, data)
