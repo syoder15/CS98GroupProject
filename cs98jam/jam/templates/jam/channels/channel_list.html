@@ -38,9 +38,9 @@
 	            <h2>Channels</h2>
 				{% for channel in channels %}
 					{% if channel in sub_channels%}
-						<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" style="color:black" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+						<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" style="color:black" title="Click for channel page" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
 					{% else %}
-					<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" class="channel_link"> {{ channel.name }} ({{channel.moniker}}) </a></p>
+					<p> <a href ="{{site}}/jam/channels/view/{{channel.name}}" class="channel_link" title="Click for channel page"> {{ channel.name }} ({{channel.moniker}}) </a></p>
 					{% endif %}
 
 				{% empty %}

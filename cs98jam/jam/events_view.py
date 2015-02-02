@@ -109,6 +109,34 @@ def add_event(
 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
 	)
 
+def startEndTimeValidation(start_time, end_time):
+	startTime = start_time.split(':')
+	endTime = end_time.split(':')
+	startMin = startTime[1].split(" ")
+	endMin = endTime[1].split(" ")
+
+	error = ''
+	print "about to convert"
+	if (startMin[1].lower() == 'pm'):
+		startTime[0] = int(startTime[0]) + 12
+		print "first block"
+	if (endMin[1].lower() == 'pm'):
+		endTime[0] = int(endTime[0]) + 12
+		print "second block"
+
+	'''if ( endTime[0] < startTime[0] or (endTime[0] == startTime[0] and int(endMin[0]) < int(startMin[0]))):
+		error = "Your start time must be before your end time. Please try again."
+		print "hit a wall"
+	
+	'''
+	print "ugh"
+	start = str(startTime[0]) + ":" + str(startMin[0])
+	end = str(endTime[0]) + ":" + str(endMin[0])
+
+	print "ish"
+	print "inside startEnd validation"
+	return (start,end)
+
 def new_event(request):
 	if request.method == "POST":
 		form_data = request.POST
@@ -129,6 +157,9 @@ def new_event(request):
 
 		print form_data.get('event_type')
 
+
+		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
+		print "start time" + startTime + "end time" + endTime
 		# Event model doesn't exist right now
 		print "making event"
 		event = jam_event(name=event_name,
@@ -136,8 +167,8 @@ def new_event(request):
 						  description=form_data.get('description'),
 						  companies=form_data.get('companies'),
 						  event_date=form_data.get('event_date'),
-						  start_time=form_data.get('start_time'),
-						  end_time=form_data.get('end_time'),
+						  start_time=startTime,
+						  end_time=endTime,
 						  user=request.user)
 		print "made event"
 		event.save()

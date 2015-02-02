@@ -30,7 +30,6 @@ from dateutil import rrule
 upload_form = UploadFileForm
 
 def new_company(request):
-	print 'I AM HERE'
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
@@ -70,11 +69,11 @@ def new_company(request):
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 		else: 
 
-			company = Company(name=company_name,
+			'''company = Company(name=company_name,
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
 						  user=request.user)
-
+			'''
 			
 			#event_types = swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
 			
@@ -113,7 +112,7 @@ def new_company(request):
 			print form_data.get('deadline')
 			print form_data.get('company_notes')
 			print request.user.username
-			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user)
+			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user, link=form_data.get('app_link'))
 
 			company.save()
 			company.events.add(evt)
@@ -131,12 +130,18 @@ def company_page(request, company_name):
 	events = request.user.profile.events.all()
 	application_deadline = company.application_deadline
 	company_notes = company.notes
+	link = company.link
+	has_link = False
+	if link != '':
+		has_link = True
 	print "company notes: " + company_notes
 
+	print "has link's value is " + has_link
+	print "link = " + link
 
 	site = settings.DOMAIN
 
-	context = {'company': companies, 'contacts': contacts, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes, 'site': site}
+	context = {'company': companies, 'contacts': contacts,'status': company.application_status,'has_link': has_link, 'link': link, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes, 'site': site}
 	
 	return render(request, 'jam/companies/company_page.html', context)
 
@@ -239,19 +244,27 @@ def companies(request, company_name):
 				company_edit = True 
 				show_company = False
 				c_name = data.get('company_edit')
-				print "company edit"
+				# print "company edit"
 			else:
-				print "company name in data"
+				# print "company name in data"
 				c_name = data.get('company_name')
 			company = request.user.company_set.get(name=c_name)
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			events = company.events.all()
 			notes = company.notes
 
+			link = company.link
+			has_link = False
+			if link != '':
+				has_link = True
+
+			# print "has link's value is " + str(has_link)
+			# print "link = " + link
+
 
 			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 'events': events}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 'events': events, 'link': link, 'has_link': has_link}
 
 		else:
 			print "got to the else"

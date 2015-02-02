@@ -274,6 +274,7 @@ function submitCompanyForm(event){
   	var name = $('#company_name_input').val();
   	var deadline = $('#company_deadline_input').val();
   	var company_notes = $('#comment').val();
+  	var app_link = $('#company_app_link').val();
 	var csrftoken = getCookie('csrftoken');
 
 	var formName = $('.company_form').attr('name');
@@ -294,7 +295,8 @@ function submitCompanyForm(event){
 		data: {
 			"name": name,
 			"deadline": deadline,
-			"company_notes": company_notes
+			"company_notes": company_notes,
+			"app_link": app_link
 		},
 		singleton:true,
         delay:500,
@@ -366,10 +368,10 @@ function submitEventForm(event){
   	var endTime = $('#event_end_time_input').val();
 	var csrftoken = getCookie('csrftoken');
 
-	/*if ( dateValidation(date)==false || timeValidation(startTime)==false || 
+	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
 		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
 		return false;
-	}*/
+	}
 
 	var formName = $('.event_form').attr('name');
 
