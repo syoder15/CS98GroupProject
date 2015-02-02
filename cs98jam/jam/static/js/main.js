@@ -38,10 +38,10 @@ function timeValidation(time) {
 		return false;
 	}
 
-	/*if ( splitMinute[1] !== 'AM' && splitMinute[1] !== 'PM' ) {
+	if ( splitMinute[1].toLowerCase() !== 'AM' && splitMinute[1].toLowerCase() !== 'PM' ) {
 		alert("You must enter a valid time including either 'AM' or 'PM'.");
 		return false;
-	} */
+	} 
 
 	return true;
 };
@@ -52,11 +52,11 @@ function startEndTimeValidation(startTime, endTime) {
 	var startMin = startTime[1].split(" ");
 	var endMin = endTime[1].split(" ");
 
-	if (startMin[1].toLowerCase() == 'pm') {
+	if ((startMin[1] !== null) && (startMin[1].toLowerCase() == 'pm')) {
 		startTime[0] += 12;
 	}
 
-	if (endMin[1].toLowerCase == 'pm') {
+	if ((endMin[1] !== null) && (endMin[1].toLowerCase == 'pm')) {
 		endTime[0] += 12;
 	}
 

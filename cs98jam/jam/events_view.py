@@ -192,6 +192,39 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+def events_page(request, event_name):
+	data = request.POST
+
+	if (data):
+		go_home = data.get('back_home')
+		if(go_home == ("Back")):
+			show_contact = False
+
+	events = request.user.event_set.all()
+	event = request.user.event_set.filter(name=event_name).first()
+	event_type = event.event_type
+	event_description = event.description
+	event_date = event.event_date
+	start_time = event.start_time
+	end_time = event.end_time
+
+	if event_type == 'fair': 
+		event_type = 'Career Fair'
+	if (event_type == 'int'):
+		event_type = 'Interview'
+	if (event_type == 'app'): 
+		event_type = 'Application Deadline'
+	if (event_type == 'other'): 
+		event_type = 'Other'
+	if (event_type == 'info'): 
+		event_type = 'Info Session'
+
+	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type}
+
+	return render(request, 'swingtime/event_detail_page.html', context)
+
+
 ####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
