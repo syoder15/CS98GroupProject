@@ -38,7 +38,7 @@ function timeValidation(time) {
 		return false;
 	}
 
-	if ( splitMinute[1].toLowerCase() !== 'AM' && splitMinute[1].toLowerCase() !== 'PM' ) {
+	if ( splitMinute[1].toUpperCase() !== 'AM' && splitMinute[1].toUpperCase() !== 'PM' ) {
 		alert("You must enter a valid time including either 'AM' or 'PM'.");
 		return false;
 	} 
