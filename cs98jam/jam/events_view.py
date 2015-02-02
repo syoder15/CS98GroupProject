@@ -192,6 +192,21 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+def events_page(request, event_name):
+	events = request.user.event_set.all()
+	event = request.user.eventt_set.filter(name=event_name, user=request.user.username)
+	event_type = event.event_type
+	event_description = event.description
+	event_date = event.date
+	start_time = event.start_time
+	end_time = event.end_time
+
+	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
+	'start_time': start_time, 'end_time': end_time}
+
+	return render(request, 'jam/event_detail_page.html', context)
+
+
 ####FROM SWINGTIME ADD COMMENTS
 
 def event_listing(
