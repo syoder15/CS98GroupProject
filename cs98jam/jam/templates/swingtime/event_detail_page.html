@@ -1,3 +1,13 @@
+{% extends "../../jam/templates/jam/index/index.html" %}
+
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
+{% endblock %}
+
+{% block content %}
 <div class="table-responsive">
 	<table class="table table-events"> 
 		<thead> 
@@ -13,10 +23,11 @@
 			</tr>
 			<tr>
 				<th>Event Description:</th> 
-				<td><a>{{ event_description }}</a></td>
+				<td>{{ event_description }}</td>
 			</tr>
 			<tr>
 				<th>Date:</th> 
+				<td>
 					{{ event_date }}
 				</td>
 			</tr>
@@ -30,4 +41,13 @@
 			</tr>
 		</tbody>
 	</table>
+
+	<br />
+	<input type="button" onclick="history.back();" value="Back" />
 </div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'js/events.js' %}"></script>
+{% endblock %}

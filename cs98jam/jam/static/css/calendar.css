@@ -119,3 +119,12 @@ button:hover {
 .recurrenceOptions{
 	display: none;
 }
+
+.table-events thead tr th, .table-events tbody tr th {
+	border:none;
+}
+
+.table-events thead tr td, .table-events tbody tr td {
+   width:100%;
+   white-space: nowrap; 
+}

@@ -38,10 +38,10 @@ function timeValidation(time) {
 		return false;
 	}
 
-	/*if ( splitMinute[1] !== 'AM' && splitMinute[1] !== 'PM' ) {
+	if ( splitMinute[1].toLowerCase() !== 'AM' && splitMinute[1].toLowerCase() !== 'PM' ) {
 		alert("You must enter a valid time including either 'AM' or 'PM'.");
 		return false;
-	} */
+	} 
 
 	return true;
 };

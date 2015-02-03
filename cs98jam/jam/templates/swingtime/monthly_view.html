@@ -90,7 +90,7 @@
                             <ul class="eventBullet">
                                 {% for item in items %}
                                 <li>
-                                    <a href="{% url 'events_page' item.name %}">
+                                    <a href="{% url 'events_page' event_name=item.name %}">
                                         <span class="event-times">{{ item.start_time|time }}</span>
                                         {{ item.name }}
                                     </a>
