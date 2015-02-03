@@ -61,7 +61,7 @@ table.month-view {
 }
 .month-view td { 
 	vertical-align: top; 
-	height: 7.5em; 
+	height: 6em; 
 	border: 1px solid black;
 	padding: 3px;
 	}
