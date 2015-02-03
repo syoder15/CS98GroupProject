@@ -192,7 +192,7 @@ def view_channel(request, channel_name):
 	if request.user.controlledChannels.filter(name=channel_name).exists():
 		is_admin = True
 
-	added_events = channel.events.all() & request.user.profile.events.all()
+	added_events = channel.events.all() & request.user.events.all()
 	unadded_events = channel.events.all().exclude(pk__in = added_events.all())
 		
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,

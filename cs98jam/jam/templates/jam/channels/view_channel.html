@@ -35,7 +35,7 @@
 			
 			<p style="font-weight: bold;">All Events:</p>
 			<ul>{% for e in unadded_e.all %}
-			<li>{{ e }} - {{e.next_occurrence.start_time}}</li>
+			<li>{{ e }} -  {{e.event_date}} - {{e.start_time}}</li>
 			<form class="addEvent" method="POST">
 				{% csrf_token %}
 				<input class="button" name="{{e.pk}}" type="submit" value="Add"/>
@@ -43,7 +43,7 @@
 			{% endfor %}
 			
 			<ul>{% for e in added_e.all %}
-			<li><a href="{{ e.get_absolute_url }}">{{ e }}</a> - {{e.next_occurrence.start_time}}</li>
+			<li><a href="{% url 'events_page' event_name=e.name %}">{{ e }} - {{e.event_date}} - {{e.start_time}}</a></li>
 			
 			{% endfor %}
 			

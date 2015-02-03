@@ -366,6 +366,7 @@ function submitEventForm(event){
   	var companies = $('#event_companies_input').val();
   	var startTime = $('#event_start_time_input').val();
   	var endTime = $('#event_end_time_input').val();
+	var channel = $('#channel_input').val();
 	var csrftoken = getCookie('csrftoken');
 
 	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
@@ -393,7 +394,8 @@ function submitEventForm(event){
 			"event_type": type,
 			"event_date": date,
 			"start_time": startTime,
-			"end_time": endTime
+			"end_time": endTime,
+			"channel": channel
 		},
 		singleton:true,
         delay:500,

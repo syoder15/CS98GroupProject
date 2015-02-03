@@ -50,7 +50,7 @@ def index(request):
 			article_urls[article.url] = article.title
 		i += 1
 	'''
-	events = request.user.event_set.all()
+	events = request.user.events.all()
 	future_events = []
 	for e in events:
 		if (e.event_date >= datetime.now().date()):
@@ -90,7 +90,7 @@ def index(request):
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
 			'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList, 'app_list': app_notifications,
-			'article_urls': article_urls, 'article_images': article_images}
+			'article_urls': article_urls, 'article_images': article_images, "controlled_channels": request.user.controlledChannels}
 
 	#post request can mean 2 things.
 	#either a request to see a channel's newsfeed
@@ -105,7 +105,7 @@ def index(request):
 			show_feed = False
 			context = {'username': request.user.username, 
 			'channels': channels,'show': show_feed, 'events': future_events, 'notificationList': notificationList,
-			'article_urls': article_urls, 'article_images': article_images}
+			'article_urls': article_urls, 'article_images': article_images, "controlled_channels": request.user.controlledChannels}
 
 		else:
 			c_name = None
@@ -123,7 +123,7 @@ def index(request):
 						
 						if channel.events.filter(pk = split[0]).exists() and request.user.channel_set.filter(name=c_name).exists():
 							event = channel.events.filter(pk = split[0]).first()
-							request.user.profile.events.add(event)
+							request.user.events.add(event)
 							
 					if split[0] == "Unsubscribe":
 						c_name = split[1]
@@ -147,18 +147,19 @@ def index(request):
 			
 			
 			for e in channel.events.all():
-				print "HEREFIRST"
-				if e.next_occurrence() == None:
+				if (e.event_date <= datetime.now().date()):
+					if (e.event_date == datetime.now().date()) and (e.start_time >= datetime.now().time()):
+						continue #if the event already happened today, don't add it
 					channel.events.remove(e)
 			
-			
-			added_events = channel.events.all() & request.user.profile.events.all()
+			added_events = channel.events.all() & request.user.events.all()
 			unadded_events = channel.events.all().exclude(pk__in = added_events.all())
 			
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
-				"adminNotes": channel.adminNotes.order_by("-created_at"), 'unadded_e': unadded_events, 'added_e': added_events}
+				"adminNotes": channel.adminNotes.order_by("-created_at"), 'unadded_e': unadded_events, 'added_e': added_events, 
+				"controlled_channels": request.user.controlledChannels}
 			
 
 	return render(request, 'jam/index/index_landing_home.html', context)

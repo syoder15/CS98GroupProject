@@ -169,11 +169,15 @@ def new_event(request):
 						  event_date=form_data.get('event_date'),
 						  start_time=startTime,
 						  end_time=endTime,
-						  user=request.user)
-		print "made event"
+						  creator=request.user)
 		event.save()
-		print "saved event"
-
+		request.user.events.add(event)
+		
+		if request.user.controlledChannels.filter(name=form_data.get("channel")).exists():
+			channel = request.user.controlledChannels.filter(name=form_data.get("channel")).first()
+			if form_data.get("channel") != "None":
+				event.channel_set.add(channel)
+		
 		company_field = form_data.get('companies')
 		if company_field != '':
 			company_field = company_field.replace(" ", "")
@@ -193,8 +197,8 @@ def new_event(request):
 		return render(request, 'jam/index/index_landing_home.html', context)
 
 def events_page(request, event_name):
-	events = request.user.event_set.all()
-	event = request.user.event_set.filter(name=event_name).first()
+	events = request.user.events.all()
+	event = request.user.events.filter(name=event_name).first()
 	event_type = event.event_type
 	event_description = event.description
 	event_date = event.event_date
@@ -294,7 +298,7 @@ def month_view(
 
 	#### JAM CODE ####
 	#my_events = request.user.profile.events.all() #access all of the users events
-	my_events = request.user.event_set.all()
+	my_events = request.user.events.all()
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
 		if request.POST.get('Interviews'):

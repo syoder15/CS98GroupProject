@@ -96,14 +96,14 @@ def new_company(request):
 				start_time='12:00',
 				end_time='13:00',
 				event_date=application_deadline,
-				user=request.user
+				creator=request.user
 			)
 			evt.save()
 			print "after evt"
-			request.user.profile.events.add(evt)
+			request.user.events.add(evt)
 			print "after events"
-			request.user.profile.owned_events.add(evt)
-			print "after owned events"
+			#request.user.owned_events.add(evt)
+			#print "after owned events"
 			
 			
 
