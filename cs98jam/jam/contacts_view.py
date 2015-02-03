@@ -32,6 +32,7 @@ def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
 	data = request.POST
 	show_contact = True
+	contact_edit = False
 
 	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
 
@@ -50,10 +51,10 @@ def contacts(request, contact_name):
 		elif(go_home == ("Back")):
 			show_contact = False
 
-		elif('edit' in data or 'contact_name' in data):
-			if('edit' in data):
-				edit = True
-				contact_name = data.get('edit')
+		elif('contact_edit' in data or 'contact_name' in data):
+			if('contact_edit' in data):
+				contact_edit = True
+				contact_name = data.get('contact_edit')
 				show_contact = False
 				print "edit pressed"
 			else:
@@ -69,7 +70,7 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
-			context = {'edit': edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			context = {'contact_edit': contact_edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
