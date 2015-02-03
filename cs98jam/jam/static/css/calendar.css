@@ -128,3 +128,7 @@ button:hover {
    width:100%;
    white-space: nowrap; 
 }
+
+.event-times {
+	color: black;
+}
