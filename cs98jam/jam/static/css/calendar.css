@@ -21,7 +21,7 @@
 .eventSidebar {
 	position: absolute;
   	top: 60px;
-  	width: 250px;
+  	width: 300px;
   	list-style: none;
   	margin: 0;
   	padding-left: 5px;
@@ -56,12 +56,12 @@ table.month-view {
 	margin: auto;
 }
 .month-view { 
-	width: 80%; 
+	width: 75%; 
 	color: #2D30E3;
 }
 .month-view td { 
 	vertical-align: top; 
-	height: 6em; 
+	height: 7.5em; 
 	border: 1px solid black;
 	padding: 3px;
 	}
