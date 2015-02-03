@@ -239,15 +239,17 @@ def companies(request, company_name):
 				company_edit = True 
 				show_company = False 
 			company_list = data.getlist('app_status[]')
+			print company_list
 			for company in companies: 
 				if company.name in company_list: 
 					company = request.user.company_set.get(name=company.name)
 					company.application_status = True
-					print company.name + "is COMPLETE"
+
+					print company.name + " is COMPLETE"
 					company.save()
 				else:
 					company.application_status = False
-					print company.name + "IS NOT COMPLETE"
+					print company.name + " IS NOT COMPLETE"
 					company.save()
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
@@ -279,7 +281,7 @@ def companies(request, company_name):
 			# print "link = " + link
 
 			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
-			'application_deadline': app_deadline, 'show': show_company,
+			'application_deadline': company.application_deadline, 'status': company.application_status, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 'events': events, 'link': link, 'has_link': has_link}
 
 		else:
