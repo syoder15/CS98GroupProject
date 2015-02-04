@@ -11,6 +11,7 @@ if(localTest){
 	site = "http://127.0.0.1:8000/jam/";
 }
 
+
 // JS functions necessary for modal form validation
 // real-time inline error validation is a-go!
 
@@ -24,6 +25,7 @@ function validateDeadline(deadline_id){
 		$('.error-message').show();
 		$('#' + deadline_id).css('border','solid 2px red');
 		$('.error-message').html(msg);
+		console.log("DATE ERROR " + deadline)
 	}
 	else{
 		$('.error-message').hide();
@@ -274,7 +276,9 @@ function submitCompanyForm(event){
 
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
-	if (validateDeadline('#' + company_deadline_input) != true || validateName('company_name_input') != ""){
+	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
+		me.on('click', submitCompanyForm);
+		me.data('requestRunning', false);
 		return false;
 	}
 
@@ -371,6 +375,7 @@ function submitEventForm(event){
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateName('event_name_input') != ""){
+		me.data('requestRunning',false);
 		return false;
 	}
 	
@@ -385,7 +390,8 @@ function submitEventForm(event){
 	var csrftoken = getCookie('csrftoken');
 
 	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
-		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) != true ) {
+		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		me.on('click', submitEventForm);
 		return false;
 	}
 
