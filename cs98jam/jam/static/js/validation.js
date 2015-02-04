@@ -20,7 +20,7 @@ function validateDeadline(deadline_id){
 	var deadline = $('#' + deadline_id).val();
 	//var deadline = $('#company_deadline_input').val();
 	var msg = dateValidation(deadline);
-	if(msg.length > 0){
+	if(msg != true){
 		$('.error-message').show();
 		$('#' + deadline_id).css('border','solid 2px red');
 		$('.error-message').html(msg);
