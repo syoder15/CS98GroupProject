@@ -276,6 +276,8 @@ function submitCompanyForm(event){
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
+		me.on('click', submitCompanyForm);
+		me.data('requestRunning', false);
 		return false;
 	}
 
@@ -372,6 +374,7 @@ function submitEventForm(event){
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateName('event_name_input') != ""){
+		me.data('requestRunning',false);
 		return false;
 	}
 	
@@ -387,6 +390,7 @@ function submitEventForm(event){
 
 	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
 		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		me.on('click', submitEventForm);
 		return false;
 	}
 
