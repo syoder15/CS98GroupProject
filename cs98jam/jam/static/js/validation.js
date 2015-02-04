@@ -16,20 +16,35 @@ if(localTest){
 
 
 //validating company form fields
-function validateDeadline(){
-	/*var deadline = $('#' + deadline_id).val();*/
-	var deadline = $('#company_deadline_input').val();
+function validateDeadline(deadline_id){
+	var deadline = $('#' + deadline_id).val();
+	//var deadline = $('#company_deadline_input').val();
 	var msg = dateValidation(deadline);
 	if(msg.length > 0){
 		$('.error-message').show();
-		$('#company_deadline_input').css('border','solid 2px red');
+		$('#' + deadline_id).css('border','solid 2px red');
 		$('.error-message').html(msg);
 	}
 	else{
 		$('.error-message').hide();
-		$('#company_deadline_input').css('border','solid 0px red');
+		$('#' + deadline_id).css('border','solid 0px red');
 	}
 	return msg;
+}
+
+function validateTimes(start_id, end_id){
+	var start = $('#' + start_id).val();
+	var end = $('#' + end_id).val();
+	var msg = startEndTimeValidation(start, end);
+	if(msg != true){
+		$('.time-error').show();
+		$('#' + end_id).css('border','solid 2px red');
+		$('.time-error').html(msg);
+	}
+	else{
+		$('.time-error').hide();
+		$('#' + end_id).css('border','solid 0px red');
+	}
 }
 
 function validateName(input){
@@ -259,7 +274,7 @@ function submitCompanyForm(event){
 
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
-	if (validateDeadline() != true || validateName('company_name_input') != ""){
+	if (validateDeadline('#' + company_deadline_input) != true || validateName('company_name_input') != ""){
 		return false;
 	}
 
@@ -370,7 +385,7 @@ function submitEventForm(event){
 	var csrftoken = getCookie('csrftoken');
 
 	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
-		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) != true ) {
 		return false;
 	}
 
