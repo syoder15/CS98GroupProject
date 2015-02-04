@@ -16,18 +16,19 @@ if(localTest){
 
 
 //validating company form fields
-function validateDeadline(){
-	/*var deadline = $('#' + deadline_id).val();*/
-	var deadline = $('#company_deadline_input').val();
+function validateDeadline(deadline_id){
+	var deadline = $('#' + deadline_id).val();
+	//var deadline = $('#company_deadline_input').val();
 	var msg = dateValidation(deadline);
-	if(msg.length > 0){
+	if(msg != true){
 		$('.error-message').show();
-		$('#company_deadline_input').css('border','solid 2px red');
+		$('#' + deadline_id).css('border','solid 2px red');
 		$('.error-message').html(msg);
+		console.log("DATE ERROR " + deadline)
 	}
 	else{
 		$('.error-message').hide();
-		$('#company_deadline_input').css('border','solid 0px red');
+		$('#' + deadline_id).css('border','solid 1px light-gray');
 	}
 	return msg;
 }
@@ -259,7 +260,7 @@ function submitCompanyForm(event){
 
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
-	if (validateDeadline() != true || validateName('company_name_input') != ""){
+	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
 		return false;
 	}
 
