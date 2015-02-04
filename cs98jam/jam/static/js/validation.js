@@ -33,6 +33,21 @@ function validateDeadline(deadline_id){
 	return msg;
 }
 
+function validateTimes(start_id, end_id){
+	var start = $('#' + start_id).val();
+	var end = $('#' + end_id).val();
+	var msg = startEndTimeValidation(start, end);
+	if(msg != true){
+		$('.time-error').show();
+		$('#' + end_id).css('border','solid 2px red');
+		$('.time-error').html(msg);
+	}
+	else{
+		$('.time-error').hide();
+		$('#' + end_id).css('border','solid 0px red');
+	}
+}
+
 function validateName(input){
 	var name = $('#'+input).val();
 	error_element = $('[name="' + input + '"]');
