@@ -28,7 +28,7 @@ function validateDeadline(deadline_id){
 	}
 	else{
 		$('.error-message').hide();
-		$('#' + deadline_id).css('border','solid 1px light-gray');
+		$('#' + deadline_id).css('border','solid 0px red');
 	}
 	return msg;
 }
