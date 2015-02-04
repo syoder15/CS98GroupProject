@@ -294,11 +294,19 @@ def month_view(
 	infoSession = True
 	app_deadline= True
 	other       = True
-   # dtend       = datetime(year, month, last_day)
+    # dtend       = datetime(year, month, last_day)
 
 	#### JAM CODE ####
-	#my_events = request.user.profile.events.all() #access all of the users events
-	my_events = request.user.events.all()
+	my_events = request.user.profile.events.all() #access all of the users events
+	my_events = []
+
+	for e in request.user.events.all():
+		e_month = e.event_date.month
+		if month is e_month:
+			my_events.append(e)
+
+	#my_events = request.user.events.all()
+	print my_events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
@@ -328,10 +336,15 @@ def month_view(
 
 		my_events = my_new_events
 
-	def start_day(o):
+	def start_date(o):
 		return o.event_date.day
 
-	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_day)])
+	def start_month(o):
+		return o.event_date.month
+
+	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_date)])
+	#by_day = dict([(m, dt) for m,dt in groupby(start_month, start_date)])
+	
 	data = {
 		'today'		  : datetime.now(),
 		'calendar'	  : [[(d, by_day.get(d, [])) for d in row] for row in cal],
