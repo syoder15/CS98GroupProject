@@ -161,7 +161,7 @@ function submitChannelForm(event){
 			me.data('requestRunning',false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
-				$('.server-error').html(errors[error]);
+				$('.channel-error').html(errors[error]);
 			}
 			console.log('about to return false');
 			return false;
@@ -170,6 +170,7 @@ function submitChannelForm(event){
 		if(donezo){
 			console.log("GOT HERE");
 			$( this ).addClass( "done" );
+			me.data('requestRunning',false);
 			me.on('click', submitChannelForm);
 			location.reload();
 		}
