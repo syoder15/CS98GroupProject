@@ -4,15 +4,25 @@
 		<div class="form-group"> 
 			<label form="name_input" class="col-md-5 control-label">Name: </label>
 			<div class="col-md-7"> 
-				<input id="name_input" class="form-control" name="gender" value='{{ profile.first_name }}' placeholder="John" />
+				{% if profile.first_name %}
+				<input id="name_input" class="form-control" name="name" value='{{ profile.first_name }} {{ profile.last_name }}' placeholder="John" />
 				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> 
+				{% else %}
+				<input id="name_input" class="form-control" name="name" value='' placeholder="Jane Doe" />
+				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> 
+				{% endif %}
 			</div>
 		</div>
 		<div class="form-group"> 
 			<label form="name_input" class="col-md-5 control-label">Gender: </label>
 			<div class="col-md-7"> 
+				{% if profile.gender %}
 				<input id="name_input" class="form-control" name="gender" value='{{ profile.gender }}' placeholder="Female" />
 				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> 
+				{% else %}
+				<input id="name_input" class="form-control" name="gender" value='' placeholder="Female" />
+				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> 
+				{% endif %}
 			</div>
 		</div>
 		<div class="form-group"> 
@@ -26,26 +36,42 @@
 		<div class="form-group"> 
 			<label for="user_phone_number" class="col-md-5 control-label">Phone Number: </label>
 			<div class="col-md-7"> 
-				<input id="user_phone_number" class="form-control" placeholder="123-456-7890" name="user_phone_number" value='{{ user.phone }}' />
+				{% if profile.phone_number %}
+				<input id="user_phone_number" class="form-control" placeholder="123-456-7890" name="user_phone_number" value='{{ profile.phone_number }}' />
 				<span class ="" style="color:red;"> </span>
+				{% else %}
+				<input id="user_phone_number" class="form-control" placeholder="123-456-7890" name="user_phone_number" value='' />
+				<span class ="" style="color:red;"> </span>
+				{% endif %}
 			</div>
 		</div>
 		<div class="form-group"> 
 			<label for="user_address" class="col-md-5 control-label">Address: </label>
 			<div class="col-md-7"> 
-				<input id="user_address" class="form-control" placeholder="1234 Main St. Hanover, NH 03755" name="user_address" value='{{ user.address }}' />
+				{% if profile.address %}
+				<input id="user_address" class="form-control" placeholder="1234 Main St. Hanover, NH 03755" name="user_address" value='{{ profile.address }}' />
 				<span class ="" style="color:red;"> </span>
+				{% else %}
+				<input id="user_address" class="form-control" placeholder="1234 Main St. Hanover, NH 03755" name="user_address" value='' />
+				<span class ="" style="color:red;"> </span>
+				{% endif %}
+
 			</div>
 		</div>
 		<div class="form-group"> 
 			<label for="user_grad_date" class="col-md-5 control-label">Graduation Date: </label>
 			<div class="col-md-7"> 
-				<input id="user_grad_date" class="form-control" placeholder="123-456-7890" name="user_grad_date" value='{{ user.grad_date }}' />
+				{% if profile.grad_date %}
+				<input id="user_grad_date" class="form-control" placeholder="June, 2015" name="user_grad_date" value='{{ profile.grad_date}}' />
 				<span class ="" style="color:red;"> </span>
+				{% else %}
+				<input id="user_grad_date" class="form-control" placeholder="June, 2015" name="user_grad_date" value='' />
+				<span class ="" style="color:red;"> </span>
+				{% endif %}
 			</div>
 		</div>
 		<div class="form-group"> 
-			<label for="user_grad_date" class="col-md-5 control-label"></label>
+			<label for="submit_button" class="col-md-5 control-label"></label>
 			<div class="col-md-7"> 
 				<button class="btn btn-default btn-small" type="submit" value="Save">Save</button>	
 			</div>
