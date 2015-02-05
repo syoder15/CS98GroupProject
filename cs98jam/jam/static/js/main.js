@@ -70,7 +70,7 @@ function startEndTimeValidation(startTime, endTime) {
 
 	if (endTime[0] == startTime[0] && endMin[0] < startMin[0]) {
 		//alert("Your start time must be before your end time. Please try again.");
-		var msg = "Your start time must be before your end time. Please try again.";
+		var msg =  "Your start time must be before your end time. Please try again.";
 		return msg;
 	}
 
