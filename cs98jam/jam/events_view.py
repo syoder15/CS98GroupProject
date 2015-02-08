@@ -217,8 +217,13 @@ def events_page(request, event_name):
 	if (event_type == 'info'): 
 		event_type = 'Info Session'
 
+	event_title = urlify(event_name)
+	event_desc = urlify(event_description)
+	google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(event_date.year) + str(event_date.month).zfill(2) + str(event_date.day).zfill(2) + "T" + str(start_time.hour +5).zfill(2) + str(start_time.minute).zfill(2) + "00Z/" + str(event_date.year) +  str(event_date.month).zfill(2) + str(event_date.day).zfill(2) + "T" + str(end_time.hour + 5).zfill(2) + "" +  str(end_time.minute).zfill(2) + "00Z&details=" + event_desc
+
+
 	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time, 'end_time': end_time, 'event_type': event_type}
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google': google_link}
 
 	return render(request, 'swingtime/event_detail_page.html', context)
 
