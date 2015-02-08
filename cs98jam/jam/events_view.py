@@ -204,6 +204,7 @@ def events_page(request, event_name):
 	event_date = event.event_date
 	start_time = event.start_time
 	end_time = event.end_time
+	print "EVENTS PAGE"
 
 	if event_type == 'fair': 
 		event_type = 'Career Fair'
