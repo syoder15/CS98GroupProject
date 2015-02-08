@@ -53,11 +53,6 @@ a:link, a:visited {
 	margin-right:100px;
 }
 
-/*#backgroundImage {
-   background: url("images/google_campus.jpg") center center no-repeat fixed;
-   background-size: cover;
-}*/
-
 .carousel { z-index: -99; }
 
 .carousel img {
