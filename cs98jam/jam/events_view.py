@@ -201,16 +201,8 @@ def events_page(request, event_id, event_name):
 	start_time = event.start_time
 	end_time = event.end_time
 
-	if event_type == 'fair': 
-		event_type = 'Career Fair'
-	if (event_type == 'int'):
-		event_type = 'Interview'
 	if (event_type == 'app'): 
 		event_type = 'Application Deadline'
-	if (event_type == 'other'): 
-		event_type = 'Other'
-	if (event_type == 'info'): 
-		event_type = 'Info Session'
 
 	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, "controlled_channels": request.user.controlledChannels}
