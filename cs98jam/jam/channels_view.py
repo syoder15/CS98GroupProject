@@ -208,7 +208,7 @@ def view_channel(request, channel_name):
 		for key in request.POST:
 			if key.isdigit() and channel.events.filter(pk = key).exists():
 				event = channel.events.filter(pk = key).first()
-				request.user.profile.events.add(event)
+				request.user.events.add(event)
 				event_added = True
 		
 		if 'Unsubscribe' in request.POST:
