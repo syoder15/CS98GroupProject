@@ -2,7 +2,9 @@
    background: #4166F5;
 }*/
 
-/*.table-profile thead tr th, */
+.table-profile thead tr th {
+	border:none;
+} 
 .table-profile tbody tr th {
 	float:right;
 	font-size:16px;
@@ -105,8 +107,4 @@ h2 {
 
 .profile-form label {
 	font-size:16px;
-}
-
-.btn-small {
-	padding:2px 10px;
 }
