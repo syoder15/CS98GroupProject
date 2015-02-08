@@ -207,46 +207,51 @@ def events_page(request, event_id, event_name):
 	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, "controlled_channels": request.user.controlledChannels}
 
-	return render(request, 'swingtime/event_detail_page.html', context)
+	return render(request, 'events/event_detail_page.html', context)
 
+@login_required
+def edit_event(request, event_id, event_name):
+	form_data = request.POST
 
-####FROM SWINGTIME ADD COMMENTS
+	user = User.objects.get(username=request.user.username)
+	event = request.user.event_set.filter(id=event_id)
 
-def event_listing(
-	request,
-	template='swingtime/event_list.html',
-	events=None,
-	**extra_context
-):
-	'''
-	View all ``events``.
+	if form_data:
+		redirect_link = '../../../calendar/' + event.event_date.year + '/' + event.event_date.month
 
-	If ``events`` is a queryset, clone it. If ``None`` default to all ``Event``s.
+		if user and event: 
+			company.name=form_data.get('company_name')
+			company.application_deadline=form_data.get('app_deadline')
+			event.save()
 
-	Context parameters:
+		else:
+			event = jam_event(name=event_name,
+						  event_type=form_data.get('event_type'),
+						  description=form_data.get('description'),
+						  companies=form_data.get('companies'),
+						  event_date=form_data.get('event_date'),
+						  start_time=startTime,
+						  end_time=endTime,
+						  creator=request.user)
+			event.save()
+			request.user.events.add(event)
+			
+		return HttpResponseRedirect(redirect_link)
 
-	events
-		an iterable of ``Event`` objects
+	#app_deadline = company.application_deadline
+	#app_deadline = str(app_deadline)
+	#datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	???
-		all values passed in via **extra_context
-	'''
-	extra_context={'username': request.user.username, 'upload_form': upload_form}
-	return render(
-		request,
-		template,
-		dict(extra_context, events=events or request.user.profile.events.all()),
-		
-		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
-	)
+	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes, "controlled_channels": request.user.controlledChannels}
 
+	return render(request, 'jam/companies/company_page_edit.html', context)
 
 
 def month_view(
 	request,
 	year,
 	month,
-	template='swingtime/monthly_view.html',
+	template='events/monthly_view.html',
 	queryset=None
 ):
 	'''
@@ -350,6 +355,34 @@ def month_view(
 	}
 
 	return render(request, template, data)
+
+def event_listing(
+	request,
+	template='swingtime/event_list.html',
+	events=None,
+	**extra_context
+):
+	'''
+	View all ``events``.
+
+	If ``events`` is a queryset, clone it. If ``None`` default to all ``Event``s.
+
+	Context parameters:
+
+	events
+		an iterable of ``Event`` objects
+
+	???
+		all values passed in via **extra_context
+	'''
+	extra_context={'username': request.user.username, 'upload_form': upload_form}
+	return render(
+		request,
+		template,
+		dict(extra_context, events=events or request.user.profile.events.all()),
+		
+		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
+	)
 
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''
