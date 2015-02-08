@@ -31,7 +31,7 @@
 				<th>Events:</th> 
 				<td><ul>
 					{% for e in events %}
-						<li><a href="{% url 'events_page' event_name=e.name %}">{{ e }}</a></li>
+						<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a></li>
 
 					{% empty %}
 						<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
