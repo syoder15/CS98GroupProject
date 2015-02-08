@@ -33,6 +33,7 @@ upload_form = UploadFileForm
 # We made slight edits which include comments below. These edits were made in order to allow user-specific
 # calendars for our Events page
 ######################################################################################
+@login_required
 def add_event(
 	request,
 	template='swingtime/add_event.html',
@@ -137,6 +138,7 @@ def startEndTimeValidation(start_time, end_time):
 	print "inside startEnd validation"
 	return (start,end)
 
+@login_required
 def new_event(request):
 	if request.method == "POST":
 		form_data = request.POST
@@ -190,6 +192,7 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+@login_required
 def events_page(request, event_id, event_name):
 	events = request.user.events.all()
 	#event = request.user.events.filter(id=event_id)
@@ -251,7 +254,7 @@ def edit_event(request, event_id, event_name):
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
-
+@login_required
 def month_view(
 	request,
 	year,
@@ -361,6 +364,7 @@ def month_view(
 
 	return render(request, template, data)
 
+@login_required
 def event_listing(
 	request,
 	template='swingtime/event_list.html',
@@ -388,7 +392,7 @@ def event_listing(
 		
 		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
 	)
-
+@login_required
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''
 
@@ -446,7 +450,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 	})
 
 #-------------------------------------------------------------------------------
-
+@login_required
 def event_view(
 	request, 
 	pk, 
@@ -509,6 +513,7 @@ def event_view(
 		return HttpResponseRedirect("/jam/events")
 
 #-------------------------------------------------------------------------------
+@login_required
 def occurrence_view(
 	request, 
 	event_pk, 

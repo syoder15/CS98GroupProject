@@ -29,6 +29,7 @@ from dateutil import rrule
 
 upload_form = UploadFileForm
 
+@login_required
 def new_company(request):
 	if request.method == "POST" and request.FILES:
 		form = UploadFileForm(request.FILES)
@@ -123,6 +124,7 @@ def new_company(request):
 
 			return render(request, 'jam/index/index_landing_home.html', context)
 
+@login_required
 def company_page(request, company_name):
 	companies = request.user.company_set.all()
 	company = request.user.company_set.filter(name=company_name).first()
@@ -183,6 +185,7 @@ def edit_company(request, company_name):
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
+@login_required
 def companies(request, company_name):
 	companies = request.user.company_set.all()
 	data = request.POST
@@ -317,6 +320,7 @@ def companies(request, company_name):
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/companies/companies.html', context)
+
 def is_valid_date(date):
 	now = datetime.now()
 
