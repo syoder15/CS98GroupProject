@@ -45,18 +45,13 @@ a:link, a:visited {
 }
 
 #userIcon {
-	width: 22px;
+	width: 30px;
 	height: 25px;
 }
 
 .rightMargin {
 	margin-right:100px;
 }
-
-/*#backgroundImage {
-   background: url("images/google_campus.jpg") center center no-repeat fixed;
-   background-size: cover;
-}*/
 
 .carousel { z-index: -99; }
 
@@ -212,4 +207,12 @@ a:link, a:visited {
 
 .navbar-fixed-bottom {
 	z-index: 100;
+}
+
+.col-sm-3 {
+	padding-bottom: 5px;
+}
+
+.col-sm-9 {
+	padding-bottom: 15px;
 }

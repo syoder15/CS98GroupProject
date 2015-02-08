@@ -30,6 +30,7 @@ from dateutil import rrule
 
 upload_form = UploadFileForm
 
+@login_required
 def channel_list(request):
 	form_data = request.POST
 	channel_categories =  ChannelCategory.objects.all().order_by('-count')[:10]
