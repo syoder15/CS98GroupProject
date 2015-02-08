@@ -203,9 +203,13 @@ a:link, a:visited {
 
 .btn {
 	position: relative;
-	z-index: 3000;
+	z-index: 200;
 }
 
 .btn-small {
 	padding:2px 10px;
+}
+
+.navbar-fixed-bottom {
+	z-index: 100;
 }

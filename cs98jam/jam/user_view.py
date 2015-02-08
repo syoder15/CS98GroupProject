@@ -247,7 +247,8 @@ def profile(request):
 			show_profile = False 
 			print "in profile edit in data" 
 	'''
-	context = {'show_profile' : show_profile, 'profile_edit': profile_edit, 'profile': profile, 'username': request.user.username}
+
+	context = {'show_profile' : show_profile, 'profile_edit': profile_edit, 'profile': profile, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 	return render(request, 'jam/user/profile.html', context)
 
 
@@ -261,7 +262,7 @@ def manage_account(request):
 	user_profile = UserProfile.objects.filter(user=request.user)
 
 	user = request.user
-	context ={'site': site, 'profile': user_profile, 'email': user.email}
+	context ={'site': site, 'profile': user_profile, 'email': user.email, "controlled_channels": request.user.controlledChannels}
 
 	if form_data:
 		user.email = form_data.get('new_email')

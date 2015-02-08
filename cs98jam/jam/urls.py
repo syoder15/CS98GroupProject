@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     # url(r'^edit/contact/(?P<contact_name>.+)/$', views.edit_contact, name='edit_contact'),
 
     url(r'^new_event/', views.new_event, name='new_event'),
-    url(r'^events/(?P<event_name>.+)/$', views.events_page, name='events_page'),
+    url(r'^events/(?P<event_id>.+)/(?P<event_name>.+)/$', views.events_page, name='events_page'),
     
     url(r'^channels/create/', views.new_channel, name='new_channel'),
     url(r'^channels/activate/(?P<channel_name>.+)/(?P<user_name>.+)/$', views.activate_subscriber, name='activate_subscriber'),

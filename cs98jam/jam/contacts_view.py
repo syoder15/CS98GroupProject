@@ -34,7 +34,7 @@ def contacts(request, contact_name):
 	show_contact = True
 	contact_edit = False
 
-	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form}
+	context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
 	if (data):
 		edit = False
@@ -87,7 +87,7 @@ def contacts(request, contact_name):
 				employer_exists = True
 
 			context = {'contact_edit': contact_edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, 
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, "controlled_channels": request.user.controlledChannels,
 			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
 			for c in contacts:
@@ -111,7 +111,7 @@ def contacts(request, contact_name):
 
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
-			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
+			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/contacts/contacts.html', context)
 
@@ -124,7 +124,7 @@ def contacts_page(request, contact_name):
 	contact_notes = contact.notes
 
 	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
-	'contact_email': email_address, 'employer': employer}
+	'contact_email': email_address, 'employer': employer, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/contact_page.html', context)
 
@@ -159,7 +159,7 @@ def edit_contact(request, contact_name):
 
 
 	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email, 
-	'phone_number': contact.phone_number, 'employer': contact.employer}
+	'phone_number': contact.phone_number, 'employer': contact.employer, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
