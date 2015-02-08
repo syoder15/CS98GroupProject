@@ -47,7 +47,7 @@
 				{% endfor %}
 				
 				<ul>{% for e in added_e.all %}
-				<li><a href="{% url 'events_page' event_name=e.name %}">{{ e }}</a> - {{e.event_date}} - {{e.start_time}}</li>
+				<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a> - {{e.event_date}} - {{e.start_time}}</li>
 				
 				{% endfor %}
 				
@@ -69,7 +69,7 @@
 					<p style="color:red; font-size:2em"> {{ a }} </p>
 				{% endfor %}
 				{% for e in events %}
-					<p><a href="{% url 'events_page' event_name=e.name %}">{{e}} - {{e.event_date}} - {{e.start_time}}</a></p>
+					<p><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{e}} - {{e.event_date}} - {{e.start_time}}</a></p>
 				{% endfor %}
 				<!--<p>News Articles</p>
 				{% for k, v in article_urls.items %}

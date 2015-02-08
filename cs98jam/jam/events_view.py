@@ -142,7 +142,6 @@ def new_event(request):
 		form_data = request.POST
 
 		event_date = form_data.get('event_date')
-		print event_date
 		validity = is_valid_date(event_date)
 		print "validity is " + validity
 		if(validity!=''):
@@ -155,13 +154,9 @@ def new_event(request):
 		
 		event_name = form_data.get('name')
 
-		print form_data.get('event_type')
-
-
 		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
-		print "start time" + startTime + "end time" + endTime
-		# Event model doesn't exist right now
-		print "making event"
+		#print "start time" + startTime + "end time" + endTime
+
 		event = jam_event(name=event_name,
 						  event_type=form_data.get('event_type'),
 						  description=form_data.get('description'),
@@ -172,7 +167,7 @@ def new_event(request):
 						  creator=request.user)
 		event.save()
 		request.user.events.add(event)
-		
+
 		if request.user.controlledChannels.filter(name=form_data.get("channel")).exists():
 			channel = request.user.controlledChannels.filter(name=form_data.get("channel")).first()
 			if form_data.get("channel") != "None":
@@ -191,14 +186,15 @@ def new_event(request):
 		#user_profile.events.add(event) #associate the current event with a user's profile
 		#user_profile.owned_events.add(event)
 		
-		print 'made event'
 		context = {'username': request.user.username}
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
-def events_page(request, event_name):
+def events_page(request, event_id, event_name):
 	events = request.user.events.all()
-	event = request.user.events.filter(name=event_name).first()
+	#event = request.user.events.filter(id=event_id)
+	event = request.user.events.get(id=event_id)
+	
 	event_type = event.event_type
 	event_description = event.description
 	event_date = event.event_date
