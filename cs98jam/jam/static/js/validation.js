@@ -5,7 +5,7 @@ var channelForm = $('.channel_form');
 
 // change the site for absolute URL paths depending on whether we're in development 
 // vs. production environment.
-var localTest = false; 
+var localTest = true; 
 var site = "http://dartmouthjam.pythonanywhere.com/jam/"
 if(localTest){
 	site = "http://127.0.0.1:8000/jam/";
