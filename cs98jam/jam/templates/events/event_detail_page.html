@@ -25,6 +25,16 @@
 				<th>Event Description:</th> 
 				<td>{{ event_description }}</td>
 			</tr>
+			{% if companies %}
+			<tr>
+				<th>Companies:</th> 
+				<td> 
+					{% for c in companies %}
+					<a href="{% url 'companies' c %}">{{ c }}</a></td>
+					{% endfor %}
+			</tr>
+			{% endif %}
+
 			<tr>
 				<th>Date:</th> 
 				<td>
