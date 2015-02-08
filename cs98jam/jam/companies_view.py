@@ -96,14 +96,14 @@ def new_company(request):
 				start_time='12:00',
 				end_time='13:00',
 				event_date=application_deadline,
-				user=request.user
+				creator=request.user
 			)
 			evt.save()
 			print "after evt"
-			request.user.profile.events.add(evt)
+			request.user.events.add(evt)
 			print "after events"
-			request.user.profile.owned_events.add(evt)
-			print "after owned events"
+			#request.user.owned_events.add(evt)
+			#print "after owned events"
 			
 			
 
@@ -141,7 +141,9 @@ def company_page(request, company_name):
 
 	site = settings.DOMAIN
 
-	context = {'company': companies, 'contacts': contacts,'status': company.application_status,'has_link': has_link, 'link': link, 'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 'company_notes': company_notes, 'site': site}
+	context = {'company': companies, 'contacts': contacts,'status': company.application_status,'has_link': has_link, 'link': link, 
+	'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 
+	'company_notes': company_notes, 'site': site, "controlled_channels": request.user.controlledChannels}
 	
 	return render(request, 'jam/companies/company_page.html', context)
 
@@ -177,7 +179,7 @@ def edit_company(request, company_name):
 	app_deadline = str(app_deadline)
 	datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes}
+	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
@@ -188,7 +190,7 @@ def companies(request, company_name):
 	user = User.objects.get(username = request.user.username)
 
 
-	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
+	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
 	if(data):
 		company_edit = False
@@ -252,7 +254,7 @@ def companies(request, company_name):
 					print company.name + " IS NOT COMPLETE"
 					company.save()
 			companies = request.user.company_set.all()
-			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 		elif('company_name' in data or 'company_edit' in data):
 			if('company_edit' in data): 
 				company_edit = True 
@@ -282,7 +284,8 @@ def companies(request, company_name):
 
 			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'status': company.application_status, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 'events': events, 'link': link, 'has_link': has_link}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 
+			'events': events, 'link': link, 'has_link': has_link, "controlled_channels": request.user.controlledChannels}
 
 		else:
 			print "got to the else"
@@ -302,7 +305,7 @@ def companies(request, company_name):
 			'''
 
 			companies = request.user.company_set.all()
-			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form}
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 	else:
 		if company_name != 'all':
 			company = request.user.company_set.get(name=company_name)
@@ -311,7 +314,7 @@ def companies(request, company_name):
 
 			context = {'companies': companies, 'company_name': company.name, 
 			'application_deadline': company.application_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username}
+			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/companies/companies.html', context)
 def is_valid_date(date):

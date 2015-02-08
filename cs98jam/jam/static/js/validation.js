@@ -11,25 +11,42 @@ if(localTest){
 	site = "http://127.0.0.1:8000/jam/";
 }
 
+
 // JS functions necessary for modal form validation
 // real-time inline error validation is a-go!
 
 
 //validating company form fields
-function validateDeadline(){
-	/*var deadline = $('#' + deadline_id).val();*/
-	var deadline = $('#company_deadline_input').val();
+function validateDeadline(deadline_id){
+	var deadline = $('#' + deadline_id).val();
+	//var deadline = $('#company_deadline_input').val();
 	var msg = dateValidation(deadline);
-	if(msg.length > 0){
+	if(msg != true){
 		$('.error-message').show();
-		$('#company_deadline_input').css('border','solid 2px red');
+		$('#' + deadline_id).css('border','solid 2px red');
 		$('.error-message').html(msg);
+		console.log("DATE ERROR " + deadline)
 	}
 	else{
 		$('.error-message').hide();
-		$('#company_deadline_input').css('border','solid 0px red');
+		$('#' + deadline_id).css('border','solid 0px red');
 	}
 	return msg;
+}
+
+function validateTimes(start_id, end_id){
+	var start = $('#' + start_id).val();
+	var end = $('#' + end_id).val();
+	var msg = startEndTimeValidation(start, end);
+	if(msg != true){
+		$('.time-error').show();
+		$('#' + end_id).css('border','solid 2px red');
+		$('.time-error').html(msg);
+	}
+	else{
+		$('.time-error').hide();
+		$('#' + end_id).css('border','solid 0px red');
+	}
 }
 
 function validateName(input){
@@ -259,7 +276,9 @@ function submitCompanyForm(event){
 
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
-	if (validateDeadline() != true || validateName('company_name_input') != ""){
+	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
+		me.on('click', submitCompanyForm);
+		me.data('requestRunning', false);
 		return false;
 	}
 
@@ -356,6 +375,7 @@ function submitEventForm(event){
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateName('event_name_input') != ""){
+		me.data('requestRunning',false);
 		return false;
 	}
 	
@@ -366,10 +386,12 @@ function submitEventForm(event){
   	var companies = $('#event_companies_input').val();
   	var startTime = $('#event_start_time_input').val();
   	var endTime = $('#event_end_time_input').val();
+	var channel = $('#channel_input').val();
 	var csrftoken = getCookie('csrftoken');
 
 	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
 		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		me.on('click', submitEventForm);
 		return false;
 	}
 
@@ -393,7 +415,8 @@ function submitEventForm(event){
 			"event_type": type,
 			"event_date": date,
 			"start_time": startTime,
-			"end_time": endTime
+			"end_time": endTime,
+			"channel": channel
 		},
 		singleton:true,
         delay:500,

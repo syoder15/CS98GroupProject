@@ -17,8 +17,9 @@ class Event(models.Model):
 	event_date = models.DateField()
 	start_time = models.TimeField()
 	end_time = models.TimeField()
-	user = models.ForeignKey(User)
-# Create your models here.
+	creator = models.ForeignKey(User, related_name="owned_events", blank=True)
+	users = models.ManyToManyField(User, related_name="events", blank=True)
+
 class Company(models.Model):
     
     def __unicode__(self):

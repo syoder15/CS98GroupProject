@@ -169,11 +169,15 @@ def new_event(request):
 						  event_date=form_data.get('event_date'),
 						  start_time=startTime,
 						  end_time=endTime,
-						  user=request.user)
-		print "made event"
+						  creator=request.user)
 		event.save()
-		print "saved event"
-
+		request.user.events.add(event)
+		
+		if request.user.controlledChannels.filter(name=form_data.get("channel")).exists():
+			channel = request.user.controlledChannels.filter(name=form_data.get("channel")).first()
+			if form_data.get("channel") != "None":
+				event.channel_set.add(channel)
+		
 		company_field = form_data.get('companies')
 		if company_field != '':
 			company_field = company_field.replace(" ", "")
@@ -193,8 +197,8 @@ def new_event(request):
 		return render(request, 'jam/index/index_landing_home.html', context)
 
 def events_page(request, event_name):
-	events = request.user.event_set.all()
-	event = request.user.event_set.filter(name=event_name).first()
+	events = request.user.events.all()
+	event = request.user.events.filter(name=event_name).first()
 	event_type = event.event_type
 	event_description = event.description
 	event_date = event.event_date
@@ -213,7 +217,7 @@ def events_page(request, event_name):
 		event_type = 'Info Session'
 
 	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time, 'end_time': end_time, 'event_type': event_type}
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'swingtime/event_detail_page.html', context)
 
@@ -290,11 +294,19 @@ def month_view(
 	infoSession = True
 	app_deadline= True
 	other       = True
-   # dtend       = datetime(year, month, last_day)
+    # dtend       = datetime(year, month, last_day)
 
 	#### JAM CODE ####
-	#my_events = request.user.profile.events.all() #access all of the users events
-	my_events = request.user.event_set.all()
+	my_events = request.user.profile.events.all() #access all of the users events
+	my_events = []
+
+	for e in request.user.events.all():
+		e_month = e.event_date.month
+		if month is e_month:
+			my_events.append(e)
+
+	#my_events = request.user.events.all()
+	print my_events
 	my_new_events = request.user.profile.events.none()
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
@@ -324,10 +336,15 @@ def month_view(
 
 		my_events = my_new_events
 
-	def start_day(o):
+	def start_date(o):
 		return o.event_date.day
 
-	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_day)])
+	def start_month(o):
+		return o.event_date.month
+
+	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_date)])
+	#by_day = dict([(m, dt) for m,dt in groupby(start_month, start_date)])
+	
 	data = {
 		'today'		  : datetime.now(),
 		'calendar'	  : [[(d, by_day.get(d, [])) for d in row] for row in cal],
@@ -340,7 +357,8 @@ def month_view(
 		'infoSession' : infoSession,
 		'app_deadline': app_deadline,
 		'other'		  : other,
-		'upload_form' : upload_form
+		'upload_form' : upload_form,
+		"controlled_channels": request.user.controlledChannels
 	}
 
 	return render(request, template, data)
