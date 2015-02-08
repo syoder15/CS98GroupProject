@@ -168,63 +168,85 @@ def index(request):
 @login_required
 def profile(request):
 	import pdb;
-	form_data = request.POST
-
-	username = request.user.username
-	#pdb.set_trace()
-	#user = User.objects.get(username=username.lower())
-	user = User.objects.get(username = username)
+	user = User.objects.get(username = request.user.username)
 	if user:
 		try:
-			profile = Profile.objects.get(user=username)
+			profile = Profile.objects.get(user=request.user.username)
 		except ObjectDoesNotExist:
 			profile = None
-	if form_data:
-		if user and profile: #already contained in DB, want to edit
-			profile.first_name=form_data.get('first_name')
-			profile.last_name=form_data.get('last_name')
-			profile.email=form_data.get('email')
-			profile.phone_number=form_data.get('phone')
-			profile.address=form_data.get('address')
-			profile.city=form_data.get('city')
-			profile.state=form_data.get('state')
-			profile.zip_code=form_data.get('zip_code')
-			profile.gender=form_data.get('gender')
-			profile.school=form_data.get('school_number')
-			profile.grad_month=form_data.get('grad_month')
-			profile.grad_year=form_data.get('grad_year')
+	
+	profile_edit = False 
+	show_profile = True 
 
+	form_data = request.POST
+	
+	if form_data:
+		if('profile_edit' in form_data):
+			profile_edit = True 
+			show_profile = False 
+			print "in profile edit in data" 
+
+		elif profile: #already contained in DB, want to edit
+			
+			name_input = form_data.get('name')
+			if(name_input):
+				names = name_input.split(' ')
+				if len(names) > 1:
+					first=names[0]
+					last=names[1]
+				else: 
+					first = names[0]
+					last = ''
+			else:
+				first = ''
+				last = ''
+
+			profile.first_name = first
+			profile.last_name = last
+			profile.email=form_data.get('user_email')
+			profile.phone_number=form_data.get('user_phone_number')
+			profile.address=form_data.get('user_address')
+			profile.gender=form_data.get('gender')
+			profile.grad_date=form_data.get('user_grad_date')
+			profile.save()
 
 		else:
+			name_input = form_data.get('name')
+			if(name_input):
+				names = name_input.split(' ')
+				if len(names) > 1:
+					first=names[0]
+					last=names[1]
+				else: 
+					first = names[0]
+					last = ''
+			else:
+				first = ''
+				last = ''
 			profile = Profile(user=request.user.username,
-							  first_name=form_data.get('first_name'),
-							  last_name=form_data.get('last_name'),
-							  email=form_data.get('email'),
-							  phone_number=form_data.get('phone'),
-							  address=form_data.get('address'),
-							  city=form_data.get('city'),
-							  state=form_data.get('state'),
-							  zip_code=form_data.get('zip_code'),
+							  first_name=first,
+							  last_name=last,
+							  email=form_data.get('user_email'),
+							  phone_number=form_data.get('user_phone_number'),
+							  address=form_data.get('user_address'),
 							  gender=form_data.get('gender'),
-							  school=form_data.get('school_number'),
-							  grad_month=form_data.get('grad_month'),
-							  grad_year=form_data.get('grad_year'))
-
+							  grad_date=form_data.get('user_grad_date'),
+							 )
+			profile.save()
 		# profile.save()
 		# remember to cause profile to save again!!! 
 
 		#return render(request, 'jam/index/index.html', {})
-
+	'''
 	profile_edit = False 
 	show_profile = True 
 	data = request.POST 
-
 	if(data): 
 		if ('profile_edit' in data): 
 			profile_edit = True 
 			show_profile = False 
 			print "in profile edit in data" 
-
+	'''
 	context = {'show_profile' : show_profile, 'profile_edit': profile_edit, 'profile': profile, 'username': request.user.username}
 	return render(request, 'jam/user/profile.html', context)
 
