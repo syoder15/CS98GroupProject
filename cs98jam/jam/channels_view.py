@@ -71,7 +71,8 @@ def channel_list(request):
 			channel_categories = []
 			channel_categories.append(channel_category)
 		
-	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username, 'upload_form': upload_form}
+	context={'channels': channels, 'sub_channels': sub_channels, 'categories': channel_categories, 'username': request.user.username, 'upload_form': upload_form,
+			"controlled_channels": request.user.controlledChannels}
 	return render(request,'jam/channels/channel_list.html',context)
 
 
@@ -154,7 +155,8 @@ def view_channel_as_admin(request, channel_name):
 
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker, 'events': channel.events,
 		'channel_description': channel.description, 'channel_status': channel.is_public,
-		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at"), 'username': request.user.username}
+		'is_admin': is_admin, 'subscribers': channel.subscribers, 'adminNotes': channel.adminNotes.order_by("-created_at"), 'username': request.user.username,
+		"controlled_channels": request.user.controlledChannels}
 
 
 	return render(request, 'jam/channels/view_channel_as_admin.html', context)
@@ -172,7 +174,8 @@ def activate_subscriber(request, channel_name, user_name):
 		channel.subscribers.add(user)
 
 	# pass the appropriate context to populate generic activation view
-	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin, 'site': settings.DOMAIN}
+	context = {'channel_name': channel.name, 'username': user_name, 'valid': is_admin, 'site': settings.DOMAIN,
+				"controlled_channels": request.user.controlledChannels}
 	return render(request, 'jam/channels/activate_subscriber.html', context)
 
 
@@ -197,7 +200,7 @@ def view_channel(request, channel_name):
 		
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
-		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events}
+		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events, "controlled_channels": request.user.controlledChannels}
 
 	if request.method == 'POST':
 		event_added = False
