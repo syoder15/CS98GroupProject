@@ -217,7 +217,7 @@ def events_page(request, event_name):
 		event_type = 'Info Session'
 
 	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time, 'end_time': end_time, 'event_type': event_type}
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'swingtime/event_detail_page.html', context)
 
@@ -357,7 +357,8 @@ def month_view(
 		'infoSession' : infoSession,
 		'app_deadline': app_deadline,
 		'other'		  : other,
-		'upload_form' : upload_form
+		'upload_form' : upload_form,
+		"controlled_channels": request.user.controlledChannels
 	}
 
 	return render(request, template, data)
