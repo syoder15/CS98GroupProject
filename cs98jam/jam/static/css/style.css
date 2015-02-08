@@ -45,7 +45,7 @@ a:link, a:visited {
 }
 
 #userIcon {
-	width: 22px;
+	width: 30px;
 	height: 25px;
 }
 
@@ -212,4 +212,12 @@ a:link, a:visited {
 
 .navbar-fixed-bottom {
 	z-index: 100;
+}
+
+.col-sm-3 {
+	padding-bottom: 5px;
+}
+
+.col-sm-9 {
+	padding-bottom: 15px;
 }

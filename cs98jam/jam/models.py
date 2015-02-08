@@ -85,7 +85,7 @@ class Profile(models.Model):
 	first_name = models.CharField(max_length=20)
 	last_name = models.CharField(max_length=50)
 	email = models.EmailField(max_length=60)
-	phone_number = models.IntegerField(default=0, blank=True)
+	phone_number = models.CharField(max_length=11, blank=True)
 	address = models.CharField(max_length=50, blank=True)
 	city = models.CharField(max_length=40, blank=True)
 	state = models.CharField(max_length=13, blank=True)
@@ -96,9 +96,9 @@ class Profile(models.Model):
 
 	school = models.CharField(max_length=50, blank=True)
 
-	grad_month = models.CharField(max_length=10, blank=True)
-	grad_year = models.IntegerField(default=0, blank=True)
-
+	grad_date = models.CharField(max_length=15, blank=True)
+	#grad_year = models.IntegerField(default=0, blank=True)
+	
 class UserProfile(models.Model):
 	user = models.OneToOneField(User, related_name="profile")
 	activation_key = models.CharField(max_length=40)
