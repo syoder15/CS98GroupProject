@@ -221,8 +221,9 @@ def edit_event(request, event_id, event_name):
 	event = request.user.event_set.filter(id=event_id)
 
 	if form_data:
-		redirect_link = '../../../calendar/' + event.event_date.year + '/' + event.event_date.month
-
+		#redirect_link = '../../../calendar/' +  event.event_date.strptime('%Y') + '/' + event.event_date.strptime('%m')
+		redirect_link = ''
+		
 		if user and event: 
 			company.name=form_data.get('company_name')
 			company.application_deadline=form_data.get('app_deadline')

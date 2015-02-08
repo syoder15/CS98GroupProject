@@ -1,0 +1,55 @@
+{% extends "../../jam/templates/jam/index/index.html" %}
+
+
+{% block styles %}
+    {% load staticfiles %}
+    {{block.super}}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/calendar.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="table-responsive">
+	<table class="table table-events"> 
+		<thead> 
+			<tr> 
+				<th class="col-md-3"><h3>Event Name: </h3></th>
+				<td><h3>{{ event_name }}</h3></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Event Type:</th> 
+				<td>{{ event_type }}</td>
+			</tr>
+			<tr>
+				<th>Event Description:</th> 
+				<td>{{ event_description }}</td>
+			</tr>
+			<tr>
+				<th>Date:</th> 
+				<td>
+					{{ event_date }}
+				</td>
+			</tr>
+			<tr> 
+				<th>Start Time:</th>
+				<td>{{ start_time }} </td>
+			</tr>
+			<tr> 
+				<th>End Time:</th>
+				<td>{{ end_time }} </td>
+			</tr>
+		</tbody>
+	</table>
+	<p> <a href="{{ google_link }}">Sync with Google Calendar</a> </p>
+
+	<br />
+	<input type="button" onclick="history.back();" value="Back" />
+	<!--<a href="../../edit/event/{{ event_name }}"><button style="color:black" type="submit" name="event_edit" class="btn btn-default btn-small" value="{{ event_name }}">Edit</button></a>-->
+</div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{% static 'js/events.js' %}"></script>
+{% endblock %}
