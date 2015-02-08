@@ -109,7 +109,7 @@ def new_channel(request):
 			errors = ""
 			if Channel.objects.filter(name=form_data.get('name')).exists():
 				errors = "A channel with that name already exists: please choose another."
-			context = {"errors": errors}
+			context = {"errors": errors, "controlled_channels": request.user.controlledChannels}
 			
 			response={}
 			response["error"] = errors
@@ -118,7 +118,7 @@ def new_channel(request):
 
 	else:
 		cats = ChannelCategory.objects.all()
-		context = {'categories':cats}
+		context = {'categories':cats, "controlled_channels": request.user.controlledChannels}
 		return render(request, 'jam/channels/new_channel.html', context)
 
 # Administrative view for a channel. Allows for removal of subscribers.
@@ -208,7 +208,7 @@ def view_channel(request, channel_name):
 		for key in request.POST:
 			if key.isdigit() and channel.events.filter(pk = key).exists():
 				event = channel.events.filter(pk = key).first()
-				request.user.profile.events.add(event)
+				request.user.events.add(event)
 				event_added = True
 		
 		if 'Unsubscribe' in request.POST:
