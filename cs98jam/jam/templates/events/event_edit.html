@@ -1,46 +1,87 @@
+{% extends "../../jam/templates/jam/index/index.html" %}
+
+
+{% block content %}
 <div>
-	<form name="contact_form" class="contact_form form-horizontal" method="POST"> 
-		{% csrf_token %}
-		<div class="form-group"> 
-			<label for="{{ c_name }}" class="col-md-3 control-label"><h3>Contact Name: </h3></label>
-			<div class="col-md-8"> <h3>
-				<input id="name_input" class="form-control" name="name" value='{{ c_name }}' placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
-				<input type="hidden" name="contact_name" value='{{ c_name }}'/>
-				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> </h3>
+	<form name="edit_event_form" class="edit_event_form form-horizontal" method="POST">
+    	{% csrf_token %}
+			<div class="form-group">
+					<label for="event_type_input" class="col-md-4 control-label">Event Type: </label>
+					<div class="col-md-8"> 
+						<select id="event_type_input" name="event_type">
+							<option value="{{event_type}}">{{event_type}}</option>
+			                <option value="Interview">Interview</option>
+			                <option value="Career Fair">Career Fair</option>
+			                <option value="Info Session">Info Session</option>
+			                <option value="Application Deadline">Application Deadline</option>
+			                <option value="Other">Other</option>
+		        		</select>
+	        		</div>
 			</div>
-		</div>
 
-		<div class="form-group"> 
-			<label for="phone_number_input" class="col-md-3 control-label">Phone Number: </label>
-			<div class="col-md-8"> 
-				<input id="phone_number_input" class="form-control" placeholder="(555) 555-5555" name="phone" value='{{ phone_number }}' onblur="validatePhone()"/>
-				<span class ="phone_error_message" style="color:red;"> </span>
+				<div class="form-group">
+					<label for="event_name_input" class="col-md-4 control-label">Event Name: </label>
+					<div class="col-md-8"> 
+						<input id="event_name_input" class="form-control" name="event_name" placeholder="Google Tech Interview" onblur = 'validateName(this.id)' value="{{ event_name }}" required  />
+						<span class="error" name="event_name_input" style="display:none; background-color: white; color: red"> </span>
+					</div>
+				</div>
 
+				<div class="form-group">
+					<label for="event_description_input" class="col-md-4 control-label">Event Description: </label>
+					<div class="col-md-8"> 
+						<input id="event_description_input" class="form-control" name="description" placeholder="At 123 Main Street, bring resume" value="{{description}}" required  />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event_companies_input" class="col-md-4 control-label">Companies: </label>
+					<div class="col-md-8"> 
+						<input id="event_companies_input" class="form-control" name="companies" placeholder="Google, Pinterest, Apple" value="{{ companies }}"  />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event_date_input" class="col-md-4 control-label">Date: </label>
+					<div class="col-md-8">
+						<input id="event_date_input" class="form-control" name="event_date" placeholder="2015-12-31" onblur="validateDeadline('event_date_input')" value="{{ event_date }}" required />
+						<span class="error-message" style="display:none; color:red;"> {{ validity }} </span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event_start_time_input" class="col-md-4 control-label">Start Time: </label>
+					<div class="col-md-8">
+						<input id="event_start_time_input" class="form-control" name="start_time" placeholder="2:00 PM" 
+						value="{{ start_time }}" required />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event_end_time_input" class="col-md-4 control-label">End Time: </label>
+					<div class="col-md-8">
+						<input id="event_end_time_input" class="form-control" name="end_time" placeholder="5:00 PM" onblur="validateTimes('event_start_time_input','event_end_time_input')" value="{{ end_time }}" />
+						<span class="time-error" style="display:none; color:red;">  </span>
+
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="channel_input" class="col-md-4 control-label">Channel</label>
+					<div class="col-md-8"> 
+							<select id="channel_input" name="channel_type">
+								<option value="None">None</option>
+								{% for channel in controlled_channels.all %}
+									 <option value="{{channel.name}}">{{channel.name}}</option>
+								{% endfor %}
+							   
+							</select>
+					</div>
 			</div>
-		</div>
-		<div class="form-group">
-			<label for="email_input" class="col-md-3 control-label">Email: </label>
-			<div class="col-md-8">
-				<input id="email_input" class="form-control" name="email" value='{{ contact_email }}' placeholder="john.smith@gmail.com" onblur="validateEmailAddress()"/>
-				<span class ="email_error_message" style="color:red;"> </span>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="company_input" class="col-md-3 control-label">Employer: </label>
-			<div class="col-md-8">
-				<input id="company_input" class="form-control" name="employer" value='{{ employer }}' placeholder="Google" onblur = 'validateName(this.id)'required />
-				<span class="error" name="company_input" style="display:none; background-color: white; color: red"> </span>
-			</div>
-		</div>
 
-		<div class="form-group"> 
-			<label for="contact_notes_input" class="col-md-3 control-label">Notes on Contact: </label>
-			<div class="col-md-8">
-				<textarea class="form-control" name="notes" rows="5" id="comment">{{ notes }}</textarea>
-			</div>
-		</div>	
-
-		<button class="btn btn-default btn-small" type="submit" name="save" value="Save">Save</button>
-
-	</form>
+		<br />
+		<input type="button" onclick="history.back();" value="Back" style="font-size: 15px" />	
+		<button class="btn small-btn btn-default" type="submit" name="save" value="Save">Save</button>
+		</form>
 </div>
+{% endblock %}
