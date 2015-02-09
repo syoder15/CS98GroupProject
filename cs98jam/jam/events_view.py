@@ -33,6 +33,7 @@ upload_form = UploadFileForm
 # We made slight edits which include comments below. These edits were made in order to allow user-specific
 # calendars for our Events page
 ######################################################################################
+@login_required
 def add_event(
 	request,
 	template='swingtime/add_event.html',
@@ -139,6 +140,7 @@ def startEndTimeValidation(start_time, end_time):
 	print "inside startEnd validation"
 	return (start,end)
 
+@login_required
 def new_event(request):
 	if request.method == "POST":
 		form_data = request.POST
@@ -192,6 +194,7 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+@login_required
 def events_page(request, event_id, event_name):
 	events = request.user.events.all()
 	#event = request.user.events.filter(id=event_id)
@@ -210,8 +213,20 @@ def events_page(request, event_id, event_name):
 	event_desc = urlify(event_description)
 	google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(event_date.year) + str(event_date.month).zfill(2) + str(event_date.day).zfill(2) + "T" + str(start_time.hour +5).zfill(2) + str(start_time.minute).zfill(2) + "00Z/" + str(event_date.year) +  str(event_date.month).zfill(2) + str(event_date.day).zfill(2) + "T" + str(end_time.hour + 5).zfill(2) + "" +  str(end_time.minute).zfill(2) + "00Z&details=" + event_desc
 
+	company_text = event.companies
+	if company_text:
+		comps = company_text.split(",")
+	else:
+		comps = ''
+
+	companies = []
+	for c in comps:
+		if request.user.company_set.filter(name=c).exists():
+ 			companies.append(c)
+
+
 	context = {'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels}
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
 
 	return render(request, 'events/event_detail_page.html', context)
 
@@ -265,7 +280,7 @@ def edit_event(request, event_id):
 
 	return render(request, 'events/event_edit.html', context)
 
-
+@login_required
 def month_view(
 	request,
 	year,
@@ -375,6 +390,7 @@ def month_view(
 
 	return render(request, template, data)
 
+@login_required
 def event_listing(
 	request,
 	template='swingtime/event_list.html',
@@ -402,7 +418,7 @@ def event_listing(
 		
 		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
 	)
-
+@login_required
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''
 
@@ -460,7 +476,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 	})
 
 #-------------------------------------------------------------------------------
-
+@login_required
 def event_view(
 	request, 
 	pk, 
@@ -523,6 +539,7 @@ def event_view(
 		return HttpResponseRedirect("/jam/events")
 
 #-------------------------------------------------------------------------------
+@login_required
 def occurrence_view(
 	request, 
 	event_pk, 

@@ -6,8 +6,16 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">New Channel</h4>
+		
       </div>
       <div class="modal-body">
+		{% if controlled_channels.all|length == 0 %}
+			<p style="font-style: italic;">Channels allow you to share information with other users. If you create a public channel, anyone can join and see information
+			you post. Users must request to join a private channel. If you don't have anything to share, try checking out existing channels 
+			<a href="/jam/channels/list">here</a>!</p> 
+		{% endif %}
+		
+		
       	{{ errors }}
         <form name="channel_form" class="channel_form form-horizontal" method="POST" >
 			{% csrf_token %}
