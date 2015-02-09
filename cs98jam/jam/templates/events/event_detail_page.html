@@ -12,7 +12,7 @@
 	<table class="table table-events"> 
 		<thead> 
 			<tr> 
-				<th class="col-md-3"><h3>Event Name: </h3></th>
+				<th class="col-md-4"><h3>Event Name: </h3></th>
 				<td><h3>{{ event_name }}</h3></td>
 			</tr>
 		</thead>
@@ -41,10 +41,13 @@
 			</tr>
 		</tbody>
 	</table>
-	<p> <a href="{{ google_link }}">Sync with Google Calendar</a> </p>
+	<div class="col-sm-5" style="text-align:right;">
+		<p> <a href="{{ google_link }}">Sync with Google Calendar</a> </p>
 
-	<br />
-	<input type="button" onclick="history.back();" value="Back" />
+		<br />
+		<!-- <input type="button" onclick="history.back();" style="margin-right:10px;" value="Back" /> -->
+		<button class="btn btn-default btn-small" onclick="history.back();" style="margin-right:10px;" value="Back">Back</button>
+	</div>
 	<!--<a href="../../edit/event/{{ event_name }}"><button style="color:black" type="submit" name="event_edit" class="btn btn-default btn-small" value="{{ event_name }}">Edit</button></a>-->
 </div>
 {% endblock %}
