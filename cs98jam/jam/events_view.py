@@ -118,6 +118,8 @@ def startEndTimeValidation(start_time, end_time):
 
 	error = ''
 	print "about to convert"
+	if (startMin[1].lower() == 'p.m.'):
+		startMin[1] = 'pm'
 	if (startMin[1].lower() == 'pm'):
 		startTime[0] = int(startTime[0]) + 12
 		print "first block"
@@ -223,29 +225,37 @@ def events_page(request, event_id, event_name):
  			companies.append(c)
 
 
-	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
+	context = {'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
 
 	return render(request, 'events/event_detail_page.html', context)
 
 @login_required
-def edit_event(request, event_id, event_name):
+def edit_event(request, event_id):
 	form_data = request.POST
 
 	user = User.objects.get(username=request.user.username)
-	event = request.user.event_set.filter(id=event_id)
+	event = request.user.events.get(id=event_id)
 
 	if form_data:
-		#redirect_link = '../../../calendar/' +  event.event_date.strptime('%Y') + '/' + event.event_date.strptime('%m')
-		redirect_link = ''
-		
+		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
+
 		if user and event: 
-			company.name=form_data.get('company_name')
-			company.application_deadline=form_data.get('app_deadline')
+			event.name=form_data.get('event_name')
+			event.event_type=form_data.get('event_type')
+			event.description=form_data.get('description')
+			event.companies=form_data.get('companies')
+			event.event_date=form_data.get('event_date')
+			event.start_time=startTime
+			event.end_time=endTime
 			event.save()
 
+			datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+			redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
+			return HttpResponseRedirect(redirect_link)
+
 		else:
-			event = jam_event(name=event_name,
+			event = jam_event(name=form_data.get('event_name'),
 						  event_type=form_data.get('event_type'),
 						  description=form_data.get('description'),
 						  companies=form_data.get('companies'),
@@ -255,16 +265,20 @@ def edit_event(request, event_id, event_name):
 						  creator=request.user)
 			event.save()
 			request.user.events.add(event)
-			
-		return HttpResponseRedirect(redirect_link)
 
-	#app_deadline = company.application_deadline
-	#app_deadline = str(app_deadline)
-	#datetime.strptime(app_deadline, "%Y-%m-%d")
+			datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+			redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
+			return HttpResponseRedirect(redirect_link)
 
-	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes, "controlled_channels": request.user.controlledChannels}
+	event_date = event.event_date
+	event_date = str(event_date)
+	datetime.strptime(event_date, "%Y-%m-%d")
 
-	return render(request, 'jam/companies/company_page_edit.html', context)
+	context = {'event': event, 'event_name': event.name, 'description': event.description, 'event_date': event_date,
+	'start_time': event.start_time, 'end_time': event.end_time, 'creator': event.creator, 'event_type': event.event_type, 
+	'companies': event.companies}
+
+	return render(request, 'events/event_edit.html', context)
 
 @login_required
 def month_view(
