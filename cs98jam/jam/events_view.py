@@ -118,14 +118,18 @@ def startEndTimeValidation(start_time, end_time):
 
 	error = ''
 	print "about to convert"
-	if (startMin[1].lower() == 'p.m.'):
-		startMin[1] = 'pm'
-	if (startMin[1].lower() == 'pm'):
-		startTime[0] = int(startTime[0]) + 12
-		print "first block"
-	if (endMin[1].lower() == 'pm'):
-		endTime[0] = int(endTime[0]) + 12
-		print "second block"
+
+
+	if len(startMin) > 1: 
+		if (startMin[1].lower() == 'p.m.'):
+			startMin[1] = 'pm'
+		if (startMin[1].lower() == 'pm'):
+			startTime[0] = int(startTime[0]) + 12
+			print "first block"
+	if len(endMin) > 1:
+		if (endMin[1].lower() == 'pm'):
+			endTime[0] = int(endTime[0]) + 12
+			print "second block"
 
 	'''if ( endTime[0] < startTime[0] or (endTime[0] == startTime[0] and int(endMin[0]) < int(startMin[0]))):
 		error = "Your start time must be before your end time. Please try again."

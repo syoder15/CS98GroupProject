@@ -62,13 +62,12 @@ def index(request):
 
 	companies = request.user.company_set.order_by("application_deadline").all()
 
-	notificationList = []
+
+	news_feed_notes = []
 	for c in channels:
-		newNotes = 0
 		for note in c.adminNotes.all():
-			if note.created_at > request.user.last_login:
-				newNotes += 1
-		notificationList.append(newNotes)	
+			if note.created_at > datetime.now() - timedelta(days=7):
+				news_feed_notes.append(note)	
 
 	# application status notifications
 	app_notifications = []
@@ -89,7 +88,7 @@ def index(request):
 		c_name = ""
 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
-			'channels': channels, 'show': show_feed ,'events': future_events, 'notificationList': notificationList, 'app_list': app_notifications,
+			'channels': channels, 'show': show_feed ,'events': future_events, 'news_feed_notes': news_feed_notes, 'app_list': app_notifications,
 			'article_urls': article_urls, 'article_images': article_images, "controlled_channels": request.user.controlledChannels}
 
 	#post request can mean 2 things.
@@ -104,7 +103,7 @@ def index(request):
 		if(go_home == ("Back")):
 			show_feed = False
 			context = {'username': request.user.username, 
-			'channels': channels,'show': show_feed, 'events': future_events, 'notificationList': notificationList,
+			'channels': channels,'show': show_feed, 'events': future_events, 'news_feed_notes': news_feed_notes,
 			'article_urls': article_urls, 'article_images': article_images, "controlled_channels": request.user.controlledChannels}
 
 		else:
@@ -132,7 +131,7 @@ def index(request):
 						show_feed = False
 						channels = request.user.channel_set.order_by("name").all()
 						context = {'username': request.user.username, 
-						'channels': channels,'show': show_feed, 'events': events, 'notificationList': notificationList}
+						'channels': channels,'show': show_feed, 'events': events, 'news_feed_notes': news_feed_notes,}
 						return render(request, 'jam/index/index_landing_home.html', context)
 					
 			
@@ -156,7 +155,7 @@ def index(request):
 			unadded_events = channel.events.all().exclude(pk__in = added_events.all())
 			
 			context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
-				'channel_description': channel.description, 'channel_status': channel.is_public, 'notificationList': notificationList, 
+				'channel_description': channel.description, 'channel_status': channel.is_public, 'news_feed_notes': news_feed_notes,
 				'is_admin': is_admin, 'username': request.user.username, 'channels': channels, 'show': show_feed, 
 				"adminNotes": channel.adminNotes.order_by("-created_at"), 'unadded_e': unadded_events, 'added_e': added_events, 
 				"controlled_channels": request.user.controlledChannels}
