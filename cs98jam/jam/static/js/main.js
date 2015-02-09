@@ -38,7 +38,8 @@ function timeValidation(time) {
 		return false;
 	}
 
-	if ( splitMinute[1].toUpperCase() !== 'AM' && splitMinute[1].toUpperCase() !== 'PM' ) {
+	if ( splitMinute[1].toUpperCase() !== 'AM' && splitMinute[1].toUpperCase() !== 'PM' && 
+		splitMinute[1].toUpperCase() !== 'P.M.' && splitMinute[1].toUpperCase() !== 'A.M.' ) {
 		alert("You must enter a valid time including either 'AM' or 'PM'.");
 		return false;
 	} 
@@ -51,6 +52,14 @@ function startEndTimeValidation(startTime, endTime) {
 	var endTime = endTime.split(':');
 	var startMin = startTime[1].split(" ");
 	var endMin = endTime[1].split(" ");
+
+	if (startMin[1].toLowerCase() == 'p.m.') {
+		startMin[1] = 'PM';
+	}
+
+	if (endMin[1].toLowerCase() == 'p.m.') {
+		startMin[1] = 'PM';
+	}
 
 	if ((startMin[1] !== null) && (startMin[1].toLowerCase() == 'pm')) {
 		startTime[0] += 12;
