@@ -323,41 +323,40 @@ def month_view(
 	other       = True
     # dtend       = datetime(year, month, last_day)
 
+	if len(str(month)) < 2:
+		month = '-0' + str(month) + '-'
+	else:
+		month = "-" + str(month) + "-"
 	#### JAM CODE ####
-	my_events = request.user.profile.events.all() #access all of the users events
-	my_events = []
+	
+	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
 
-	for e in request.user.events.all():
-		e_month = e.event_date.month
-		if month is e_month:
-			my_events.append(e)
-
-	#my_events = request.user.events.all()
-	print my_events
 	my_new_events = request.user.profile.events.none()
+	print month
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
-			my_new_events = my_events.filter(event_type = 'int') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Interview') | my_new_events
+			print my_new_events
 		else:
 			interview = False
 
 		if request.POST.get('Career Fairs'):
-			my_new_events = my_events.filter(event_type = 'fair') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Career Fair') | my_new_events
 		else:
 			careerFair = False
 
 		if request.POST.get('Application Deadline'):
-			my_new_events = my_events.filter(event_type = 'app') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Application Deadline') | my_new_events
 		else:
 			app_deadline = False
 
 		if request.POST.get('Info Sessions'):
-			my_new_events = my_events.filter(event_type = 'info') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Info Session') | my_new_events
 		else:
 			infoSession = False
 
 		if request.POST.get('Other'):
-			my_new_events = my_events.filter(event_type = 'other') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Other') | my_new_events
 		else:
 			other = False
 

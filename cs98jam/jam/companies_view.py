@@ -92,7 +92,7 @@ def new_company(request):
 			print "before evt"
 			evt = jam_event(
 				name=title,
-				event_type='app',
+				event_type='Application Deadline',
 				description='',
 				companies=company_name,
 				start_time='12:00',
