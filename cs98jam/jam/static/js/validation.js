@@ -265,16 +265,25 @@ $('.company-btn').on('click', submitCompanyForm);
 	//disable button during a submit to prevent double submission
 
 function submitCompanyForm(event){	
+	/*     UPLOAD MULTIPLE
+	console.log("submitting companyForm");
+	var file = $('#id_filep');
+	if (file.val()){
+		console.log("file has value");
+		companyForm.submit();
+		return;
+	}*/
 	event.preventDefault();
 	var me = $(this);
 	me.off('click');
-	console.log("GOT HERE");
 
 	if( me.data('requestRunning')){
 		return;
 	}
 
 	me.data('requestRunning', true);
+	
+	
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
 		me.on('click', submitCompanyForm);
@@ -375,23 +384,30 @@ function submitEventForm(event){
 	me.data('requestRunning', true);
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateName('event_name_input') != ""){
+		me.on('click', submitEventForm);
 		me.data('requestRunning',false);
 		return false;
 	}
 	
   	var name = $('#event_name_input').val();
+  	console.log(name);
   	var type = $('#event_type_input').val();
+  	console.log(type);
+
   	var date = $('#event_date_input').val();
   	var description = $('#event_description_input').val();
   	var companies = $('#event_companies_input').val();
   	var startTime = $('#event_start_time_input').val();
+  	console.log("START" + startTime);
   	var endTime = $('#event_end_time_input').val();
+  	console.log("END" + endTime);
 	var channel = $('#channel_input').val();
 	var csrftoken = getCookie('csrftoken');
 
 	if ( dateValidation(date)!=true || timeValidation(startTime)==false || 
-		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) == false ) {
+		timeValidation(endTime)==false || startEndTimeValidation(startTime, endTime) !=true ) {
 		me.on('click', submitEventForm);
+		me.data('requestRunning',false);
 		return false;
 	}
 

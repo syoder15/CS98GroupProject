@@ -43,11 +43,15 @@ addFileButton.mouseleave(function(){
 });
 
 
+/*
+//THIS IS THE ON CHANGE FOR FILE UPLOAD
 addFileButton.on('change', function() {
 	console.log("HERE");
-  	$('#company_name_input').removeAttr('required');
-  	$('#company_deadline_input').removeAttr('required');
+	$('#company_deadline_input').val('2049-12-31');
+	companyForm.submit(); //DOES NOT ENTER submitCompanyForm in validation
 });
+*/
+	
 
 
 function getCookie(name) {

@@ -118,14 +118,18 @@ def startEndTimeValidation(start_time, end_time):
 
 	error = ''
 	print "about to convert"
-	if (startMin[1].lower() == 'p.m.'):
-		startMin[1] = 'pm'
-	if (startMin[1].lower() == 'pm'):
-		startTime[0] = int(startTime[0]) + 12
-		print "first block"
-	if (endMin[1].lower() == 'pm'):
-		endTime[0] = int(endTime[0]) + 12
-		print "second block"
+
+
+	if len(startMin) > 1: 
+		if (startMin[1].lower() == 'p.m.'):
+			startMin[1] = 'pm'
+		if (startMin[1].lower() == 'pm'):
+			startTime[0] = int(startTime[0]) + 12
+			print "first block"
+	if len(endMin) > 1:
+		if (endMin[1].lower() == 'pm'):
+			endTime[0] = int(endTime[0]) + 12
+			print "second block"
 
 	'''if ( endTime[0] < startTime[0] or (endTime[0] == startTime[0] and int(endMin[0]) < int(startMin[0]))):
 		error = "Your start time must be before your end time. Please try again."
@@ -323,41 +327,42 @@ def month_view(
 	other       = True
     # dtend       = datetime(year, month, last_day)
 
-	#my_events = request.user.events.all() #access all of the users events
-	my_events = []
-	print request.POST.get('Interviews')
-	for e in request.user.events.all():
-		print e
-		e_month = e.event_date.month
-		if month is e_month:
-			if request.POST.get('Interviews'):
-				if e.event_type is 'Interview' or e.event_type is 'int':
-					my_events.append(e)
-			else:
-				interview = False
+	if len(str(month)) < 2:
+		month = '-0' + str(month) + '-'
+	else:
+		month = "-" + str(month) + "-"
+	#### JAM CODE ####
+	
+	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
 
-			if request.POST.get('Career Fairs'):
-				if e.event_type is 'Career Fair' or e.event_type is 'fair':
-					my_events.append(e)	
-			else:
-				careerFair = False
+	my_new_events = request.user.profile.events.none()
+	print month
+	if request.method == "POST":
+		if request.POST.get('Interviews'):
+			my_new_events = my_events.filter(event_type = 'Interview') | my_new_events
+			print my_new_events
+		else:
+			interview = False
 
-			if request.POST.get('Application Deadline'):
-				if e.event_type is 'Application Deadline' or e.event_type is 'app':
-					my_events.append(e)	
-			else:
-				app_deadline = False
+		if request.POST.get('Career Fairs'):
+			my_new_events = my_events.filter(event_type = 'Career Fair') | my_new_events
+		else:
+			careerFair = False
 
-			if request.POST.get('Info Sessions'):
-				if e.event_type is 'Info Session' or e.event_type is 'info':
-					my_events.append(e)	
-			else:
-				infoSession = False
+		if request.POST.get('Application Deadline'):
+			my_new_events = my_events.filter(event_type = 'Application Deadline') | my_new_events
+		else:
+			app_deadline = False
 
-			if request.POST.get('Other') and e.event_type is 'Other':
-				my_events.append(e)	
-			elif e.event_type is 'Other':
-				other = False
+		if request.POST.get('Info Sessions'):
+			my_new_events = my_events.filter(event_type = 'Info Session') | my_new_events
+		else:
+			infoSession = False
+
+		if request.POST.get('Other'):
+			my_new_events = my_events.filter(event_type = 'Other') | my_new_events
+		else:
+			other = False
 
 	#my_events = request.user.events.all()
 	# my_new_events = request.user.profile.events.none()
