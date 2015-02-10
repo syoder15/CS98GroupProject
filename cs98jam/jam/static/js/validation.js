@@ -265,16 +265,25 @@ $('.company-btn').on('click', submitCompanyForm);
 	//disable button during a submit to prevent double submission
 
 function submitCompanyForm(event){	
+	/*     UPLOAD MULTIPLE
+	console.log("submitting companyForm");
+	var file = $('#id_filep');
+	if (file.val()){
+		console.log("file has value");
+		companyForm.submit();
+		return;
+	}*/
 	event.preventDefault();
 	var me = $(this);
 	me.off('click');
-	console.log("GOT HERE");
 
 	if( me.data('requestRunning')){
 		return;
 	}
 
 	me.data('requestRunning', true);
+	
+	
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
 		me.on('click', submitCompanyForm);

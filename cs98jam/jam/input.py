@@ -6,7 +6,7 @@ from jam.models import Company
 
 
 def read_from_file(user, input_file):
-
+	print "in read_from_file"
 	for line in input_file:
 		company_info = line.split(',')
 		company_name = company_info[0]

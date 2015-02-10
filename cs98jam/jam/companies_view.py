@@ -32,7 +32,10 @@ upload_form = UploadFileForm
 
 @login_required
 def new_company(request):
+	print "in new company"
+	#START OF CODE
 	if request.method == "POST" and request.FILES:
+		print "in new company upload multiple"
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
 	elif request.method == "POST":
