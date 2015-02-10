@@ -225,7 +225,7 @@ def events_page(request, event_id, event_name):
  			companies.append(c)
 
 
-	context = {'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
+	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
 
 	return render(request, 'events/event_detail_page.html', context)
@@ -323,45 +323,71 @@ def month_view(
 	other       = True
     # dtend       = datetime(year, month, last_day)
 
-	#### JAM CODE ####
-	my_events = request.user.profile.events.all() #access all of the users events
+	#my_events = request.user.events.all() #access all of the users events
 	my_events = []
-
+	print request.POST.get('Interviews')
 	for e in request.user.events.all():
+		print e
 		e_month = e.event_date.month
 		if month is e_month:
-			my_events.append(e)
+			if request.POST.get('Interviews'):
+				if e.event_type is 'Interview' or e.event_type is 'int':
+					my_events.append(e)
+			else:
+				interview = False
+
+			if request.POST.get('Career Fairs'):
+				if e.event_type is 'Career Fair' or e.event_type is 'fair':
+					my_events.append(e)	
+			else:
+				careerFair = False
+
+			if request.POST.get('Application Deadline'):
+				if e.event_type is 'Application Deadline' or e.event_type is 'app':
+					my_events.append(e)	
+			else:
+				app_deadline = False
+
+			if request.POST.get('Info Sessions'):
+				if e.event_type is 'Info Session' or e.event_type is 'info':
+					my_events.append(e)	
+			else:
+				infoSession = False
+
+			if request.POST.get('Other') and e.event_type is 'Other':
+				my_events.append(e)	
+			elif e.event_type is 'Other':
+				other = False
 
 	#my_events = request.user.events.all()
-	print my_events
-	my_new_events = request.user.profile.events.none()
-	if request.method == "POST":
-		if request.POST.get('Interviews'):
-			my_new_events = my_events.filter(event_type = 'int') | my_new_events
-		else:
-			interview = False
+	# my_new_events = request.user.profile.events.none()
+	# if request.method == "POST":
+	# 	if request.POST.get('Interviews'):
+	# 		my_new_events = my_events.filter(event_type = 'int') | my_new_events
+	# 	else:
+	# 		interview = False
 
-		if request.POST.get('Career Fairs'):
-			my_new_events = my_events.filter(event_type = 'fair') | my_new_events
-		else:
-			careerFair = False
+	# 	if request.POST.get('Career Fairs'):
+	# 		my_new_events = my_events.filter(event_type = 'fair') | my_new_events
+	# 	else:
+	# 		careerFair = False
 
-		if request.POST.get('Application Deadline'):
-			my_new_events = my_events.filter(event_type = 'app') | my_new_events
-		else:
-			app_deadline = False
+	# 	if request.POST.get('Application Deadline'):
+	# 		my_new_events = my_events.filter(event_type = 'app') | my_new_events
+	# 	else:
+	# 		app_deadline = False
 
-		if request.POST.get('Info Sessions'):
-			my_new_events = my_events.filter(event_type = 'info') | my_new_events
-		else:
-			infoSession = False
+	# 	if request.POST.get('Info Sessions'):
+	# 		my_new_events = my_events.filter(event_type = 'info') | my_new_events
+	# 	else:
+	# 		infoSession = False
 
-		if request.POST.get('Other'):
-			my_new_events = my_events.filter(event_type = 'other') | my_new_events
-		else:
-			other = False
+	# 	if request.POST.get('Other'):
+	# 		my_new_events = my_events.filter(event_type = 'other') | my_new_events
+	# 	else:
+	# 		other = False
 
-		my_events = my_new_events
+	# 	my_events = my_new_events
 
 	def start_date(o):
 		return o.event_date.day
