@@ -25,6 +25,16 @@
 				<th>Event Description:</th> 
 				<td>{{ event_description }}</td>
 			</tr>
+			{% if companies %}
+			<tr>
+				<th>Companies:</th> 
+				<td> 
+					{% for c in companies %}
+					<a href="{% url 'companies' c %}">{{ c }}</a></td>
+					{% endfor %}
+			</tr>
+			{% endif %}
+
 			<tr>
 				<th>Date:</th> 
 				<td>
@@ -41,14 +51,12 @@
 			</tr>
 		</tbody>
 	</table>
-	<div class="col-sm-5" style="text-align:right;">
+	<div class="col-sm-5" style="text-align:right; margin-right:10px">
 		<p> <a href="{{ google_link }}">Sync with Google Calendar</a> </p>
 
-		<br />
-		<!-- <input type="button" onclick="history.back();" style="margin-right:10px;" value="Back" /> -->
-		<button class="btn btn-default btn-small" onclick="history.back();" style="margin-right:10px;" value="Back">Back</button>
+		<button class="btn btn-default btn-small" onclick="history.back();" value="Back">Back</button>
+		<a href="../../../edit/event/{{ event.id }}"><button style="color:black" type="submit" name="event_edit" class="btn btn-default btn-small" value="{{ event_name }}">Edit</button></a>
 	</div>
-	<!--<a href="../../edit/event/{{ event_name }}"><button style="color:black" type="submit" name="event_edit" class="btn btn-default btn-small" value="{{ event_name }}">Edit</button></a>-->
 </div>
 {% endblock %}
 

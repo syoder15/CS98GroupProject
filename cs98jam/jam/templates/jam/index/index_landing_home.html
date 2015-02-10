@@ -16,9 +16,7 @@
 		</a>
 		-->
 			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
-			{% if notificationList|get_notifications:forloop.counter0 != 0 %}
-				({{ notificationList|get_notifications:forloop.counter0 }})
-			{% endif %}	
+			
 			
 
 		</form>
@@ -68,6 +66,10 @@
 				{% for a in app_list %}
 					<p style="color:red; font-size:2em"> {{ a }} </p>
 				{% endfor %}
+				
+				{% if events %}
+					<p><b>Upcoming Events:</b></p>
+				{% endif %}	
 				{% for e in events %}
 					<p><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{e}} - {{e.event_date}} - {{e.start_time}}</a></p>
 				{% endfor %}
@@ -76,6 +78,12 @@
 				    <p><a target="_blank" href="{{k}}">{{v}}</a></p>
 				{% endfor %}
 				-->
+				{% if news_feed_notes %}
+					<p><b>Recent Channel Notes:</b></p>
+				{% endif %}
+				{% for note in news_feed_notes %}
+					<p>{{ note.home_channel }}</b> - {{ note.text }} - {{ note.created_at }}</p> 
+				{% endfor %}
 			{% endif %}
 		</div>
 		<!-- <div class="push"></div> -->

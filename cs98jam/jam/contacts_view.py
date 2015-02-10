@@ -25,9 +25,12 @@ from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
 from dateutil import rrule
+from django.views.decorators.csrf import csrf_exempt
 
 upload_form = UploadFileForm
 
+@login_required
+@csrf_exempt
 def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
 	data = request.POST
@@ -115,6 +118,8 @@ def contacts(request, contact_name):
 
 	return render(request, 'jam/contacts/contacts.html', context)
 
+@login_required
+@csrf_exempt
 def contacts_page(request, contact_name):
 	contacts = request.user.contact_set.all()
 	contact = request.user.contact_set.filter(name=contact_name).first()
@@ -164,6 +169,7 @@ def edit_contact(request, contact_name):
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
 
+@login_required
 def new_contact(request):
 	form_data = request.POST
 	

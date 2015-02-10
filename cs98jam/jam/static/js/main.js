@@ -38,25 +38,38 @@ function timeValidation(time) {
 		return false;
 	}
 
-	if ( splitMinute[1].toUpperCase() !== 'AM' && splitMinute[1].toUpperCase() !== 'PM' ) {
-		alert("You must enter a valid time including either 'AM' or 'PM'.");
-		return false;
-	} 
+	if(typeof splitMinute[1] !== 'undefined'){
+		if ( splitMinute[1].toUpperCase() !== 'AM' && splitMinute[1].toUpperCase() !== 'PM' && 
+			splitMinute[1].toUpperCase() !== 'P.M.' && splitMinute[1].toUpperCase() !== 'A.M.' ) {
+			alert("You must enter a valid time including either 'AM' or 'PM'.");
+			return false;
+		} 
+	}	
 
 	return true;
 };
 
 function startEndTimeValidation(startTime, endTime) {
-	var startTime = startTime.split(':');
-	var endTime = endTime.split(':');
-	var startMin = startTime[1].split(" ");
-	var endMin = endTime[1].split(" ");
 
-	if ((startMin[1] !== null) && (startMin[1].toLowerCase() == 'pm')) {
+	var start_time =  startTime.split(':');
+	var end_time = endTime.split(':');
+	var startMin = start_time[1].split(" ");
+	var endMin = end_time[1].split(" ");
+
+
+	if (typeof(startMin[1]) !== 'undefined' && startMin[1].toLowerCase() == 'p.m.') {
+		startMin[1] = 'PM';
+	}
+
+	if ( (typeof(endMin[1]) !== 'undefined') &&  endMin[1].toLowerCase() == 'p.m.') {
+		startMin[1] = 'PM';
+	}
+
+	if ( (typeof(startMin[1]) !== 'undefined') && (startMin[1].toLowerCase() == 'pm')) {
 		startTime[0] += 12;
 	}
 
-	if ((endMin[1] !== null) && (endMin[1].toLowerCase == 'pm')) {
+	if ( (typeof(endMin[1]) !== 'undefined') && (endMin[1].toLowerCase() == 'pm')) {
 		endTime[0] += 12;
 	}
 

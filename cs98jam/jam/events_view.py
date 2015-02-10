@@ -33,6 +33,7 @@ upload_form = UploadFileForm
 # We made slight edits which include comments below. These edits were made in order to allow user-specific
 # calendars for our Events page
 ######################################################################################
+@login_required
 def add_event(
 	request,
 	template='swingtime/add_event.html',
@@ -117,12 +118,18 @@ def startEndTimeValidation(start_time, end_time):
 
 	error = ''
 	print "about to convert"
-	if (startMin[1].lower() == 'pm'):
-		startTime[0] = int(startTime[0]) + 12
-		print "first block"
-	if (endMin[1].lower() == 'pm'):
-		endTime[0] = int(endTime[0]) + 12
-		print "second block"
+
+
+	if len(startMin) > 1: 
+		if (startMin[1].lower() == 'p.m.'):
+			startMin[1] = 'pm'
+		if (startMin[1].lower() == 'pm'):
+			startTime[0] = int(startTime[0]) + 12
+			print "first block"
+	if len(endMin) > 1:
+		if (endMin[1].lower() == 'pm'):
+			endTime[0] = int(endTime[0]) + 12
+			print "second block"
 
 	'''if ( endTime[0] < startTime[0] or (endTime[0] == startTime[0] and int(endMin[0]) < int(startMin[0]))):
 		error = "Your start time must be before your end time. Please try again."
@@ -137,6 +144,7 @@ def startEndTimeValidation(start_time, end_time):
 	print "inside startEnd validation"
 	return (start,end)
 
+@login_required
 def new_event(request):
 	if request.method == "POST":
 		form_data = request.POST
@@ -190,6 +198,7 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+@login_required
 def events_page(request, event_id, event_name):
 	events = request.user.events.all()
 	#event = request.user.events.filter(id=event_id)
@@ -208,29 +217,49 @@ def events_page(request, event_id, event_name):
 	event_desc = urlify(event_description)
 	google_link = "http://www.google.com/calendar/event?action=TEMPLATE&text=" + event_title + "&dates=" + str(event_date.year) + str(event_date.month).zfill(2) + str(event_date.day).zfill(2) + "T" + str(start_time.hour +5).zfill(2) + str(start_time.minute).zfill(2) + "00Z/" + str(event_date.year) +  str(event_date.month).zfill(2) + str(event_date.day).zfill(2) + "T" + str(end_time.hour + 5).zfill(2) + "" +  str(end_time.minute).zfill(2) + "00Z&details=" + event_desc
 
-	context = {'events': events, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels}
+	company_text = event.companies
+	if company_text:
+		comps = company_text.split(",")
+	else:
+		comps = ''
+
+	companies = []
+	for c in comps:
+		if request.user.company_set.filter(name=c).exists():
+ 			companies.append(c)
+
+
+	context = {'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
+	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
 
 	return render(request, 'events/event_detail_page.html', context)
 
 @login_required
-def edit_event(request, event_id, event_name):
+def edit_event(request, event_id):
 	form_data = request.POST
 
 	user = User.objects.get(username=request.user.username)
-	event = request.user.event_set.filter(id=event_id)
+	event = request.user.events.get(id=event_id)
 
 	if form_data:
-		#redirect_link = '../../../calendar/' +  event.event_date.strptime('%Y') + '/' + event.event_date.strptime('%m')
-		redirect_link = ''
-		
+		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
+
 		if user and event: 
-			company.name=form_data.get('company_name')
-			company.application_deadline=form_data.get('app_deadline')
+			event.name=form_data.get('event_name')
+			event.event_type=form_data.get('event_type')
+			event.description=form_data.get('description')
+			event.companies=form_data.get('companies')
+			event.event_date=form_data.get('event_date')
+			event.start_time=startTime
+			event.end_time=endTime
 			event.save()
 
+			datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+			redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
+			return HttpResponseRedirect(redirect_link)
+
 		else:
-			event = jam_event(name=event_name,
+			event = jam_event(name=form_data.get('event_name'),
 						  event_type=form_data.get('event_type'),
 						  description=form_data.get('description'),
 						  companies=form_data.get('companies'),
@@ -240,18 +269,22 @@ def edit_event(request, event_id, event_name):
 						  creator=request.user)
 			event.save()
 			request.user.events.add(event)
-			
-		return HttpResponseRedirect(redirect_link)
 
-	#app_deadline = company.application_deadline
-	#app_deadline = str(app_deadline)
-	#datetime.strptime(app_deadline, "%Y-%m-%d")
+			datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+			redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
+			return HttpResponseRedirect(redirect_link)
 
-	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes, "controlled_channels": request.user.controlledChannels}
+	event_date = event.event_date
+	event_date = str(event_date)
+	datetime.strptime(event_date, "%Y-%m-%d")
 
-	return render(request, 'jam/companies/company_page_edit.html', context)
+	context = {'event': event, 'event_name': event.name, 'description': event.description, 'event_date': event_date,
+	'start_time': event.start_time, 'end_time': event.end_time, 'creator': event.creator, 'event_type': event.event_type, 
+	'companies': event.companies}
 
+	return render(request, 'events/event_edit.html', context)
 
+@login_required
 def month_view(
 	request,
 	year,
@@ -294,41 +327,40 @@ def month_view(
 	other       = True
     # dtend       = datetime(year, month, last_day)
 
+	if len(str(month)) < 2:
+		month = '-0' + str(month) + '-'
+	else:
+		month = "-" + str(month) + "-"
 	#### JAM CODE ####
-	my_events = request.user.profile.events.all() #access all of the users events
-	my_events = []
+	
+	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
 
-	for e in request.user.events.all():
-		e_month = e.event_date.month
-		if month is e_month:
-			my_events.append(e)
-
-	#my_events = request.user.events.all()
-	print my_events
 	my_new_events = request.user.profile.events.none()
+	print month
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
-			my_new_events = my_events.filter(event_type = 'int') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Interview') | my_new_events
+			print my_new_events
 		else:
 			interview = False
 
 		if request.POST.get('Career Fairs'):
-			my_new_events = my_events.filter(event_type = 'fair') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Career Fair') | my_new_events
 		else:
 			careerFair = False
 
 		if request.POST.get('Application Deadline'):
-			my_new_events = my_events.filter(event_type = 'app') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Application Deadline') | my_new_events
 		else:
 			app_deadline = False
 
 		if request.POST.get('Info Sessions'):
-			my_new_events = my_events.filter(event_type = 'info') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Info Session') | my_new_events
 		else:
 			infoSession = False
 
 		if request.POST.get('Other'):
-			my_new_events = my_events.filter(event_type = 'other') | my_new_events
+			my_new_events = my_events.filter(event_type = 'Other') | my_new_events
 		else:
 			other = False
 
@@ -361,6 +393,7 @@ def month_view(
 
 	return render(request, template, data)
 
+@login_required
 def event_listing(
 	request,
 	template='swingtime/event_list.html',
@@ -388,7 +421,7 @@ def event_listing(
 		
 		#changed request.user.profile.events.all() to Event.objects.all() in order to only grab the current user's events
 	)
-
+@login_required
 def year_view(request, year, template='swingtime/yearly_view.html', queryset=None):
 	'''
 
@@ -446,7 +479,7 @@ def year_view(request, year, template='swingtime/yearly_view.html', queryset=Non
 	})
 
 #-------------------------------------------------------------------------------
-
+@login_required
 def event_view(
 	request, 
 	pk, 
@@ -509,6 +542,7 @@ def event_view(
 		return HttpResponseRedirect("/jam/events")
 
 #-------------------------------------------------------------------------------
+@login_required
 def occurrence_view(
 	request, 
 	event_pk, 
