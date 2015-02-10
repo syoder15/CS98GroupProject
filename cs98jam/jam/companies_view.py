@@ -25,6 +25,7 @@ from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
 from dateutil import rrule
+from django.views.decorators.csrf import csrf_exempt
 
 
 upload_form = UploadFileForm
@@ -94,7 +95,7 @@ def new_company(request):
 			print "before evt"
 			evt = jam_event(
 				name=title,
-				event_type='app',
+				event_type='Application Deadline',
 				description='',
 				companies=company_name,
 				start_time='12:00',
@@ -128,6 +129,7 @@ def new_company(request):
 			return render(request, 'jam/index/index_landing_home.html', context)
 
 @login_required
+@csrf_exempt
 def company_page(request, company_name):
 	companies = request.user.company_set.all()
 	company = request.user.company_set.filter(name=company_name).first()
@@ -189,6 +191,7 @@ def edit_company(request, company_name):
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
 @login_required
+@csrf_exempt
 def companies(request, company_name):
 	companies = request.user.company_set.all()
 	data = request.POST
