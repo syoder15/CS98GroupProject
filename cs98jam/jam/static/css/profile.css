@@ -108,3 +108,17 @@ h2 {
 .profile-form label {
 	font-size:16px;
 }
+
+@media screen and (max-width: 1000px){
+
+}
+
+@media screen and (max-width: 768px){
+	.banner-picture {
+		height: 10em;
+	}
+
+/*	.table-profile {
+		margin-left:-10px;
+	}*/
+}

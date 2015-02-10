@@ -120,13 +120,17 @@ button:hover {
 	display: none;
 }
 
-.table-events thead tr th, .table-events tbody tr th {
+.table-events thead tr th, 
+.table-events tbody tr th {
 	border:none;
+	text-align: right; 
 }
 
-.table-events thead tr td, .table-events tbody tr td {
+.table-events thead tr td, 
+.table-events tbody tr td {
    width:100%;
    white-space: nowrap; 
+   border: none; 
 }
 
 .event-times {

@@ -152,7 +152,7 @@ a:link, a:visited {
 }*/
 
 .menuBar{
-	height:70px;
+	height:55px;
 }
 
 .newsfeed-bar {
@@ -215,4 +215,15 @@ a:link, a:visited {
 
 .col-sm-9 {
 	padding-bottom: 15px;
+}
+
+@media screen and (max-width: 768px){
+	.menuBar{
+		height:50px;
+	}
+
+	.details-body {
+		float:left; 
+	}
+
 }
