@@ -134,17 +134,14 @@ def company_page(request, company_name):
 	companies = request.user.company_set.all()
 	company = request.user.company_set.filter(name=company_name).first()
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
-	events = request.user.profile.events.all()
+	events = request.user.events.all()
 	application_deadline = company.application_deadline
 	company_notes = company.notes
 	link = company.link
 	has_link = False
 	if link != '':
 		has_link = True
-	print "company notes: " + company_notes
-
-	print "has link's value is " + has_link
-	print "link = " + link
+	
 
 	site = settings.DOMAIN
 
@@ -198,17 +195,17 @@ def companies(request, company_name):
 	show_company = True
 	user = User.objects.get(username = request.user.username)
 
+	
 
 	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
 	if(data):
 		company_edit = False
-		print "got to post"
+		
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 
 		if("export" in data):
-			print "export in data"
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
 			f = open(os.path.join(path_name, "companies.txt"), "w")
@@ -219,16 +216,16 @@ def companies(request, company_name):
 			company_name = data.get('name')
 			company = request.user.company_set.filter(name=company_name).first()
 
-			print "about to save company"
+		
 			company.name = company_name
 			company.application_deadline=data.get('application_deadline')
 			company.notes=data.get('notes')
 			company.link = data.get('app_link')
 			company.save()
-			print "saved company"
+			
 
 		elif('delete' in data):
-			print 'delete in data'
+		
 			company_name = data.get('delete')
 			event_title = str(company_name) + ' Deadline'
 			company = request.user.company_set.filter(name=company_name)
@@ -241,26 +238,22 @@ def companies(request, company_name):
 					break
 
 		elif(go_home == ("Back")):
-			print "go home"
 			show_company = False
 		elif('company_update' in data):
-			print "APP STATUS"
+			
 			#c_name = data.get('app_status')
 			if ('company_edit' in data): 
 				company_edit = True 
 				show_company = False 
 			company_list = data.getlist('app_status[]')
-			print company_list
+			
 			for company in companies: 
 				if company.name in company_list: 
 					company = request.user.company_set.get(name=company.name)
 					company.application_status = True
-
-					print company.name + " is COMPLETE"
 					company.save()
 				else:
 					company.application_status = False
-					print company.name + " IS NOT COMPLETE"
 					company.save()
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
@@ -319,9 +312,8 @@ def companies(request, company_name):
 		if company_name != 'all':
 			company = request.user.company_set.get(name=company_name)
 			contacts = Contact.objects.filter(user=request.user, employer=company_name)
-			
-
-			context = {'companies': companies, 'company_name': company.name, 
+			events = company.events.all()
+			context = {'companies': companies, 'company_name': company.name, 'events': events,			
 			'application_deadline': company.application_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 
