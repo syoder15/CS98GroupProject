@@ -7,6 +7,8 @@ var companyForm = $('.company_form');
 var eventForm = $('.event_form');
 var addFileButton = $("#id_filep");
 
+var submit = false;
+
 function importMain(){
     var x = document.createElement('script');
     x.src = '../js/main.js';
@@ -37,22 +39,35 @@ addFileButton.mouseenter(function(){
 	$("#format_reminder").css('opacity', '1.0');
 });
 
+//THIS IS THE ON CHANGE FOR FILE UPLOAD
+addFileButton.on('change', function() {
+	console.log("HERE");
+	submit = true;
+	console.log(addFileButton.val());
+	$('#hidden_submit').trigger('click');
+	//companyForm.submit();
+	//$('#company_deadline_input').val('2049-12-31');
+	//companyForm.submit(); //DOES NOT ENTER submitCompanyForm in validation
+});
+
+$('#company_deadline_input').on('blur', function(){
+	if (!submit){
+		console.log("in on blur");
+		validateDeadline('#company_deadline_input');
+	}
+});
+
+$('#company_name_input').on('blur', function(){
+	if(!submit){
+		console.log("in on blur");
+		validateName('#company_name_input');
+	}
+});
+
 addFileButton.mouseleave(function(){
 	console.log('HOVERING');
 	$("#format_reminder").css('opacity', '0.0');
 });
-
-
-/*
-//THIS IS THE ON CHANGE FOR FILE UPLOAD
-addFileButton.on('change', function() {
-	console.log("HERE");
-	$('#company_deadline_input').val('2049-12-31');
-	companyForm.submit(); //DOES NOT ENTER submitCompanyForm in validation
-});
-*/
-	
-
 
 function getCookie(name) {
     var cookieValue = null;

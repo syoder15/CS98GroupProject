@@ -278,6 +278,11 @@ function submitCompanyForm(event){
 	event.preventDefault();
 	var file = $('#id_filep');
 	console.log("FILE = " + file.val());
+	if(file.val()){
+		console.log('file has value');
+		//companyForm.submit();
+	}
+
 	var me = $(this);
 	me.off('click');
 
