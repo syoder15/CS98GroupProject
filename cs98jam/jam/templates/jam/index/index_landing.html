@@ -1,19 +1,15 @@
 {% extends "../../jam/templates/jam/index/index.html" %}
 
 {% block content %}
-	<section class="container-fluid">
-		<div class="row">
-	        <div class="col-sm-3">
-	            {% block side_col %}
-	            	
-	            {% endblock %}
-	        </div>
+	<div class="col-sm-3 left-bar">
+        {% block side_col %}
+        	
+        {% endblock %}
+    </div>
 
-	        <div class="col-sm-9">
-	            {% block main_col %}
+    <div class="col-sm-9 details-body">
+        {% block main_col %}
 
-	            {% endblock %}
-	        </div>
-	    </div>
-    <section>
+        {% endblock %}
+    </div>
 {% endblock %}

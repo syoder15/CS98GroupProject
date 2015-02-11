@@ -1,4 +1,4 @@
-{% extends "../../jam/templates/jam/index/index.html" %}
+{% extends "../../jam/templates/jam/index/index_landing_home.html" %}
 
 
 {% block styles %}
@@ -102,9 +102,12 @@
 {% endblock %}
 
 {% block javascript %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.css' %}">
-<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
-<script src="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.js' %}"></script>
-<script src="{% static 'js/events.js' %}"></script>
+    <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/handlers.js' %}"></script>
+    <script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/validation.js' %}"></script>
+
 {% endblock %}
