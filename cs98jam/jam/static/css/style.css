@@ -4,7 +4,7 @@ ul, li {
     padding: 0;
 } 
 
-html, body, section {
+html, body {
 	background-color: #efefef !important;
 	height: 100%;
 }
@@ -41,7 +41,8 @@ html, body, section {
 }
 
 a:link, a:visited {
-	color: #4166F5;
+	/*color: #4166F5;*/
+	color: #ab445b; 
 }
 
 #userIcon {
@@ -117,17 +118,19 @@ a:link, a:visited {
     height: 0;
     padding-bottom: 55px;
     border-radius: 50%;
-    border: 2px solid #f5f5f5;
+    border: 2px solid #fbfafa;
     overflow: hidden;
-    background: #e6e6e6;
+    background: #ebe6e3;
     box-shadow: 0 0 3px gray;
     margin: 0px 2px;
 }
+
 .round-button:hover {
-    background: #4099FF;
+    /*background: #786257;*/
+    background: #ab445b;
     cursor:pointer;
-    /*background: #e6e6e6;*/
 }
+
 .round-button img {
     display: block;
     width: 100%;
@@ -150,6 +153,26 @@ a:link, a:visited {
 	width: 60%; 
 	margin: 0% 20%;
 }*/
+
+.navbar-default {
+	background-color: #786257;
+	border-color: #bfc98c;
+}
+
+.navbar-default a {
+	color:blue;
+}
+
+.navbar-default .navbar-brand {
+	/*color: #dfe3cf; the green of the page*/
+	color: #ebe6e3;
+}
+
+.navbar-default .navbar-brand:hover {
+	/*color: #f5f6f0; lighter hue of green*/
+	color: #fbfafa;
+}
+
 
 .container-fluid {
 	padding-left: 20px; 
@@ -223,13 +246,16 @@ a:link, a:visited {
 }
 
 .left-bar {
-	border-right:1px solid #c8c8c8; 
+	background-color:#bfc98c;
+	border-right:1px solid #786257; 
 	height:100vh; 
 }
 
 .details-body {
 	height:100vh;
-	background-color: #f5f5f5;
+	/*background-color: #f5f5f5;*/
+	/*background-color: #e3c6d4; */
+	background-color: #dfe3cf;
 }
 
 @media screen and (max-width: 768px){
