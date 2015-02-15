@@ -42,6 +42,8 @@ def contacts(request, contact_name):
 	if (data):
 		edit = False
 		go_home = data.get('back_home')
+		print go_home
+		print 'here'
 		if("export" in data): #if we want to output this as text file:
 			#import pdb; pdb.set_trace()
 			user = request.META['LOGNAME']

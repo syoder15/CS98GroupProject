@@ -7,7 +7,7 @@ var companyForm = $('.company_form');
 var eventForm = $('.event_form');
 var addFileButton = $("#id_filep");
 
-var submit = false;
+var submit_val = false;
 
 function importMain(){
     var x = document.createElement('script');
@@ -41,26 +41,29 @@ addFileButton.mouseenter(function(){
 
 
 //THIS IS THE ON CHANGE FOR FILE UPLOAD
-addFileButton.on('change', function() {
+/*addFileButton.on('change', function() {
 	console.log("HERE in add file");
-	submit = true;
+	submit_val = true;
 	console.log(addFileButton.val());
 	$('#hidden_submit').trigger('click');
+	console.log(submit_val);
 	//companyForm.submit();
 	//$('#company_deadline_input').val('2049-12-31');
 	//companyForm.submit(); //DOES NOT ENTER submitCompanyForm in validation
 });
+*/
 
 $('#company_deadline_input').on('blur', function(){
+
 	console.log('company deadline');
-	if (!submit){
+	if (!submit_val){
 		console.log("in on blur");
 		validateDeadline('#company_deadline_input');
 	}
 });
 
 $('#company_name_input').on('blur', function(){
-	if(!submit){
+	if(!submit_val){
 		console.log("in on blur");
 		validateName('#company_name_input');
 	}

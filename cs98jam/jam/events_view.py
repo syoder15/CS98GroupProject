@@ -172,6 +172,7 @@ def new_event(request):
 						  creator=request.user)
 		event.save()
 		request.user.events.add(event)
+		request.user.owned_events.add(event)
 
 		if request.user.controlledChannels.filter(name=form_data.get("channel")).exists():
 			channel = request.user.controlledChannels.filter(name=form_data.get("channel")).first()
@@ -197,6 +198,7 @@ def new_event(request):
 
 @login_required
 def events_page(request, event_id, event_name):
+	data = request.POST
 	events = request.user.events.all()
 	#event = request.user.events.filter(id=event_id)
 	event = request.user.events.get(id=event_id)
@@ -224,7 +226,16 @@ def events_page(request, event_id, event_name):
 	for c in comps:
 		if request.user.company_set.filter(name=c).exists():
  			companies.append(c)
-
+ 	
+ 	
+ 	if('delete' in data):
+ 		delete_event(request, event_id)
+ 		
+ 		month = str(event_date)[5:7]
+ 		year = str(event_date)[0:4]
+ 		link = "/jam/calendar/" + str(year) + '/' + str(month)
+ 		
+ 		return HttpResponseRedirect(link)
 
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
@@ -268,6 +279,7 @@ def edit_event(request, event_id):
 						  creator=request.user)
 			event.save()
 			request.user.events.add(event)
+			request.user.owned_events.add(event)
 
 			datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
 			redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
@@ -282,6 +294,14 @@ def edit_event(request, event_id):
 	'companies': event.companies}
 
 	return render(request, 'events/event_edit.html', context)
+
+def delete_event(request, event_id):
+	event = request.user.events.get(id=event_id)
+	owned_event = request.user.owned_events.get(id=event_id)
+
+	event.delete()
+	owned_event.delete()
+
 
 @login_required
 def month_view(
