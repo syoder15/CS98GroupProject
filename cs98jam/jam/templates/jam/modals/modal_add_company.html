@@ -8,7 +8,7 @@
         <h4 class="modal-title" id="myModalLabel">New Company</h4>
       </div>
       <div class="modal-body">
-        <form name="company_form" class="company_form form-horizontal" enctype="multipart/form-data" action="new_company/" method="POST">
+        <form name="company_form" class="company_form form-horizontal" enctype="multipart/form-data" action="http://127.0.0.1:8000/jam/new_company/" method="POST">
 			{% csrf_token %}
 			<div class="form-group"> 
 				<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
@@ -76,7 +76,7 @@
 	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
 	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
 	<script src="{% static 'js/main.js' %}"></script>
-		<script src="{% static 'js/handlers.js' %}"></script>
+	<script src="{% static 'js/handlers.js' %}"></script>
 	<script src="{% static 'js/validation.js' %}"></script>
 
 {% endblock %}

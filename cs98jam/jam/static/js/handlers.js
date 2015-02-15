@@ -39,9 +39,10 @@ addFileButton.mouseenter(function(){
 	$("#format_reminder").css('opacity', '1.0');
 });
 
+
 //THIS IS THE ON CHANGE FOR FILE UPLOAD
 addFileButton.on('change', function() {
-	console.log("HERE");
+	console.log("HERE in add file");
 	submit = true;
 	console.log(addFileButton.val());
 	$('#hidden_submit').trigger('click');
@@ -51,6 +52,7 @@ addFileButton.on('change', function() {
 });
 
 $('#company_deadline_input').on('blur', function(){
+	console.log('company deadline');
 	if (!submit){
 		console.log("in on blur");
 		validateDeadline('#company_deadline_input');

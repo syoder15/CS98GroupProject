@@ -275,6 +275,7 @@ function submitCompanyForm(event){
 		//return;
 	}
 	*/
+	console.log("IN SUBMIT COMPANY");
 	event.preventDefault();
 	var file = $('#id_filep');
 	console.log("FILE = " + file.val());
