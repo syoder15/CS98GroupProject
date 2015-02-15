@@ -35,6 +35,7 @@ function validateDeadline(deadline_id){
 }
 
 function validateTimes(start_id, end_id){
+	console.log("validateTimes");
 	var start = $('#' + start_id).val();
 	var end = $('#' + end_id).val();
 	var msg = startEndTimeValidation(start, end);

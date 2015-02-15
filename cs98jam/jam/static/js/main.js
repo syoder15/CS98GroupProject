@@ -50,13 +50,16 @@ function timeValidation(time) {
 };
 
 function startEndTimeValidation(startTime, endTime) {
-
-	console.log("GOT INTO HTIS FUNCTION");
 	var start_time =  startTime.split(':');
 	var end_time = endTime.split(':');
+
+	if ( startTime.indexOf(':') < 0 || endTime.indexOf(':') < 0 ) {
+		var msg = 'Your time must include a colon (:)';
+		return msg;
+	}
+
 	var startMin = start_time[1].split(" ");
 	var endMin = end_time[1].split(" ");
-
 
 	if (typeof(startMin[1]) !== 'undefined' && ( startMin[1].toLowerCase() == 'p.m.'  || startMin[1].toLowerCase() == 'pm' ) ){
 		//startMin[1] = 'PM';
