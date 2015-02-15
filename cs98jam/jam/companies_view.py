@@ -273,6 +273,14 @@ def companies(request, company_name):
 				app_deadline = company.application_deadline
 				
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
+			
+			for e in request.user.events.all():
+				for c in e.companies.split(','):
+					if c.strip() == company.name:
+						company.events.add(e)
+			
+			
+			
 			events = company.events.all()
 			notes = company.notes
 
