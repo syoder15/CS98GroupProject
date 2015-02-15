@@ -14,7 +14,7 @@
 	</form>
 	
 	<br>
-	<p><b> Recent Notes from Admins: <b></p>
+	<p><b> Recent Notes from Admins: </b></p>
 	{% for note in adminNotes.all %}
 			<p>{{ note.text }} - {{ note.author }} @ {{ note.created_at }}</p>
 	{% endfor %}
