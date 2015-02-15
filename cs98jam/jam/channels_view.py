@@ -13,7 +13,7 @@ import json
 
 from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
 from django.http import HttpResponseRedirect
-
+from django.db.models import Count
 from swingtime import utils, forms
 from swingtime import models as swingmodel
 from dateutil import parser
@@ -38,8 +38,13 @@ def channel_list(request):
 	sub_channels = request.user.channel_set.all()
 
 	# get channels in order of creation, starting with the most recent 
-	channels = Channel.objects.order_by('-added').all()
+	#channels = Channel.objects.order_by('-added').all()
 
+	
+	channels = Channel.objects.all().annotate(
+				   subscriber_count=Count('subscribers')
+				).order_by('-subscriber_count')
+	
 	error = ''
 	if(form_data):
 		if 'search_category' in form_data:
