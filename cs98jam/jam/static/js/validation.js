@@ -35,6 +35,7 @@ function validateDeadline(deadline_id){
 }
 
 function validateTimes(start_id, end_id){
+	console.log("validateTimes");
 	var start = $('#' + start_id).val();
 	var end = $('#' + end_id).val();
 	var msg = startEndTimeValidation(start, end);
@@ -265,15 +266,25 @@ $('.company-btn').on('click', submitCompanyForm);
 	//disable button during a submit to prevent double submission
 
 function submitCompanyForm(event){	
-	/*     UPLOAD MULTIPLE
+	//UPLOAD MULTIPLE
+	/*
 	console.log("submitting companyForm");
 	var file = $('#id_filep');
 	if (file.val()){
 		console.log("file has value");
 		companyForm.submit();
-		return;
-	}*/
+		//return;
+	}
+	*/
+	console.log("IN SUBMIT COMPANY");
 	event.preventDefault();
+	var file = $('#id_filep');
+	console.log("FILE = " + file.val());
+	if(file.val()){
+		console.log('file has value');
+		//companyForm.submit();
+	}
+
 	var me = $(this);
 	me.off('click');
 
@@ -286,6 +297,7 @@ function submitCompanyForm(event){
 	
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
+		console.log("GOT TO THIS PART");
 		me.on('click', submitCompanyForm);
 		me.data('requestRunning', false);
 		return false;
@@ -308,7 +320,7 @@ function submitCompanyForm(event){
 	var formName = $('.company_form').attr('name');
 
 	var donezo = false;
-
+	console.log("GOT HERE");
   	// xhr = 
 
   	$.ajaxSetup({
