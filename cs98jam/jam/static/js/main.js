@@ -62,16 +62,19 @@ function startEndTimeValidation(startTime, endTime) {
 	var endMin = end_time[1].split(" ");
 
 	if (typeof(startMin[1]) !== 'undefined' && ( startMin[1].toLowerCase() == 'p.m.'  || startMin[1].toLowerCase() == 'pm' ) ){
-		//startMin[1] = 'PM';
-		start_time[0] = start_time[0] + 12;
+		startMin[1] = 'PM';
+		if (parseInt(start_time[0]) !== 12) { 
+			start_time[0] = parseInt(start_time[0]) + 12;
+		}
 		console.log("start Time is " + start_time[0]);
 	}
 
 	if ( (typeof(endMin[1]) !== 'undefined') &&  ( endMin[1].toLowerCase() == 'p.m.' || endMin[1].toLowerCase() == 'pm' )) {
-		//startMin[1] = 'PM';
-		end_time[0] = end_time[0] + 12;
+		endMin[1] = 'PM';
+		if (parseInt(end_time[0]) !== 12) { 
+			end_time[0] = parseInt(end_time[0]) + 12;
+		}
 		console.log("end Time is " + end_time[0]);
-
 	}
 
 	if ( end_time[0] < start_time[0] ) {
@@ -80,9 +83,7 @@ function startEndTimeValidation(startTime, endTime) {
 		return msg;
 	}
 
-	
-
-	if (end_time[0] == start_time[0] && endMin[0] < startMin[0]) {
+	if (end_time[0] == start_time[0] && parseInt(endMin[0]) < parseInt(startMin[0])) {
 		//alert("Your start time must be before your end time. Please try again.");
 		var msg = "Your start time must be before your end time. Please try again.";
 		return msg;
