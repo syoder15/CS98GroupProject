@@ -35,6 +35,7 @@ function validateDeadline(deadline_id){
 }
 
 function validateTimes(start_id, end_id){
+	console.log("validateTimes");
 	var start = $('#' + start_id).val();
 	var end = $('#' + end_id).val();
 	var msg = startEndTimeValidation(start, end);
@@ -275,9 +276,15 @@ function submitCompanyForm(event){
 		//return;
 	}
 	*/
+	console.log("IN SUBMIT COMPANY");
 	event.preventDefault();
 	var file = $('#id_filep');
 	console.log("FILE = " + file.val());
+	if(file.val()){
+		console.log('file has value');
+		//companyForm.submit();
+	}
+
 	var me = $(this);
 	me.off('click');
 

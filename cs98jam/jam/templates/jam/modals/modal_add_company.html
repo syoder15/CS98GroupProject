@@ -8,23 +8,30 @@
         <h4 class="modal-title" id="myModalLabel">New Company</h4>
       </div>
       <div class="modal-body">
-        <form name="company_form" class="company_form form-horizontal" action="/new_company" method="POST">
+        <form name="company_form" class="company_form form-horizontal" enctype="multipart/form-data" action="http://127.0.0.1:8000/jam/new_company/" method="POST">
 			{% csrf_token %}
 			<div class="form-group"> 
 				<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
 				<div class="col-sm-8"> 
-					<input id="company_name_input" class="form-control" name="name" placeholder="Google" onblur="validateName(this.id)"/>
+					<input id="company_name_input" class="form-control" name="name" placeholder="Google"/> <!--onblur="validateName(this.id)"/>-->
 					<span class="error" name="company_name_input" style="display:none; background-color: white; color: red"> </span>
 
 				</div>
 			</div>
-			<div class="form-group"> 
+			<!--<div class="form-group"> 
 				<label for="company_deadline_input" class="col-sm-4 control-label">Application Deadline: </label>
 				<div class="col-sm-8">
-					<input id="company_deadline_input" class="form-control" name="deadline" placeholder="YYYY-MM-DD" onblur="validateDeadline('company_deadline_input')"/>
+					<input id="company_deadline_input" class="form-control" name="deadline" placeholder="YYYY-MM-DD"/>
 					<span class="error-message" style="display:none; color:red;"> {{ validity }} </span>
 				</div>
+			</div>-->
+			<div class="form-group">
+					<label for="company_deadline_input" class="col-md-4 control-label">Application Deadline 2: </label>
+					<div class="col-md-8">
+						<input id="company_deadline_input" class="form-control" name="deadline" placeholder="YYYY-MM-DD" required />
+					</div>
 			</div>
+
 
 			<div class="form-group"> 
 				<label for="company_app_link" class="col-sm-4 control-label">Link to Application: </label>
@@ -49,6 +56,10 @@
 					{{ upload_form.filep }}
 				</div>
 			</div>
+			<div>
+				<input type="submit" id="hidden_submit" style="background:transparent; border:none; color:transparent;">
+      		</div>
+
 			<div id="format_reminder" style="opacity:0" class="form-group">
 				<p style="text-align:center;" >
 					Please make sure your file is in the proper format:<br>
@@ -69,8 +80,12 @@
 
 {% block javascript %}
 	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'js/companies.js' %}"></script>
 	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
 	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+	<script src="{% static 'js/contacts.js' %}"></script>
 	<script src="{% static 'js/validation.js' %}"></script>
-
 {% endblock %}

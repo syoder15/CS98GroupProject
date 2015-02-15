@@ -38,6 +38,10 @@ def new_company(request):
 		print "in new company upload multiple"
 		form = UploadFileForm(request.FILES)
 		read_from_file(request.user, request.FILES['filep'])
+		context = {'username': request.user.username}
+
+		#return render(request, 'jam/companies/companies.html', context)
+		return companies(request,'all')
 	elif request.method == "POST":
 		form_data = request.POST
 
