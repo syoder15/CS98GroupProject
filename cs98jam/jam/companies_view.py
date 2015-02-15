@@ -108,19 +108,11 @@ def new_company(request):
 				creator=request.user
 			)
 			evt.save()
-			print "after evt"
+
 			request.user.events.add(evt)
-			print "after events"
 			#request.user.owned_events.add(evt)
 			#print "after owned events"
-			
-			
 
-			print "making Company"
-			print company_name
-			print form_data.get('deadline')
-			print form_data.get('company_notes')
-			print request.user.username
 			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user, link=form_data.get('app_link'))
 
 			company.save()
@@ -135,6 +127,7 @@ def new_company(request):
 @login_required
 @csrf_exempt
 def company_page(request, company_name):
+	print 'company_page view'
 	companies = request.user.company_set.all()
 	company = request.user.company_set.filter(name=company_name).first()
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
@@ -149,14 +142,21 @@ def company_page(request, company_name):
 
 	site = settings.DOMAIN
 
+	app_deadline = str(application_deadline)
+	datetime.strptime(app_deadline, "%Y-%m-%d")
+
+	print 'app_deadline'
+	print app_deadline
+
 	context = {'company': companies, 'contacts': contacts,'status': company.application_status,'has_link': has_link, 'link': link, 
-	'events': events, 'company_name': company_name, 'application_deadline': application_deadline, 
+	'events': events, 'company_name': company_name, 'application_deadline': app_deadline, 
 	'company_notes': company_notes, 'site': site, "controlled_channels": request.user.controlledChannels}
 	
 	return render(request, 'jam/companies/company_page.html', context)
 
 @login_required
 def edit_company(request, company_name):
+	print 'edit company view'
 	form_data = request.POST
 
 	user = User.objects.get(username=request.user.username)
@@ -187,6 +187,9 @@ def edit_company(request, company_name):
 	app_deadline = str(app_deadline)
 	datetime.strptime(app_deadline, "%Y-%m-%d")
 
+	print 'app_deadline'
+	print app_deadline
+
 	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
@@ -194,6 +197,7 @@ def edit_company(request, company_name):
 @login_required
 @csrf_exempt
 def companies(request, company_name):
+	print 'companies view'
 	companies = request.user.company_set.all()
 	data = request.POST
 	show_company = True
@@ -227,6 +231,7 @@ def companies(request, company_name):
 			company.link = data.get('app_link')
 			company.save()
 			
+
 
 		elif('delete' in data):
 		
@@ -268,13 +273,12 @@ def companies(request, company_name):
 				c_name = data.get('company_edit')
 				company = request.user.company_set.get(name=c_name)
 				app_deadline = company.application_deadline.strftime('%Y-%m-%d')
-
 				# print "company edit"
 			else:
 				# print "company name in data"
 				c_name = data.get('company_name')
 				company = request.user.company_set.get(name=c_name)
-				app_deadline = company.application_deadline
+				app_deadline = company.application_deadline.strftime('%Y-%m-%d')
 				
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			
@@ -295,9 +299,8 @@ def companies(request, company_name):
 
 			# print "has link's value is " + str(has_link)
 			# print "link = " + link
-
 			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
-			'application_deadline': company.application_deadline, 'status': company.application_status, 'show': show_company,
+			'application_deadline': app_deadline, 'status': company.application_status, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 
 			'events': events, 'link': link, 'has_link': has_link, "controlled_channels": request.user.controlledChannels}
 
@@ -318,15 +321,25 @@ def companies(request, company_name):
 					break
 			'''
 
+			app_deadline = company.application_deadline
+			app_deadline = str(app_deadline)
+			datetime.strptime(app_deadline, "%Y-%m-%d")
+
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 	else:
+		print 'else'
 		if company_name != 'all':
 			company = request.user.company_set.get(name=company_name)
 			contacts = Contact.objects.filter(user=request.user, employer=company_name)
 			events = company.events.all()
+
+			app_deadline = company.application_deadline
+			app_deadline = str(app_deadline)
+			datetime.strptime(app_deadline, "%Y-%m-%d")
+
 			context = {'companies': companies, 'company_name': company.name, 'events': events,			
-			'application_deadline': company.application_deadline, 'show': show_company,
+			'application_deadline': app_deadline, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/companies/companies.html', context)
