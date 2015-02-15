@@ -56,6 +56,12 @@
 
 		<button class="btn btn-default btn-small" onclick="history.back();" value="Back">Back</button>
 		<a href="../../../edit/event/{{ event.id }}"><button style="color:black" type="submit" name="event_edit" class="btn btn-default btn-small" value="{{ event_name }}">Edit</button></a>
+		
+		<form class="delete" method="POST" action="">
+		{% csrf_token %}
+		<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ event.id }}" onclick="return confirm('Are you sure you want to delete {{ event_name }}?')">Delete</button>
+		</form>
+
 	</div>
 </div>
 {% endblock %}

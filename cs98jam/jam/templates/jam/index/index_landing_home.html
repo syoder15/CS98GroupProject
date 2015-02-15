@@ -35,7 +35,7 @@
 			{% if show %}
 				{% include "jam/channels/channel_feed.html" %}
 				
-				<p>All Events:</p>
+				<p><b>All Events:</b></p>
 				<ul>{% for e in unadded_e.all %}
 				<li>{{ e }} - {{e.start_time}}</li>
 				<form class="addEvent" method="POST">
