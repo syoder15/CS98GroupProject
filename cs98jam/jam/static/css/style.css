@@ -50,9 +50,6 @@ a:link, a:visited {
 	height: 25px;
 }
 
-.rightMargin {
-	margin-right:100px;
-}
 
 .carousel { z-index: -99; }
 
@@ -153,6 +150,10 @@ a:link, a:visited {
 	width: 60%; 
 	margin: 0% 20%;
 }*/
+
+.navbar-nav.navbar-right:last-child {
+	margin-right: 0px; 
+}
 
 .navbar-default {
 	background-color: #ab445b;
