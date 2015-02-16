@@ -115,18 +115,20 @@ def startEndTimeValidation(start_time, end_time):
 	endTime = end_time.split(':')
 	startMin = startTime[1].split(" ")
 	endMin = endTime[1].split(" ")
-
 	error = ''
+	print 'python'
+	print startTime[0]
 
 	if len(startMin) > 1: 
 		if (startMin[1].lower() == 'p.m.'):
 			startMin[1] = 'pm'
-		if (startMin[1].lower() == 'pm'):
+		if (startMin[1].lower() == 'pm' and int(startTime[0]) is not 12):
+			print 'start is not 12 python'
 			startTime[0] = int(startTime[0]) + 12
 	if len(endMin) > 1:
 		if (endMin[1].lower() == 'p.m.'):
 			endMin[1] = 'pm'
-		if (endMin[1].lower() == 'pm'):
+		if (endMin[1].lower() == 'pm' and int(endTime[0]) is not 12):
 			endTime[0] = int(endTime[0]) + 12
 
 	'''if ( endTime[0] < startTime[0] or (endTime[0] == startTime[0] and int(endMin[0]) < int(startMin[0]))):
@@ -249,6 +251,8 @@ def edit_event(request, event_id):
 
 	if form_data:
 		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
+		print startTime
+		print endTime
 
 		if user and event: 
 			event.name=form_data.get('event_name')

@@ -60,10 +60,10 @@ function parseFile(nameOfFile){
 	});
 }
 
-$("#company_deadline_input").datepicker({ 
+/*$("#company_deadline_input").datepicker({ 
 	altFormat: "yy-mm-dd",
     dateFormat: "yy-mm-dd",
 	onSelect: function(dateText, inst) { 
 		$("#datepicker_value").val(dateText); 
 	} 
-});
+});*/
