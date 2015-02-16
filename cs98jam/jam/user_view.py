@@ -72,13 +72,14 @@ def index(request):
 	# application status notifications
 	app_notifications = []
 	for c in companies:
-		if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
-			if c.application_deadline == datetime.today().date():
-				app_notifications.append("Your " + c.name + " application is due today. Get on that ASAP!")
-			elif c.application_deadline == datetime.today().date() + timedelta(days=1):
-				app_notifications.append("Your " + c.name + " application is due tomorrow. Get on that ASAP!")
-			else: 
-				app_notifications.append("Your " + c.name + " application is due in two days. Get on that ASAP!")
+		if c.application_deadline != '' and c.application_deadline != None:
+			if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
+				if c.application_deadline == datetime.today().date():
+					app_notifications.append("Your " + c.name + " application is due today. Get on that ASAP!")
+				elif c.application_deadline == datetime.today().date() + timedelta(days=1):
+					app_notifications.append("Your " + c.name + " application is due tomorrow. Get on that ASAP!")
+				else: 
+					app_notifications.append("Your " + c.name + " application is due in two days. Get on that ASAP!")
 
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
