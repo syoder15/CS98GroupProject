@@ -229,4 +229,15 @@ def new_contact(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+def read_contacts_from_file(user, input_file):
+	print "in read_from_file"
+	for line in input_file:
+		contact_info = line.split(',')
+		contact_name = contact_info[0]
+		contact_phone = contact_info[1]
+		contact_email = contact_info[2]
+		contact_employer = contact_info[3]
+		contact_notes = contact_info[4].strip()
 
+		contact = Contact(name=contact_name, phone_number = contact_phone, email = contact_email, employer = contact_employer, notes = contact_notes, user= user)
+		contact.save()

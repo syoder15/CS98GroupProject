@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from jam.forms import UploadFileForm
-from jam.input import read_from_file
+#from jam.input import read_from_file
 from django.conf import settings
 import os
 import json
@@ -360,4 +360,27 @@ def is_valid_date(date):
 		return 'You must enter a valid date. Please try again.'
 
 	return ""
+
+def read_from_file(user, input_file):
+	print "in read_from_file"
+	for line in input_file:
+		if len(line) > 0:
+			company_info = line.split(',')
+			company_name = company_info[0]
+			company_deadline = company_info[1].strip()
+
+			stripped_deadline = company_deadline.replace("-", "")
+			stripped_deadline.replace('/', "")
+			if len(company_deadline) < 10: 
+				continue
+			elif company_deadline.isdigit():
+				is_valid_date(company_deadline)
+			else:
+				continue
+
+
+			company = Company(name=company_name,
+						  application_deadline=company_deadline,
+						  user=user)
+			company.save()
 

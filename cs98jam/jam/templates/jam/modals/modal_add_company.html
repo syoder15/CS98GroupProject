@@ -13,7 +13,7 @@
 			<div class="form-group"> 
 				<label for="company_name_input" class="col-sm-4 control-label">Company: </label>
 				<div class="col-sm-8"> 
-					<input id="company_name_input" class="form-control" name="name" placeholder="Google" onblur="validateName(this.id)"/>
+					<input id="company_name_input" class="form-control" name="name" maxlength="50" placeholder="Google" onblur="validateName(this.id)"/>
 					<span class="error" name="company_name_input" style="display:none; background-color: white; color: red"> </span>
 
 				</div>
@@ -38,7 +38,7 @@
 			<div class="form-group"> 
 				<label for="company_app_link" class="col-sm-4 control-label">Link to Application: </label>
 				<div class="col-sm-8">
-					<input id="company_app_link" class="form-control" name="app_link" placeholder="http://www.hire_me_please.com"/>
+					<input id="company_app_link" class="form-control" maxlength="150" name="app_link" placeholder="http://www.hire_me_please.com"/>
 				</div>
 			</div>
 
