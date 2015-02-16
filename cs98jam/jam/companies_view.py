@@ -214,12 +214,14 @@ def companies(request, company_name):
 		go_home = data.get('back_home')
 
 		if("export" in data):
+			print "got to export"
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
-			f = open(os.path.join(path_name, "companies.txt"), "w")
+			f = open(os.path.join(path_name, "jam_companies.txt"), "w")
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+
 		elif('save' in data):
 			company_name = data.get('name')
 			company = request.user.company_set.filter(name=company_name).first()
@@ -383,4 +385,4 @@ def read_from_file(user, input_file):
 						  application_deadline=company_deadline,
 						  user=user)
 			company.save()
-
+	return True

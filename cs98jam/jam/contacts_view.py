@@ -48,7 +48,7 @@ def contacts(request, contact_name):
 			#import pdb; pdb.set_trace()
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
-			f = open(os.path.join(path_name, "contacts.txt"), "w")
+			f = open(os.path.join(path_name, "jam_contacts.txt"), "w")
 			for contact in contacts:
 				f.write(str(contact) + ", " + str(contact.employer) + "\n")
 			f.close()
