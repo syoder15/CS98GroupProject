@@ -20,18 +20,24 @@ if(localTest){
 function validateDeadline(deadline_id){
 	var deadline = $('#' + deadline_id).val();
 	//var deadline = $('#company_deadline_input').val();
-	var msg = dateValidation(deadline);
-	if(msg != true){
-		$('.error-message').show();
-		$('#' + deadline_id).css('border','solid 2px red');
-		$('.error-message').html(msg);
-		console.log("DATE ERROR " + deadline)
-	}
-	else{
+	if (deadline) {
+		var msg = dateValidation(deadline);
+		if(msg != true){
+			$('.error-message').show();
+			$('#' + deadline_id).css('border','solid 2px red');
+			$('.error-message').html(msg);
+			console.log("DATE ERROR " + deadline)
+		}
+		else{
+			$('.error-message').hide();
+			$('#' + deadline_id).css('border','solid 0px red');
+		}
+		return msg;
+	} else {
 		$('.error-message').hide();
 		$('#' + deadline_id).css('border','solid 0px red');
+		return true;
 	}
-	return msg;
 }
 
 function validateTimes(start_id, end_id){
@@ -278,12 +284,6 @@ function submitCompanyForm(event){
 	*/
 	console.log("IN SUBMIT COMPANY");
 	event.preventDefault();
-	var file = $('#id_filep');
-	console.log("FILE = " + file.val());
-	if(file.val()){
-		console.log('file has value');
-		//companyForm.submit();
-	}
 
 	var me = $(this);
 	me.off('click');
@@ -293,7 +293,6 @@ function submitCompanyForm(event){
 	}
 
 	me.data('requestRunning', true);
-	
 	
 	// if there are any client-side errors apparent, do NOT go through AJAX validation
 	if (validateDeadline('company_deadline_input') != true || validateName('company_name_input') != ""){
