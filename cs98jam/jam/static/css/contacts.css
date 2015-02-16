@@ -1,10 +1,10 @@
 .contact_names_list {
-	margin-top:5px;
+	margin-top: 5px;
 }
 
 .contactNames {
-	border: 0; 
 	background: transparent;
+	border: 0; 
 	font-size: 20px;
 	vertical-align: middle; 
 }
@@ -17,21 +17,19 @@
 	padding-bottom: 1em;
 }
 
-.table-contacts thead tr th, .table-contacts tbody tr th {
+.table-contacts thead tr th,
+.table-contacts tbody tr th {
+	border: none;
 	text-align: right; 
-	border:none;
 }
 
-.table-contacts thead tr td, .table-contacts tbody tr td {
-	width:100%;
+.table-contacts thead tr td,
+.table-contacts tbody tr td {
+	border: none;
 	white-space: nowrap; 
-	border:none;
+	width: 100%;
 }
 
 .contact_form label {
 	vertical-align: middle;
-}
-
-.contact_form div input {
-
 }

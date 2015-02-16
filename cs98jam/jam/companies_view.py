@@ -234,17 +234,17 @@ def companies(request, company_name):
 
 
 		elif('delete' in data):
-		
 			company_name = data.get('delete')
 			event_title = str(company_name) + ' Deadline'
 			company = request.user.company_set.filter(name=company_name)
 			company.delete()
+			
+			event = request.user.events.filter(name=event_title)
+			owned_event = request.user.owned_events.filter(name=event_title)
+			event.delete()
+			owned_event.delete()
+			
 
-			events = request.user.profile.events.all()
-			for event in events:	
-				if event_title == event.name:
-					event.delete()
-					break
 
 		elif(go_home == ("Back")):
 			show_company = False
