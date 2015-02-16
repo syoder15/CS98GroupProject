@@ -44,24 +44,9 @@
 				</div>
 
 				<div class="form-group">
-					<label for="event_companies_input" class="col-md-4 control-label">Companies: </label>
-					<div class="col-md-8"> 
-						<input id="event_companies_input" class="form-control" name="companies" placeholder="Google, Pinterest, Apple"  />
-					</div>
-				</div>
-
-				<!--<div class="form-group">
-					<label for="event_date_input" class="col-md-4 control-label">Date: </label>
-					<div class="col-md-8">
-						<input id="event_date_input" class="form-control" name="date" placeholder="2015-12-31" onblur="validateDeadline('event_date_input')" required />
-						<span class="error-message" style="display:none; color:red;"> {{ validity }} </span>
-					</div>
-				</div>-->
-
-				<div class="form-group">
 					<label for="event_date_input" class="col-md-4 control-label">Date Picker: </label>
 					<div class="col-md-8">
-						<input id="event_date_input" class="form-control" name="date" placeholder="2015-12-31" required />
+						<input id="event_date_input" class="form-control" name="date" placeholder="YYYY-MM-DD" required />
 					</div>
 				</div>
 
@@ -78,6 +63,13 @@
 						<input id="event_end_time_input" class="form-control" name="endTime" placeholder="5:00 PM" onblur="validateTimes('event_start_time_input','event_end_time_input')" />
 						<span class="time-error" style="display:none; color:red;">  </span>
 
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="event_companies_input" class="col-md-4 control-label">Companies: </label>
+					<div class="col-md-8"> 
+						<input id="event_companies_input" class="form-control" name="companies" placeholder="Google, Pinterest, Apple"  />
 					</div>
 				</div>
 				

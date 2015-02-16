@@ -50,38 +50,40 @@ function timeValidation(time) {
 };
 
 function startEndTimeValidation(startTime, endTime) {
-
 	var start_time =  startTime.split(':');
 	var end_time = endTime.split(':');
+
+	if ( startTime.indexOf(':') < 0 || endTime.indexOf(':') < 0 ) {
+		var msg = 'Your time must include a colon (:)';
+		return msg;
+	}
+
 	var startMin = start_time[1].split(" ");
 	var endMin = end_time[1].split(" ");
 
-
-	if (typeof(startMin[1]) !== 'undefined' && startMin[1].toLowerCase() == 'p.m.') {
+	if (typeof(startMin[1]) !== 'undefined' && ( startMin[1].toLowerCase() == 'p.m.'  || startMin[1].toLowerCase() == 'pm' ) ){
 		startMin[1] = 'PM';
+		if (parseInt(start_time[0]) !== 12) { 
+			start_time[0] = parseInt(start_time[0]) + 12;
+		}
+		console.log("start Time is " + start_time[0]);
 	}
 
-	if ( (typeof(endMin[1]) !== 'undefined') &&  endMin[1].toLowerCase() == 'p.m.') {
-		startMin[1] = 'PM';
+	if ( (typeof(endMin[1]) !== 'undefined') &&  ( endMin[1].toLowerCase() == 'p.m.' || endMin[1].toLowerCase() == 'pm' )) {
+		endMin[1] = 'PM';
+		if (parseInt(end_time[0]) !== 12) { 
+			end_time[0] = parseInt(end_time[0]) + 12;
+		}
+		console.log("end Time is " + end_time[0]);
 	}
 
-	if ( (typeof(startMin[1]) !== 'undefined') && (startMin[1].toLowerCase() == 'pm')) {
-		startTime[0] += 12;
-	}
-
-	if ( (typeof(endMin[1]) !== 'undefined') && (endMin[1].toLowerCase() == 'pm')) {
-		endTime[0] += 12;
-	}
-
-	if ( endTime[0] < startTime[0] ) {
+	if ( end_time[0] < start_time[0] ) {
 		//alert("Your start time must be before your end time. Please try again.");
 		var msg = "Your start time must be before your end time. Please try again.";
 		return msg;
 	}
 
-	
-
-	if (endTime[0] == startTime[0] && endMin[0] < startMin[0]) {
+	if (end_time[0] == start_time[0] && parseInt(endMin[0]) < parseInt(startMin[0])) {
 		//alert("Your start time must be before your end time. Please try again.");
 		var msg = "Your start time must be before your end time. Please try again.";
 		return msg;

@@ -115,33 +115,30 @@ def startEndTimeValidation(start_time, end_time):
 	endTime = end_time.split(':')
 	startMin = startTime[1].split(" ")
 	endMin = endTime[1].split(" ")
-
 	error = ''
-	print "about to convert"
-
+	print 'python'
+	print startTime[0]
 
 	if len(startMin) > 1: 
 		if (startMin[1].lower() == 'p.m.'):
 			startMin[1] = 'pm'
-		if (startMin[1].lower() == 'pm'):
+		if (startMin[1].lower() == 'pm' and int(startTime[0]) is not 12):
+			print 'start is not 12 python'
 			startTime[0] = int(startTime[0]) + 12
-			print "first block"
 	if len(endMin) > 1:
-		if (endMin[1].lower() == 'pm'):
+		if (endMin[1].lower() == 'p.m.'):
+			endMin[1] = 'pm'
+		if (endMin[1].lower() == 'pm' and int(endTime[0]) is not 12):
 			endTime[0] = int(endTime[0]) + 12
-			print "second block"
 
 	'''if ( endTime[0] < startTime[0] or (endTime[0] == startTime[0] and int(endMin[0]) < int(startMin[0]))):
 		error = "Your start time must be before your end time. Please try again."
 		print "hit a wall"
 	
 	'''
-	print "ugh"
 	start = str(startTime[0]) + ":" + str(startMin[0])
 	end = str(endTime[0]) + ":" + str(endMin[0])
 
-	print "ish"
-	print "inside startEnd validation"
 	return (start,end)
 
 @login_required
@@ -175,6 +172,7 @@ def new_event(request):
 						  creator=request.user)
 		event.save()
 		request.user.events.add(event)
+		request.user.owned_events.add(event)
 
 		if request.user.controlledChannels.filter(name=form_data.get("channel")).exists():
 			channel = request.user.controlledChannels.filter(name=form_data.get("channel")).first()
@@ -200,6 +198,7 @@ def new_event(request):
 
 @login_required
 def events_page(request, event_id, event_name):
+	data = request.POST
 	events = request.user.events.all()
 	#event = request.user.events.filter(id=event_id)
 	event = request.user.events.get(id=event_id)
@@ -227,10 +226,19 @@ def events_page(request, event_id, event_name):
 	for c in comps:
 		if request.user.company_set.filter(name=c).exists():
  			companies.append(c)
-
+ 	
+ 	
+ 	if('delete' in data):
+ 		delete_event(request, event_id)
+ 		
+ 		month = str(event_date)[5:7]
+ 		year = str(event_date)[0:4]
+ 		link = "/jam/calendar/" + str(year) + '/' + str(month)
+ 		
+ 		return HttpResponseRedirect(link)
 
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time, 'end_time': end_time, 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
+	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 'google_link': google_link, "controlled_channels": request.user.controlledChannels, 'companies': companies}
 
 	return render(request, 'events/event_detail_page.html', context)
 
@@ -243,6 +251,8 @@ def edit_event(request, event_id):
 
 	if form_data:
 		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
+		print startTime
+		print endTime
 
 		if user and event: 
 			event.name=form_data.get('event_name')
@@ -269,6 +279,7 @@ def edit_event(request, event_id):
 						  creator=request.user)
 			event.save()
 			request.user.events.add(event)
+			request.user.owned_events.add(event)
 
 			datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
 			redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
@@ -279,10 +290,18 @@ def edit_event(request, event_id):
 	datetime.strptime(event_date, "%Y-%m-%d")
 
 	context = {'event': event, 'event_name': event.name, 'description': event.description, 'event_date': event_date,
-	'start_time': event.start_time, 'end_time': event.end_time, 'creator': event.creator, 'event_type': event.event_type, 
+	'start_time': event.start_time.strftime("%I:%M %p"), 'end_time': event.end_time.strftime("%I:%M %p"), 'creator': event.creator, 'event_type': event.event_type, 
 	'companies': event.companies}
 
 	return render(request, 'events/event_edit.html', context)
+
+def delete_event(request, event_id):
+	event = request.user.events.get(id=event_id)
+	owned_event = request.user.owned_events.get(id=event_id)
+
+	event.delete()
+	owned_event.delete()
+
 
 @login_required
 def month_view(

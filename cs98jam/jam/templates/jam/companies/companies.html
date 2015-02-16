@@ -12,6 +12,9 @@
 
 {% block side_col %}
 	<h2>My Companies</h2>
+	<!--
+		 <button type="button" class="btn btn-default"><a style="text-decoration:none" data-toggle="modal" data-target="#importCompanyModal"> Import my companies</a></button>
+-->
 	<div class="list-group">
 		<form action="" method="POST" id="company_form">
 		{% csrf_token %}
@@ -32,7 +35,7 @@
 				<br>
 			</div>
 		{% empty %}
-			You haven't entered any companies yet.
+			<h5> You haven't entered any companies. Add one <a data-toggle="modal" data-target="#companyModal">here</a>.</h5>
 		{% endfor %}
 		{% if companies %}
 		<div class="company_submit_btn">
@@ -43,6 +46,8 @@
 		<div class="export_company_btn">
 			<button type="button" class="btn btn-default company-export">Export my companies</button>
 		</div>
+	</div>
+	<div >
 	</div>
 
 
@@ -74,10 +79,12 @@
 
 {% block javascript %}
 	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.js' %}"></script>
 	<script src="{% static 'js/companies.js' %}"></script>
 	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
 	<script src="{% static 'js/main.js' %}"></script>
 	<script src="{% static 'js/handlers.js' %}"></script>
 	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
-
+	<script src="{% static 'js/contacts.js' %}"></script>
+	<script src="{% static 'js/validation.js' %}"></script>
 {% endblock %}

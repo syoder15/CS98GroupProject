@@ -246,16 +246,22 @@ a:link, a:visited {
 }
 
 .left-bar {
-	background-color:#bfc98c;
+/*	background-color:#bfc98c;
 	border-right:1px solid #786257; 
 	height:100vh; 
 }
 
 .details-body {
 	height:100vh;
-	/*background-color: #f5f5f5;*/
-	/*background-color: #e3c6d4; */
-	background-color: #dfe3cf;
+	background-color: #dfe3cf;*/
+
+	border-right:1px solid #c8c8c8; 
+	height:150vh; 
+}
+
+.details-body {
+	height:150vh;
+	background-color: #f5f5f5;
 }
 
 @media screen and (max-width: 768px){

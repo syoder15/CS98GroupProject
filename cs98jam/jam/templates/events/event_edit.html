@@ -44,7 +44,7 @@
 				<div class="form-group">
 					<label for="event_date_input" class="col-md-4 control-label">Date: </label>
 					<div class="col-md-8">
-						<input id="event_date_input" class="form-control" name="event_date" placeholder="2015-12-31" onblur="validateDeadline('event_date_input')" value="{{ event_date }}" required />
+						<input id="event_date_input" class="form-control" name="event_date" placeholder="YYYY-MM-DD" onblur="validateDeadline('event_date_input')" value="{{ event_date }}" required />
 						<span class="error-message" style="display:none; color:red;"> {{ validity }} </span>
 					</div>
 				</div>
@@ -80,8 +80,22 @@
 			</div>
 
 		<br />
-		<input type="button" onclick="history.back();" value="Back" style="font-size: 15px" />	
+		<!--<input type="button" onclick="history.back();" value="Back" style="font-size: 15px; width: 50px; height: 30px; border-radius: 3px" />-->
+		<button class="btn small-btn btn-default" type="back" name-"Back" value="Back" href="history.back()">Back</button>
 		<button class="btn small-btn btn-default" type="submit" name="save" value="Save">Save</button>
 		</form>
 </div>
+{% endblock %}
+
+{% block javascript %}
+	{% load staticfiles %}
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script src="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.js' %}"></script>
+	<script src="{% static 'twitter_bootstrap/js/transition.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<script src="{% static 'js/handlers.js' %}"></script>
+	<script src="{% static 'bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+	<script src="{% static 'js/companies.js' %}"></script>
+	<script src="{% static 'js/contacts.js' %}"></script>
+	<script src="{% static 'js/validation.js' %}"></script>
 {% endblock %}
