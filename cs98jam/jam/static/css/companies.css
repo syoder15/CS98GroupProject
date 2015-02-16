@@ -4,24 +4,24 @@
 }
 
 .company_name_in_list {
-	width:100%;
-	vertical-align: center;
 	float: left;
 	margin-right: 10px;
+	vertical-align: center;
+	width: 100%;
 }
 
 .complete_checkbox {
-	float:left; 
-	margin-left:15px;
+	float: left; 
+	margin-left: 15px;
 }
 
 .export_company_btn {
-	float:left;
+	float: left;
 }
 
 .companyNames {
-	border: 0; 
 	background: transparent;
+	border: 0; 
 	font-size: 20px;
 	vertical-align: middle;
 }
@@ -31,42 +31,45 @@
 }
 
 .company_submit_btn {
+	float: left;
 	margin-top: 5px;
 	width: 100%;
-	float: left;
 }
 
 .complete_text {
-	margin-left: 5px;
 	float: right;
+	margin-left: 5px;
 }
 
 .company-export {
 	margin-top: 40px;
 }
 
-.table-companies thead tr th, .table-companies tbody tr th {
-	text-align: right;
+.table-companies thead tr th,
+.table-companies tbody tr th {
 	border: none;
 	font-size: 18px;
+	text-align: right;
 }
 
-.table-companies thead tr td, .table-companies tbody tr td {
-	width: 100%;
-	white-space: nowrap;
+.table-companies thead tr td,
+.table-companies tbody tr td {
 	border: none;
 	font-size: 18px;
+	white-space: nowrap;
+	width: 100%;
 }
 
 .companies_form label {
-	font-size:18px; 
+	font-size: 18px; 
 	vertical-align: middle; 
 }
 
-.companies_form div input, .companies_form div textarea {
+.companies_form div input,
+.companies_form div textarea {
 	font-size: 16px;
 }
 
 .btn-small {
-	padding:2px 10px;
+	padding: 2px 10px;
 }

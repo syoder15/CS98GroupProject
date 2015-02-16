@@ -1,41 +1,35 @@
-/*body {
-   background: #4166F5;
-}*/
-
 .table-profile thead tr th {
-	border:none;
+	border: none;
 } 
 .table-profile tbody tr th {
-	float:right;
-	font-size:16px;
-	border:none;
+	border: none;
+	float: right;
+	font-size: 16px;
 }
 
 .table-profile tbody tr td {
-	font-size:16px;
-	border:none;
+	border: none;
+	font-size: 16px;
 }
 
 .profile-header {
-	margin:0px;
-	height:300px;
-	background:gray;
+	background: gray;
+	height: 300px;
+	margin: 0px;
 }
 
 .banner-picture {
-	margin:0px;
-	height:250px;
 	background: url("http://www.addcovers.com/covers/8hy3o29c04v4fc0.jpg") center no-repeat;
+	height: 250px;
+	margin: 0px;
    	background-size: cover;
-   	position:relative;
+   	position: relative;
 }
 
 .profile-picture-container {
-	/*position:absolute;*/
-	padding:5px;
-	float:right;
-	margin-top:130px;
-	/*top:130px;*/
+	float: right;
+	margin-top: 130px;
+	padding: 5px;
 	width: 150px;
     height: 150px;
     overflow: hidden;   
@@ -45,25 +39,16 @@
 	width: 250px;
     height: 150px;
     margin: 0px 0px 0px -20px;
-
-/*	margin-top:150px;
-	margin-left: 150px;
-	height:100px;
-	width:100px;*/
-	/*background: url("http://cuteanimalpicturesandvideos.com/wp-content/uploads/super-cute-puppy-look-awww-photo.jpg") center no-repeat;*/
-   	/*background-size: cover;*/
 }
 
 .profile-bar {
-	height:290px;
-	position:relative;
-	/*background-color:red;*/
+	height: 290px;
+	position: relative;
 }
 
 .profile-name {
-	/*float:left;*/
-	position:absolute;
-	bottom:0px;
+	bottom: 0px;
+	position: absolute;
 }
 
 .title {
@@ -76,9 +61,7 @@
 .centered {
 	background-color: white;
 	display: inline-block;
-	/*height: 550px;*/
 	height: 100%;
-
 	margin-top: 350px;
 	text-align: center;
 	width: 100%;
@@ -104,9 +87,8 @@ h2 {
 	display: inline;
 }
 
-
 .profile-form label {
-	font-size:16px;
+	font-size: 16px;
 }
 
 @media screen and (max-width: 1000px){
@@ -117,8 +99,4 @@ h2 {
 	.banner-picture {
 		height: 10em;
 	}
-
-/*	.table-profile {
-		margin-left:-10px;
-	}*/
 }

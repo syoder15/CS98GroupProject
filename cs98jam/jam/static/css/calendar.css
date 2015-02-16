@@ -1,8 +1,22 @@
+button {
+	background-color: #2D30E3;
+	border: 0px solid #29668f;
+	color: #ffffff;
+	display: block;
+	float: right;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 6px 15px;
+}
+
+button:hover {
+	background-color:#1E90FF;
+}
+
 .monthlyTitle {
-	/*text-align: center;*/
-	width: 80%;
-	margin: auto;
 	font-size: 25px;
+	margin: auto;
+	width: 80%;
 }
 
 .errorMessage {
@@ -19,18 +33,13 @@
 }
 
 .eventSidebar {
-	position: absolute;
-  	top: 60px;
-  	width: 250px;
   	list-style: none;
   	margin: 0;
   	padding-left: 5px;
+	position: absolute;
+  	top: 60px;
+  	width: 250px;
 }
-
-/*.backgroundCalendar a button {
-	background-color: #428bca; 
-}*/
-
 
 .backgroundCalendar table tr th, 
 .backgroundCalendar table tr td div {
@@ -38,9 +47,9 @@
 }
 
 .update_filters {
-	padding:2px 10px;
-	float:left;
-	margin-top:10px;
+	float: left;
+	margin-top: 10px;
+	padding: 2px 10px;
 }
 
 #filterTitle {
@@ -55,39 +64,52 @@ table.month-view {
 	border-collapse: collapse;
 	margin: auto;
 }
+
 .month-view { 
-	width: 75%; 
 	color: #2D30E3;
+	width: 75%; 
 }
+
 .month-view td { 
-	vertical-align: top; 
-	height: 6em; 
 	border: 1px solid black;
+	height: 6em; 
 	padding: 3px;
-	}
-    .month-view td, .month-view th { width: 14.285%; }
-    .month-view .day-ordinal { font-weight: bold; font-size: 1.1em; text-align: right; }
-    .month-view ul { margin: 1px 2px; padding: 0; padding-left: 1em; }
-    .month-view li { font-size: .9em; }
-    .month-view .today { background-color: #E0B1B3; }
-    .month-view .event-times {  }
-.month-divider th, .month-divider td { border-top: 3px solid #8e8f80; }
-
-.monthlyViewButton {
-	background-color: gray;
-	color: white;
+	vertical-align: top; 
 }
 
-.yearlyViewButton {
-	background-color: gray;
-	color: white;
+.month-view td,
+.month-view th {
+	width: 14.285%;
 }
 
-.addEventButton {
-	background-color: gray;
-	color: white;
+.month-view .day-ordinal {
+	font-size: 1.1em;
+	font-weight: bold;
+	text-align: right;
 }
 
+.month-view ul {
+	margin: 1px 2px;
+	padding-left: 1em;
+	padding: 0;
+}
+
+.month-view li {
+	font-size: .9em;
+}
+
+.month-view .today {
+	background-color: #E0B1B3;
+}
+
+.month-divider th,
+.month-divider td {
+	border-top: 3px solid #8e8f80;
+}
+
+.monthlyViewButton,
+.yearlyViewButton,
+.addEventButton,
 .eventListButton {
 	background-color: gray;
 	color: white;
@@ -95,25 +117,10 @@ table.month-view {
 
 .table-body {
 	color: #2D30E3;
-
 }
 
 ul.eventBullet {
- list-style-type: none;
- }
-
-button {
-	background-color:#2D30E3;
-	border:0px solid #29668f;
-	display:block;
-	color:#ffffff;
-	font-size:10px;
-	font-weight:bold;
-	padding:6px 15px;
-	float:right;
-}
-button:hover {
-	background-color:#1E90FF;
+	list-style-type: none;
 }
 
 .recurrenceOptions{
@@ -122,15 +129,15 @@ button:hover {
 
 .table-events thead tr th, 
 .table-events tbody tr th {
-	border:none;
+	border: none;
 	text-align: right; 
 }
 
 .table-events thead tr td, 
 .table-events tbody tr td {
-   width:100%;
-   white-space: nowrap; 
    border: none; 
+   white-space: nowrap; 
+   width: 100%;
 }
 
 .event-times {
