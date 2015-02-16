@@ -41,15 +41,17 @@ html, body {
 	padding-top: 14px;
 }
 
+
 a:link,
 a:visited {
-	color: #4166F5;
+	color: #993399;
 }
 
 #userIcon {
 	width: 30px;
 	height: 25px;
 }
+
 
 .carousel {
 	z-index: -99;
@@ -108,11 +110,13 @@ a:visited {
 .round-button {
     background: #e6e6e6;
     border-radius: 50%;
-/*    border: 2px solid #fbfafa;
+/*<<<<<<< HEAD*/
+    border: 2px solid #fbfafa;
     overflow: hidden;
     background: #ebe6e3;
-*/
+/*=======
     border: 2px solid #f5f5f5;
+>>>>>>> 1090dabb3d7e7ad55b12b090f39b48337e831e6e*/
     box-shadow: 0 0 3px gray;
     height: 0;
     margin: 0px 2px;
@@ -122,8 +126,14 @@ a:visited {
 }
 
 .round-button:hover {
+/*<<<<<<< HEAD*/
+    /*background: #786257;*/
+    background: #ab445b;
+    cursor:pointer;
+/*=======
     background: #4099FF;
     cursor: pointer;
+>>>>>>> 1090dabb3d7e7ad55b12b090f39b48337e831e6e*/
 }
 
 .round-button img {
@@ -144,14 +154,20 @@ a:visited {
 	width: 400px;
 }
 
+/*<<<<<<< HEAD*/
+/*.container {
+	width: 60%; 
+	margin: 0% 20%;
+}*/
 
-/*.navbar-nav.navbar-right:last-child {
+.navbar-nav.navbar-right:last-child {
 	margin-right: 0px; 
 }
 
 .navbar-default {
-	background-color: #ab445b;
-	border-color: #bfc98c;
+	background-color:#5ea6d9;
+	/*background-color: #ab445b;*/
+	border-color: #5ea6d9;
 }
 
 .navbar-default a {
@@ -159,15 +175,15 @@ a:visited {
 }
 
 .navbar-default .navbar-brand {
-	/*color: #dfe3cf; the green of the page
+	/*color: #dfe3cf; the green of the page*/
 	color: #ebe6e3;
 }
 
 .navbar-default .navbar-brand:hover {
-	/*color: #f5f6f0; lighter hue of green
+	/*color: #f5f6f0; lighter hue of green*/
 	color: #fbfafa;
 }
-*/
+
 
 .container-fluid {
 	padding-left: 20px; 
@@ -242,8 +258,23 @@ a:visited {
 }
 
 .left-bar {
+
+/*	background-color:#bfc98c;
+	border-right:1px solid #786257; 
+	height:100vh; 
+}
+
+.details-body {
+	height:100vh;
+	background-color: #dfe3cf;*/
+
+	background-color:#bddbef;
+	border-right:1px solid #c8c8c8; 
+	height:150vh; 
+/*=======
 	border-right: 1px solid #c8c8c8; 
 	height: 150vh; 
+>>>>>>> 1090dabb3d7e7ad55b12b090f39b48337e831e6e*/
 }
 
 .details-body {
