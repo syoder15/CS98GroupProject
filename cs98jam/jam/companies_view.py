@@ -357,7 +357,6 @@ def is_valid_date(date):
 
 
 	if(len(date) < 10):
-		return "testshmeh"
 		return "Please enter a date in YYYY-MM-DD format"
 	elif ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
 		return 'You cannot enter a date that is in the past.'

@@ -2,7 +2,7 @@ function validateEmail(email){
 	var at = email.indexOf("@");
 	var period = email.lastIndexOf(".");
 
-	if (at < 1 || period < at + 2 || period + 2 >= email.length) {
+	if ((at < 1 || period < at + 2 || period + 2 >= email.length) && email.length != 0) {
 		//alert("Please enter a valid email address");
 		return "Please enter a valid email address";
 	}
@@ -12,12 +12,12 @@ function validateEmail(email){
 function validatePhoneNumber(number) {
 	number = number.replace(/[^0-9]/g, '');
 
-	if(! (number.match(/\d/g) && number.length==10)){
+	if(! (number.match(/\d/g) && number.length==10) && number.length!=0){
 		return "Please enter a valid phone number";
 	}
 	else{
 		$('#phone_number_input').val(number);
-		return "";
+		return '';
 	}
 	number = number.replace(/\)\s*|\(\s*|-/g, '');
 
