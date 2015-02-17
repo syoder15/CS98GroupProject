@@ -102,9 +102,15 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
-			context = {'contact_edit': contact_edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': contact.email,
+			phone_num = contact.phone_number
+			if phone_num == 0 or phone_num == None:
+				phone_num = ''
+			if email_address == '' or email_address == None:
+				email_address = ''
+
+			context = {'contact_edit': contact_edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
 			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, "controlled_channels": request.user.controlledChannels,
-			'phone_number': contact.phone_number, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
+			'phone_number': phone_num, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
 		else: 
 			for c in contacts:
 				if c.name in data:
@@ -116,7 +122,6 @@ def contacts(request, contact_name):
 		if contact_name != 'all':
 			contact = request.user.contact_set.get(name=contact_name)
 			email_address = contact.email
-			phone_number = contact.phone_number
 			employer = contact.employer
 			notes = contact.notes
 
@@ -125,8 +130,14 @@ def contacts(request, contact_name):
 			if request.user.company_set.filter(name=employer).exists():
 				employer_exists = True
 
+			phone_num = contact.phone_number
+			if phone_num == 0 or phone_num == None:
+				phone_num = ''
+			if email_address == '' or email_address == None:
+				email_address = ''
+
 			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_number,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
 			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/contacts/contacts.html', context)
@@ -141,8 +152,10 @@ def contacts_page(request, contact_name):
 	contact_notes = contact.notes
 
 	phone_num = contact.phone_number
-	if phone_num == 0:
+	if phone_num == 0 or phone_num == None:
 		phone_num = ''
+	if email_address == '' or email_address == None:
+		email_address = ''
 
 	context = {'contacts': contacts, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
 	'contact_email': email_address, 'employer': employer, "controlled_channels": request.user.controlledChannels}
@@ -196,11 +209,14 @@ def edit_contact(request, contact_name):
 			return HttpResponseRedirect(redirect_link)
 
 	phone_num = contact.phone_number
-	if phone_num == 0:
+	if phone_num == 0 or phone_num == None:
 		phone_num = ''
+	email_address = contact.email
+	if email_address == '' or email_address == None:
+		email_address = ''
 
-	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': contact.email, 
-	'phone_number': contact.phone_num, 'employer': contact.employer, "controlled_channels": request.user.controlledChannels}
+	context = {'contact_name': contact_name, 'notes': contact.notes, 'email': email_address, 
+	'phone_number': phone_num, 'employer': contact.employer, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
 
