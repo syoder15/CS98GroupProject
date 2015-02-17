@@ -15,10 +15,16 @@ function getCookie(name) {
 }
 
 $('.contact-export').on('click', function(){
-	alert("Check your Downloads folder for a 'contacts.txt.' file");
 	console.log('BUTTON CLICKED');
 	var csrftoken = getCookie('csrftoken');
 	console.log("GOT HERE");
+
+	var me = $(this);
+	if(me.data('requestRunning')){
+		return;
+	}
+	me.data('requestRunning',true);
+
 	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
 		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -30,6 +36,8 @@ $('.contact-export').on('click', function(){
 		data: {"export": true}
 	}).done(function() {
 		console.log("GOT HERE");
+		me.data('requestRunning',false);
+		alert("Check your Downloads folder for a 'jam_contacts.txt' file");
 		$( this ).addClass( "done" );
 	});
 });

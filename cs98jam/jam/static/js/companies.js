@@ -15,9 +15,15 @@ function getCookie(name) {
 }
 
 $('.company-export').on('click', function(){
-	alert("Check your Downloads folder for a 'companies.txt.' file");
 	var csrftoken = getCookie('csrftoken');
 	console.log("GOT HERE");
+
+	var me = $(this);
+	if(me.data('requestRunning')){
+		return;
+	}
+	me.data('requestRunning',true);
+
 	$.ajaxSetup({
 	    beforeSend: function(xhr, settings) {
 		    xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -30,6 +36,8 @@ $('.company-export').on('click', function(){
 	}).done(function() {
 		console.log("GOT HERE");
 		$( this ).addClass( "done" );
+		me.data('requestRunning',false);
+		alert("Check your Downloads folder for a 'jam_companies.txt' file");
 	});
 });
 

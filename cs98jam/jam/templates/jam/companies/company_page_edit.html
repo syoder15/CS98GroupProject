@@ -4,7 +4,7 @@
 		<div class="form-group"> 
 			<label form="name_input" class="col-md-3 control-label"><h3>Company: </h3></label>
 			<div class="col-md-8"> <h3>
-				<input id="name_input" class="form-control" name="name" value='{{ company_name }}' placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
+				<input id="name_input" class="form-control" name="name" value='{{ company_name }}' maxlength="50" placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
 				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> </h3>
 			</div>
 		</div>
@@ -25,7 +25,7 @@
 		<div class="form-group"> 
 			<label for="app_link_input" class="col-md-3 control-label">Link to Application: </label>
 			<div class="col-md-8">
-				<input id="app_link_input" class="form-control" name="app_link" value='{{ link }}'/>
+				<input id="app_link_input" class="form-control" maxlength="150" name="app_link" value='{{ link }}'/>
 			</div>
 		</div>
 		

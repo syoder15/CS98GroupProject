@@ -31,7 +31,7 @@
 				<div class="form-group">
 					<label for="event_name_input" class="col-md-4 control-label">Event Name: </label>
 					<div class="col-md-8"> 
-						<input id="event_name_input" class="form-control" name="name" placeholder="Google Tech Interview" onblur = 'validateName(this.id)' required  />
+						<input id="event_name_input" class="form-control" name="name" maxlength="50" placeholder="Google Tech Interview" onblur = 'validateName(this.id)' required  />
 						<span class="error" name="event_name_input" style="display:none; background-color: white; color: red"> </span>
 					</div>
 				</div>
@@ -39,7 +39,7 @@
 				<div class="form-group">
 					<label for="event_description_input" class="col-md-4 control-label">Event Description: </label>
 					<div class="col-md-8"> 
-						<input id="event_description_input" class="form-control" name="description" placeholder="At 123 Main Street, bring resume"  />
+						<input id="event_description_input" maxlength="150" class="form-control" name="description" placeholder="At 123 Main Street, bring resume"  />
 					</div>
 				</div>
 
@@ -69,7 +69,7 @@
 				<div class="form-group">
 					<label for="event_companies_input" class="col-md-4 control-label">Companies: </label>
 					<div class="col-md-8"> 
-						<input id="event_companies_input" class="form-control" name="companies" placeholder="Google, Pinterest, Apple"  />
+						<input id="event_companies_input" maxlength="200" class="form-control" name="companies" placeholder="Google, Pinterest, Apple"  />
 					</div>
 				</div>
 				
