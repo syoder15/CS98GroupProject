@@ -97,17 +97,18 @@ def new_channel(request):
 			channel.save()
 			
 			
-			if category_names.strip() != "":
+			if category_names is not None and category_names.strip() != "":
 				for c in category_names.split(","):
 					cat = None
 					c = c.strip(' \t\n\r')
-					if (ChannelCategory.objects.filter(name = c).exists()):
-						cat = ChannelCategory.objects.get(name = c)
-						cat.count += 1
-					else:
-						cat = ChannelCategory(name = c, count = 1)
-					cat.save()
-					channel.categories.add(cat)
+					if c != "":
+						if (ChannelCategory.objects.filter(name = c).exists()):
+							cat = ChannelCategory.objects.get(name = c)
+							cat.count += 1
+						else:
+							cat = ChannelCategory(name = c, count = 1)
+						cat.save()
+						channel.categories.add(cat)
 			
 			channel.subscribers.add(request.user)
 			channel.admins.add(request.user)

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from jam.forms import UploadFileForm
-from jam.input import read_from_file
+#from jam.input import read_from_file
 from django.conf import settings
 import os
 import json
@@ -49,7 +49,6 @@ def new_company(request):
 		application_deadline = form_data.get('deadline')
 		validity = is_valid_date(application_deadline)
 		if(validity!=''):
-	
 			# return bad request if the deadline is still invalid somehow (but very unlikely!)
 			response={}
 			response["error"] = validity
@@ -68,7 +67,6 @@ def new_company(request):
 			if it doesn't, go ahead with business as usual, creating the company DB record
 		'''
 		if request.user.company_set.filter(name=company_name).exists():
-
 			#request.user.company_set.get(name=company_name)
 			msg = "I'm sorry, you've already added that company. Please add a different one!"
 
@@ -77,7 +75,6 @@ def new_company(request):
 			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 		else: 
-
 			'''company = Company(name=company_name,
 						  application_deadline=form_data.get('deadline'),
 						  notes=form_data.get('company_notes'),
@@ -89,34 +86,35 @@ def new_company(request):
 			#if len(event_types) == 0:
 			#	swingmodel.EventType.objects.create(abbr='due', label='Application Deadline')
 			#	swingmodel.EventType.objects.filter(abbr='due', label='Application Deadline')
+			if (application_deadline != "" and len(application_deadline) != 0):
+				year = int(application_deadline[0:4])
+				month = int(application_deadline[5:7])
+				day = int(application_deadline[8:10])
 
+				title = str(company_name) + ' Deadline'
 			
-			year = int(application_deadline[0:4])
-			month = int(application_deadline[5:7])
-			day = int(application_deadline[8:10])
+				evt = jam_event(
+					name=title,
+					event_type='Application Deadline',
+					description='',
+					companies=company_name,
+					start_time='12:00',
+					end_time='13:00',
+					event_date=application_deadline,
+					creator=request.user
+				)
+				evt.save()
 
-			title = str(company_name) + ' Deadline'
-			print "before evt"
-			evt = jam_event(
-				name=title,
-				event_type='Application Deadline',
-				description='',
-				companies=company_name,
-				start_time='12:00',
-				end_time='13:00',
-				event_date=application_deadline,
-				creator=request.user
-			)
-			evt.save()
-
-			request.user.events.add(evt)
-			#request.user.owned_events.add(evt)
-			#print "after owned events"
-
-			company = Company(name=company_name,application_deadline=form_data.get('deadline'),notes=form_data.get('company_notes'),user=request.user, link=form_data.get('app_link'))
+				request.user.events.add(evt)
+			if application_deadline == '':
+				company = Company(name=company_name,notes=form_data.get('company_notes'),user=request.user, link=form_data.get('app_link'))
+			else:
+				company = Company(name=company_name,application_deadline=application_deadline,notes=form_data.get('company_notes'),user=request.user, link=form_data.get('app_link'))
 
 			company.save()
-			company.events.add(evt)
+
+			if (application_deadline != "" and len(application_deadline) != 0):
+				company.events.add(evt)
 			print 'made company'
 			context = {'username': request.user.username}
 
@@ -209,17 +207,20 @@ def companies(request, company_name):
 
 	if(data):
 		company_edit = False
+		app_deadline = ''
 		
 		#import pdb;pdb.set_trace()
 		go_home = data.get('back_home')
 
 		if("export" in data):
+			print "got to export"
 			user = request.META['LOGNAME']
 			path_name = "/Users/%s/Downloads/" % user
-			f = open(os.path.join(path_name, "companies.txt"), "w")
+			f = open(os.path.join(path_name, "jam_companies.txt"), "w")
 			for company in companies:
 				f.write(str(company) + ", " + str(company.application_deadline) + "\n")
 			f.close() 
+
 		elif('save' in data):
 			company_name = data.get('name')
 			company = request.user.company_set.filter(name=company_name).first()
@@ -272,13 +273,15 @@ def companies(request, company_name):
 				show_company = False
 				c_name = data.get('company_edit')
 				company = request.user.company_set.get(name=c_name)
-				app_deadline = company.application_deadline.strftime('%Y-%m-%d')
+				if company.application_deadline != "" and company.application_deadline != None:
+					app_deadline = company.application_deadline.strftime('%Y-%m-%d')
 				# print "company edit"
 			else:
 				# print "company name in data"
 				c_name = data.get('company_name')
 				company = request.user.company_set.get(name=c_name)
-				app_deadline = company.application_deadline.strftime('%Y-%m-%d')
+				if company.application_deadline != "" and company.application_deadline != None:
+					app_deadline = company.application_deadline.strftime('%Y-%m-%d')
 				
 			contacts = Contact.objects.filter(user=request.user, employer=c_name)
 			
@@ -347,6 +350,9 @@ def companies(request, company_name):
 def is_valid_date(date):
 	now = datetime.now()
 
+	if(date == "" or len(date) == 0):
+		return ""
+
 	year = int(date[0:4])
 	month = int(date[5:7])
 	day = int(date[8:10])
@@ -361,3 +367,26 @@ def is_valid_date(date):
 
 	return ""
 
+def read_from_file(user, input_file):
+	print "in read_from_file"
+	for line in input_file:
+		if len(line) > 0:
+			company_info = line.split(',')
+			company_name = company_info[0]
+			company_deadline = company_info[1].strip()
+
+			stripped_deadline = company_deadline.replace("-", "")
+			stripped_deadline.replace('/', "")
+			if len(company_deadline) < 10: 
+				continue
+			elif company_deadline.isdigit():
+				is_valid_date(company_deadline)
+			else:
+				continue
+
+
+			company = Company(name=company_name,
+						  application_deadline=company_deadline,
+						  user=user)
+			company.save()
+	return True
