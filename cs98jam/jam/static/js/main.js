@@ -2,7 +2,7 @@ function validateEmail(email){
 	var at = email.indexOf("@");
 	var period = email.lastIndexOf(".");
 
-	if (at < 1 || period < at + 2 || period + 2 >= email.length) {
+	if ((at < 1 || period < at + 2 || period + 2 >= email.length) && email.length != 0) {
 		//alert("Please enter a valid email address");
 		return "Please enter a valid email address";
 	}
@@ -12,12 +12,12 @@ function validateEmail(email){
 function validatePhoneNumber(number) {
 	number = number.replace(/[^0-9]/g, '');
 
-	if(! (number.match(/\d/g) && number.length==10)){
+	if(! (number.match(/\d/g) && number.length==10) && number.length!=0){
 		return "Please enter a valid phone number";
 	}
 	else{
 		$('#phone_number_input').val(number);
-		return "";
+		return '';
 	}
 	number = number.replace(/\)\s*|\(\s*|-/g, '');
 
@@ -99,6 +99,9 @@ function startEndTimeValidation(startTime, endTime) {
  * Checks to see if a date is in the past (before the current date) and if the month and day exist
  */
 function dateValidation(date) {
+	if (!date) {
+		return true;
+	}
 
 	var currentDate = getCurrentDate();
 
@@ -132,35 +135,40 @@ function isValidDate(formName)
 	var dateString = document.forms[formName]["deadline"].value;
     // First check for the pattern
     var regex_date = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
+    console.log(dateString);
+    if (dateString) {
 
-    if(!regex_date.test(dateString))
-    {
-    	alert('Please enter your date in the format YYYY-MM-DD');
-        return false;
-    }
+	    if(!regex_date.test(dateString))
+	    {
+	    	alert('Please enter your date in the format YYYY-MM-DD');
+	        return false;
+	    }
 
-    // Parse the date parts to integers
-    var parts   = dateString.split("-");
-    var day     = parseInt(parts[2], 10);
-    var month   = parseInt(parts[1], 10);
-    var year    = parseInt(parts[0], 10);
+	    // Parse the date parts to integers
+	    var parts   = dateString.split("-");
+	    var day     = parseInt(parts[2], 10);
+	    var month   = parseInt(parts[1], 10);
+	    var year    = parseInt(parts[0], 10);
 
-    // Check the ranges of month and year
-    if(year < 1000 || year > 3000 || month == 0 || month > 12)
-    {
-        return false;
-    }
+	    // Check the ranges of month and year
+	    if(year < 1000 || year > 3000 || month == 0 || month > 12)
+	    {
+	        return false;
+	    }
 
-    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+	    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 
-    // Adjust for leap years
-    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
-    {
-        monthLength[1] = 29;
-    }
+	    // Adjust for leap years
+	    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+	    {
+	        monthLength[1] = 29;
+	    }
 
-    // Check the range of the day
-    return day > 0 && day <= monthLength[month - 1];
+	    // Check the range of the day
+	    return day > 0 && day <= monthLength[month - 1];
+	} else {
+		return true;
+	}
 }
 
 /*
