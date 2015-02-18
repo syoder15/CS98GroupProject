@@ -77,14 +77,18 @@
                                 {{ day }}
                             </div>
                             {% if items %}
+
                             <ul class="eventBullet">
                                 {% for item in items %}
-                                <li>
-                                    <a href="{% url 'events_page' event_id=item.id event_name=item.name %}">
-                                        <span class="event-times">{{ item.start_time|time }}</span>
-                                        {{ item.name }}
-                                    </a>
-                                </li>
+                                    {% if this_month.year|stringformat:"s" in item.event_date|stringformat:"s" %}
+                                    
+                                    <li>
+                                        <a href="{% url 'events_page' event_id=item.id event_name=item.name %}">
+                                            <span class="event-times">{{ item.start_time|time }}</span>
+                                            {{ item.name }}
+                                        </a>
+                                    </li>
+                                    {% endif %}
                                 {% endfor %}
                             </ul>
                             {% endif %}
