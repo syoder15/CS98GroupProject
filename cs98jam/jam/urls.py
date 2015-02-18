@@ -64,17 +64,17 @@ urlpatterns = patterns('',
         name='swingtime-events'
     ),
         
-    url(
-        r'^events/add/(?P<channel_name>.+)/$', 
-        views.add_event, 
-        name='swingtime-add-event'
-    ),
+    #url(
+    #    r'^events/add/(?P<channel_name>.+)/$', 
+    #    views.add_event, 
+    #    name='swingtime-add-event'
+    #),
 	
-	url(
-        r'^events/add/$', 
-        views.add_event, 
-        name='swingtime-add-event'
-    ),
+	#url(
+    #    r'^events/add/$', 
+    #    views.add_event, 
+    #    name='swingtime-add-event'
+    #),
     
     url(
         r'^events/(\d+)/$', 

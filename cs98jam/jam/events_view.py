@@ -11,7 +11,7 @@ from django.conf import settings
 import os
 import json
 
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory, Event as jam_event
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory, EventOccurrence, Event as jam_event
 from django.http import HttpResponseRedirect
 
 from swingtime import utils, forms
@@ -33,82 +33,82 @@ upload_form = UploadFileForm
 # We made slight edits which include comments below. These edits were made in order to allow user-specific
 # calendars for our Events page
 ######################################################################################
-@login_required
-def add_event(
-	request,
-	template='swingtime/add_event.html',
-	event_form_class=forms.EventForm,
-	recurrence_form_class=forms.MultipleOccurrenceForm,
-	channel_name = None
-):
-	'''
-	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
+# @login_required
+# def add_event(
+# 	request,
+# 	template='swingtime/add_event.html',
+# 	event_form_class=forms.EventForm,
+# 	recurrence_form_class=forms.MultipleOccurrenceForm,
+# 	channel_name = None
+# ):
+# 	'''
+# 	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
 
-	Context parameters:
+# 	Context parameters:
 
-	dtstart
-		a datetime.datetime object representing the GET request value if present,
-		otherwise None
+# 	dtstart
+# 		a datetime.datetime object representing the GET request value if present,
+# 		otherwise None
 
-	event_form
-		a form object for updating the event
+# 	event_form
+# 		a form object for updating the event
 
-	recurrence_form
-		a form object for adding occurrences
+# 	recurrence_form
+# 		a form object for adding occurrences
 
-	'''
-	dtstart = None
-	if request.method == 'POST':
-		event_form = event_form_class(request.POST)
-		recurrence_form = recurrence_form_class(request.POST)
-		if event_form.is_valid() and recurrence_form.is_valid():
-			event = event_form.save()
+# 	'''
+# 	dtstart = None
+# 	if request.method == 'POST':
+# 		event_form = event_form_class(request.POST)
+# 		recurrence_form = recurrence_form_class(request.POST)
+# 		if event_form.is_valid() and recurrence_form.is_valid():
+# 			event = event_form.save()
 			
-			#### JAM CODE ####
-			if (not channel_name):
-				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-				user_profile.events.add(event) #associate the current event with a user's profile
-				user_profile.owned_events.add(event)
+# 			#### JAM CODE ####
+# 			if (not channel_name):
+# 				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
+# 				user_profile.events.add(event) #associate the current event with a user's profile
+# 				user_profile.owned_events.add(event)
 
-				company_field = request.POST.get('description')
-				company_field = company_field.replace(" ", "")
-				companies = company_field.split(',')
-				for c in companies:
-					if len(request.user.company_set.filter(name=c)) > 0:
-						company = request.user.company_set.filter(name=c)
-						company = company[0]
-						company.events.add(event)
+# 				company_field = request.POST.get('description')
+# 				company_field = company_field.replace(" ", "")
+# 				companies = company_field.split(',')
+# 				for c in companies:
+# 					if len(request.user.company_set.filter(name=c)) > 0:
+# 						company = request.user.company_set.filter(name=c)
+# 						company = company[0]
+# 						company.events.add(event)
 
-			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
-				channel = get_object_or_404(Channel, name=channel_name)
-				channel.events.add(event)
-				for user in channel.admins.all():
-					user.profile.owned_events.add(event)
-					user.profile.events.add(event)
+# 			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
+# 				channel = get_object_or_404(Channel, name=channel_name)
+# 				channel.events.add(event)
+# 				for user in channel.admins.all():
+# 					user.profile.owned_events.add(event)
+# 					user.profile.events.add(event)
 				
-			#### JAM CODE ####	
-			recurrence_form.save(event)
-			return http.HttpResponseRedirect(event.occurrence_set.first().get_absolute_url())
-	else:
-		if 'dtstart' in request.GET:
-			try:
-				dtstart = parser.parse(request.GET['dtstart'])
-			except:
-				# TODO A badly formatted date is passed to add_event
-				pass
+# 			#### JAM CODE ####	
+# 			recurrence_form.save(event)
+# 			return http.HttpResponseRedirect(event.occurrence_set.first().get_absolute_url())
+# 	else:
+# 		if 'dtstart' in request.GET:
+# 			try:
+# 				dtstart = parser.parse(request.GET['dtstart'])
+# 			except:
+# 				# TODO A badly formatted date is passed to add_event
+# 				pass
 
-		dtstart = dtstart or datetime.now()
-		event_form = event_form_class()
-		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
+# 		dtstart = dtstart or datetime.now()
+# 		event_form = event_form_class()
+# 		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
 
-		#print recurrence_form
+# 		#print recurrence_form
 
 
-	return render(
-		request,
-		template,
-		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
-	)
+# 	return render(
+# 		request,
+# 		template,
+# 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
+# 	)
 
 def startEndTimeValidation(start_time, end_time):
 	startTime = start_time.split(':')
@@ -162,14 +162,39 @@ def new_event(request):
 		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
 		#print "start time" + startTime + "end time" + endTime
 
-		event = jam_event(name=event_name,
+		if (form_data.get('recurrence') != 'None'):
+			date_obj = datetime.strptime(str(form_data.get('event_date')), "%Y-%m-%d")
+
+			occurrence = EventOccurrence(
+				name=event_name,
+				frequency=form_data.get('recurrence'),
+				start_month=form_data.get('event_date')[5:7],
+				start_year=form_data.get('event_date')[0:4],
+				start_day=form_data.get('event_date')[8:10],
+				day_of_the_week=date_obj.strftime('%A'))
+
+			occurrence.save()
+
+			occurrence_id = occurrence.id
+			event = jam_event(name=event_name,
 						  event_type=form_data.get('event_type'),
 						  description=form_data.get('description'),
 						  companies=form_data.get('companies'),
 						  event_date=form_data.get('event_date'),
 						  start_time=startTime,
 						  end_time=endTime,
+						  occurrence_id = occurrence_id,
 						  creator=request.user)
+		else:
+			event = jam_event(name=event_name,
+							  event_type=form_data.get('event_type'),
+							  description=form_data.get('description'),
+							  companies=form_data.get('companies'),
+							  event_date=form_data.get('event_date'),
+							  start_time=startTime,
+							  end_time=endTime,
+							  creator=request.user)
+
 		event.save()
 		request.user.events.add(event)
 		request.user.owned_events.add(event)
@@ -209,6 +234,9 @@ def events_page(request, event_id, event_name):
 	start_time = event.start_time
 	end_time = event.end_time
 
+	recurrence_object = EventOccurrence.objects.filter(id=event.occurrence_id).first() #first?
+	recurrence = recurrence_object.frequency
+
 	if (event_type == 'app'): 
 		event_type = 'Application Deadline'
 
@@ -241,7 +269,9 @@ def events_page(request, event_id, event_name):
  	if request.user.controlledChannels:
  		channel_admin = True
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
-	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 'google_link': google_link, 'channel_admin': channel_admin, "controlled_channels": request.user.controlledChannels, 'companies': companies}
+	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 
+	'google_link': google_link, 'channel_admin': channel_admin, "controlled_channels": request.user.controlledChannels, 
+	'companies': companies, 'recurrence': recurrence}
 
 	return render(request, 'events/event_detail_page.html', context)
 

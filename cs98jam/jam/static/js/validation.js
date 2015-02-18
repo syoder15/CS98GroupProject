@@ -421,6 +421,7 @@ function submitEventForm(event){
   	console.log("START" + startTime);
   	var endTime = $('#event_end_time_input').val();
   	console.log("END" + endTime);
+  	var recurrence = $('#event_recurrence_input').val();
 	var channel = $('#channel_input').val();
 	var csrftoken = getCookie('csrftoken');
 
@@ -452,6 +453,7 @@ function submitEventForm(event){
 			"event_date": date,
 			"start_time": startTime,
 			"end_time": endTime,
+			"recurrence": recurrence,
 			"channel": channel
 		},
 		singleton:true,

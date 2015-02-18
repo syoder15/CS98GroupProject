@@ -19,6 +19,7 @@ class Event(models.Model):
 	end_time = models.TimeField()
 	creator = models.ForeignKey(User, related_name="owned_events", blank=True)
 	users = models.ManyToManyField(User, related_name="events", blank=True)
+	occurrence_id = models.IntegerField(blank=True, null=True)
 
 class Company(models.Model):
     
@@ -108,3 +109,15 @@ class UserProfile(models.Model):
 	# notification freq, defined as how many emails sent per week
 	# 42 means 4-hour feed, 7 means daily digest, and 1 means week in review 
 	notification_frequency = models.IntegerField(default=0)
+
+class EventOccurrence(models.Model):
+	def __unicode__(self):
+		return self.name
+
+	name = models.CharField(max_length=50)
+	frequency = models.CharField(max_length=10) #options are daily, weekly, monthly, annually
+	start_month = models.IntegerField()
+	start_year = models.IntegerField()
+	start_day = models.IntegerField()
+	day_of_the_week = models.CharField(max_length=10)
+	end_date = models.DateField(blank=True, null=True)
