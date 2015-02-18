@@ -64,7 +64,8 @@ def send_activation_email(user,new_profile):
     email_subject = 'JobApplicationManager Account Confirmation'
     activation_link =  site + 'activate/confirm/' + new_profile.activation_key
 
-    email_body = "Howdy!\n\nYou're receiving this email since you recently signed up for a JAM account! If you're receiving this email in error, please ignore it. Otherwise, click here: " + activation_link + " to activate your account within the next 7 days!\n"
+    username = user.username
+    email_body = "Howdy!\n\nYou're receiving this email since you recently signed up for a JAM account with the username: " + username + "! If you're receiving this email in error, please ignore it. Otherwise, click here: " + activation_link + " to activate your account within the next 7 days!\n"
     send_mail(email_subject, email_body, 'no-reply@gmail.com', [user.email], fail_silently =False)
 
 

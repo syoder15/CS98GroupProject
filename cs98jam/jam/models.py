@@ -29,7 +29,7 @@ class Company(models.Model):
     name = models.CharField(max_length=50)
     notes = models.TextField(blank=True)
     user = models.ForeignKey(User)
-    application_deadline = models.DateField()
+    application_deadline = models.DateField(blank=True, null=True)
     application_status = models.BooleanField(default=False)
     events = models.ManyToManyField(Event, blank=True, related_name="company_events")
     link = models.CharField(max_length=150, blank=True)
@@ -40,8 +40,8 @@ class Contact(models.Model):
         return self.name
 
     name = models.CharField(max_length=50)
-    phone_number = models.IntegerField(default=0)
-    email = models.CharField(max_length=50)
+    phone_number = models.IntegerField(default=0,blank=True,null=True)
+    email = models.CharField(max_length=50,blank=True,null=True)
     employer = models.CharField(max_length=50)
     notes = models.TextField(blank=True)
     user = models.ForeignKey(User)
