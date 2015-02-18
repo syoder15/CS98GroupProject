@@ -34,7 +34,7 @@
 						<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a></li>
 
 					{% empty %}
-						<p> You haven't entered any events for this company. Add one <a href="{% url 'swingtime-add-event' %}">here</a>.</p>
+						<p> You haven't entered any events for this company. Add one <a style="text-decoration:none" data-toggle="modal" data-target="#eventModal">here</a>.<p>
 					{% endfor %}
 					</ul>
 				</td>
