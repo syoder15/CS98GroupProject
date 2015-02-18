@@ -415,6 +415,7 @@ def month_view(
 			my_new_events = my_events.filter(event_type = 'Other') | my_new_events
 		else:
 			other = False
+		my_events = my_new_events
 
 	#my_events = request.user.events.all()
 	# my_new_events = request.user.profile.events.none()

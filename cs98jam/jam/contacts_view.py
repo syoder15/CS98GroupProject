@@ -33,6 +33,7 @@ upload_form = UploadFileForm
 @csrf_exempt
 def contacts(request, contact_name):
 	contacts = request.user.contact_set.all()
+	contacts = sorted(contacts, key=lambda contact: contact.name)
 	data = request.POST
 	show_contact = True
 	contact_edit = False
