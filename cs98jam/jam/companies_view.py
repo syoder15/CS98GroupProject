@@ -214,7 +214,7 @@ def company_info(company_name,request):
 		has_link = True
 
 	context = {'companies': companies, 'company_name': company.name, 'events': events,			
-	'application_deadline': app_deadline, 'show': show_company,
+	'application_deadline': app_deadline, 'show': show_company,'status': company.application_status,
 	'contacts': contacts, 'link': link, 'has_link': has_link, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 	return context
 
@@ -230,10 +230,13 @@ def companies(request, company_name):
 
 	#first_company = companies.first()
 
-	if company_name == 'all':
-		company_name = companies[0]
-	
-	context = company_info(company_name,request)
+	if len(companies) == 0:
+		context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
+	else:
+		if company_name == 'all':
+			company_name = companies[0]
+		
+		context = company_info(company_name,request)
 	
 	if(data):
 		company_edit = False
@@ -275,10 +278,16 @@ def companies(request, company_name):
 			event.delete()
 			owned_event.delete()
 			
+			companies = request.user.company_set.all()
+			companies = sorted(companies, key=lambda company: company.name)
+
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
 
 		elif(go_home == ("Back")):
 			show_company = False
+			context = {'companies': companies, 'show': show_company,'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
+
 		elif('company_update' in data):
 			
 			#c_name = data.get('app_status')
@@ -295,8 +304,11 @@ def companies(request, company_name):
 				else:
 					company.application_status = False
 					company.save()
-			companies = request.user.company_set.all()
-			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
+			#companies = request.user.company_set.all()
+
+			context = company_info(company_name,request)
+
+			#context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 		elif('company_name' in data or 'company_edit' in data):
 			if('company_edit' in data): 
 				company_edit = True 
