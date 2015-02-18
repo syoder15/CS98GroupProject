@@ -197,6 +197,7 @@ def edit_company(request, company_name):
 def companies(request, company_name):
 	print 'companies view'
 	companies = request.user.company_set.all()
+	companies = sorted(companies, key=lambda company: company.name)
 	data = request.POST
 	show_company = True
 	user = User.objects.get(username = request.user.username)
