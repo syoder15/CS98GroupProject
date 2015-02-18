@@ -70,7 +70,7 @@
                     {% for row in calendar %}
                     <tr>
                         {% for day,items in row  %}
-                        <td{% ifequal day today.day %}{% ifequal this_month.month today.month %} class="today"{% endifequal %}{% endifequal %}>
+                        <td{% ifequal day today.day %}{% ifequal this_month.month today.month %}{% ifequal this_month.year today.year %} class="today"{% endifequal %}{% endifequal %}{% endifequal %}>
                         {% if day %}
                             <div class="day-ordinal">
                                 
