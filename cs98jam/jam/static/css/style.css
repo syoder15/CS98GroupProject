@@ -48,8 +48,10 @@ a:visited {
 }
 
 #userIcon {
-	width: 30px;
-	height: 25px;
+	margin-top: -9px;
+	margin-bottom: -7px;
+	width: 47px;
+	height: 40px;
 }
 
 
@@ -108,7 +110,7 @@ a:visited {
 }
 
 .round-button {
-    background: #e6e6e6;
+    /*background: #e6e6e6;*/
     border-radius: 50%;
     border: 2px solid #fbfafa;
     overflow: hidden;
@@ -122,7 +124,7 @@ a:visited {
 }
 
 .round-button:hover {
-    background: #ab445b;
+    background: #5ea6d9;
     cursor:pointer;
 }
 
@@ -244,20 +246,15 @@ a:visited {
 	padding-bottom: 15px;
 }
 
-.left-bar {
-
-/*	background-color:#bfc98c;
-	border-right:1px solid #786257; 
-	height:100vh; 
+.container-fluid {
+	padding-left:0px;
 }
 
-.details-body {
-	height:100vh;
-	background-color: #dfe3cf;*/
-
+.left-bar {
 	background-color:#bddbef;
 	border-right:1px solid #c8c8c8; 
 	height:100vh; 
+	overflow:auto;
 }
 
 .details-body {
