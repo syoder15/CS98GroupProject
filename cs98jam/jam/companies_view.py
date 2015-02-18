@@ -324,9 +324,9 @@ def companies(request, company_name):
 					break
 			'''
 
-			app_deadline = company.application_deadline
-			app_deadline = str(app_deadline)
-			datetime.strptime(app_deadline, "%Y-%m-%d")
+			# app_deadline = company.application_deadline
+			# app_deadline = str(app_deadline)
+			# datetime.strptime(app_deadline, "%Y-%m-%d")
 
 			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
@@ -377,9 +377,9 @@ def read_from_file(user, input_file):
 
 			stripped_deadline = company_deadline.replace("-", "")
 			stripped_deadline.replace('/', "")
-			if len(company_deadline) < 10: 
+			if len(stripped_deadline) < 8: 
 				continue
-			elif company_deadline.isdigit():
+			elif stripped_deadline.isdigit():
 				is_valid_date(company_deadline)
 			else:
 				continue
