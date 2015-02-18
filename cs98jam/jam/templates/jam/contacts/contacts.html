@@ -12,9 +12,6 @@
 -->
 {% block side_col %}
 	<h2>Contacts</h2>
-	<div>
-		<button type="button" name="export" class="btn btn-primary contact-export">Export my contacts</button>
-	</div>
 	<div class="list-group">
 		<form class="deleteContact" method='POST' action="">
 			{% csrf_token %}
@@ -28,6 +25,11 @@
 			<h5> You haven't entered any contacts. Add one <a data-toggle="modal" data-target="#contactModal">here</a>.</h5>
 			{% endfor %}
 		</form>
+		<br>
+		<br>
+		<div class="export_contacts_btn">
+			<button type="button" name="export" class="btn btn-default contact-export">Export my contacts</button>
+		</div>
 
 	</div>
 
