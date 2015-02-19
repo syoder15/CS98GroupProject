@@ -88,7 +88,6 @@ def index(request):
 		site = settings.DOMAIN
 		c_name = ""
 
-		if len(request.user.controlledChannels 
 		context = {'username': request.user.username, 'upload_form': upload_form, 'site': site, 
 			'channels': channels, 'show': show_feed ,'events': future_events, 'news_feed_notes': news_feed_notes, 'app_list': app_notifications,
 			'article_urls': article_urls, 'article_images': article_images, "controlled_channels": request.user.controlledChannels}
