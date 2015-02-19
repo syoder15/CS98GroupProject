@@ -265,12 +265,10 @@ def events_page(request, event_id, event_name):
  		
  		return HttpResponseRedirect(link)
 
- 	channel_admin = False
- 	if request.user.controlledChannels:
- 		channel_admin = True
+ 	
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 
-	'google_link': google_link, 'channel_admin': channel_admin, "controlled_channels": request.user.controlledChannels, 
+	'google_link': google_link, "controlled_channels": request.user.controlledChannels, 
 	'companies': companies, 'recurrence': recurrence}
 
 	return render(request, 'events/event_detail_page.html', context)
