@@ -79,6 +79,26 @@ def contacts(request, contact_name):
 			contact.notes=data.get('notes')
 
 			contact.save()
+
+			email_address = contact.email
+			employer = contact.employer
+			notes = contact.notes
+
+			# check whether the employer exists as a company in the user's DB
+			employer_exists = False
+			if request.user.company_set.filter(name=employer).exists():
+				employer_exists = True
+
+			phone_num = contact.phone_number
+			if phone_num == 0 or phone_num == None:
+				phone_num = ''
+			if email_address == '' or email_address == None:
+				email_address = ''
+
+			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
+			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
+			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
+
 			print "saved contact"
 
 		elif(go_home == ("Back")):
@@ -120,8 +140,13 @@ def contacts(request, contact_name):
 			contacts = request.user.contact_set.all()
 
 	else:
-		if contact_name != 'all':
+
+		if len(contacts) != 0:
+			if contact_name == 'all':
+				contact_name = contacts[0].name
+
 			contact = request.user.contact_set.get(name=contact_name)
+
 			email_address = contact.email
 			employer = contact.employer
 			notes = contact.notes

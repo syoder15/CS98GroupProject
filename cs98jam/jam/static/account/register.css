@@ -23,10 +23,11 @@ body {
 	color: white;
 }
 
-/* media query to optimize home screen for mobile*/
+/* media query to optimize home screen for mobile
 @media screen and (max-width: 800px){
 	body{
 		font-size:4em;
 	}
 
 }
+*/

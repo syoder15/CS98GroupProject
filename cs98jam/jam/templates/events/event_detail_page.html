@@ -49,6 +49,10 @@
 				<th>End Time:</th>
 				<td>{{ end_time }} </td>
 			</tr>
+			<tr> 
+				<th>Recurrence:</th>
+				<td>{{ recurrence }} </td>
+			</tr>
 		</tbody>
 	</table>
 	<div class="col-sm-5" style="text-align:right; margin-right:10px">
@@ -59,7 +63,7 @@
 		
 		<form class="delete" method="POST" action="">
 		{% csrf_token %}
-		<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ event.id }}" onclick="return confirm('Are you sure you want to delete {{ event_name }}?')">Delete</button>
+		<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ event.id }}" onclick="return confirm('Are you sure you want to delete event: {{ event_name }}?')">Delete</button>
 		</form>
 
 	</div>

@@ -146,6 +146,7 @@ def company_page(request, company_name):
 	print 'app_deadline'
 	print app_deadline
 
+
 	context = {'company': companies, 'contacts': contacts,'status': company.application_status,'has_link': has_link, 'link': link, 
 	'events': events, 'company_name': company_name, 'application_deadline': app_deadline, 
 	'company_notes': company_notes, 'site': site, "controlled_channels": request.user.controlledChannels}
@@ -192,6 +193,31 @@ def edit_company(request, company_name):
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
 
+
+# yay refactoring reused code. 
+def company_info(company_name,request):
+	companies = request.user.company_set.all()
+	companies = sorted(companies, key=lambda company: company.name)
+
+	company = request.user.company_set.get(name=company_name)
+	contacts = Contact.objects.filter(user=request.user, employer=company_name)
+	events = company.events.all()
+
+	app_deadline = company.application_deadline
+	app_deadline = str(app_deadline)
+	datetime.strptime(app_deadline, "%Y-%m-%d")
+	show_company = True
+
+	link = company.link
+	has_link = False
+	if link != '':
+		has_link = True
+
+	context = {'companies': companies, 'company_name': company.name, 'events': events,			
+	'application_deadline': app_deadline, 'show': show_company,'status': company.application_status,
+	'contacts': contacts, 'link': link, 'has_link': has_link, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
+	return context
+
 @login_required
 @csrf_exempt
 def companies(request, company_name):
@@ -202,10 +228,16 @@ def companies(request, company_name):
 	show_company = True
 	user = User.objects.get(username = request.user.username)
 
+	#first_company = companies.first()
+
+	if len(companies) == 0:
+		context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
+	else:
+		if company_name == 'all':
+			company_name = companies[0]
+		
+		context = company_info(company_name,request)
 	
-
-	context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
-
 	if(data):
 		company_edit = False
 		app_deadline = ''
@@ -223,17 +255,17 @@ def companies(request, company_name):
 			f.close() 
 
 		elif('save' in data):
+			print "in save"
 			company_name = data.get('name')
-			company = request.user.company_set.filter(name=company_name).first()
 
-		
+			company = request.user.company_set.filter(name=company_name).first()		
 			company.name = company_name
 			company.application_deadline=data.get('application_deadline')
 			company.notes=data.get('notes')
 			company.link = data.get('app_link')
 			company.save()
-			
 
+			context = company_info(company_name,request)
 
 		elif('delete' in data):
 			company_name = data.get('delete')
@@ -246,10 +278,16 @@ def companies(request, company_name):
 			event.delete()
 			owned_event.delete()
 			
+			companies = request.user.company_set.all()
+			companies = sorted(companies, key=lambda company: company.name)
+
+			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
 
 		elif(go_home == ("Back")):
 			show_company = False
+			context = {'companies': companies, 'show': show_company,'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
+
 		elif('company_update' in data):
 			
 			#c_name = data.get('app_status')
@@ -266,8 +304,11 @@ def companies(request, company_name):
 				else:
 					company.application_status = False
 					company.save()
-			companies = request.user.company_set.all()
-			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
+			#companies = request.user.company_set.all()
+
+			context = company_info(company_name,request)
+
+			#context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 		elif('company_name' in data or 'company_edit' in data):
 			if('company_edit' in data): 
 				company_edit = True 
@@ -301,8 +342,6 @@ def companies(request, company_name):
 			if link != '':
 				has_link = True
 
-			# print "has link's value is " + str(has_link)
-			# print "link = " + link
 			context = {'company_edit': company_edit, 'companies': companies, 'company_name': company.name, 
 			'application_deadline': app_deadline, 'status': company.application_status, 'show': show_company,
 			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, 
@@ -310,42 +349,8 @@ def companies(request, company_name):
 
 		else:
 			print "got to the else"
-			'''
-			for company in companies:
-				if company.name in data:
-					company.delete()
-					c_name = company.name
-					break
-
-			events = request.user.profile.events.all()
-			for event in events:
-				
-				if c_name == event.title:
-					event.delete()
-					break
-			'''
-
-			app_deadline = company.application_deadline
-			app_deadline = str(app_deadline)
-			datetime.strptime(app_deadline, "%Y-%m-%d")
-
-			companies = request.user.company_set.all()
 			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
-	else:
-		print 'else'
-		if company_name != 'all':
-			company = request.user.company_set.get(name=company_name)
-			contacts = Contact.objects.filter(user=request.user, employer=company_name)
-			events = company.events.all()
-
-			app_deadline = company.application_deadline
-			app_deadline = str(app_deadline)
-			datetime.strptime(app_deadline, "%Y-%m-%d")
-
-			context = {'companies': companies, 'company_name': company.name, 'events': events,			
-			'application_deadline': app_deadline, 'show': show_company,
-			'contacts': contacts, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
-
+	
 	return render(request, 'jam/companies/companies.html', context)
 
 def is_valid_date(date):
@@ -378,9 +383,9 @@ def read_from_file(user, input_file):
 
 			stripped_deadline = company_deadline.replace("-", "")
 			stripped_deadline.replace('/', "")
-			if len(company_deadline) < 10: 
+			if len(stripped_deadline) < 8: 
 				continue
-			elif company_deadline.isdigit():
+			elif stripped_deadline.isdigit():
 				is_valid_date(company_deadline)
 			else:
 				continue
