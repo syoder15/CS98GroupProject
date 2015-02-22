@@ -20,11 +20,7 @@
 		{% for c in categories %}
 			{{ c }}{% if not forloop.last %},{% endif %} 
 		{% endfor %}</p>
-	{% if channel_status %}
-		<p>Status: Public </p>
-	{% else %}
-		<p>Status: Private </p>
-	{% endif %}
+	
 	
 	<form class="joinChannel" method="POST">
 		{% csrf_token %}
