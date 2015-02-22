@@ -34,6 +34,7 @@ upload_form = UploadFileForm
 def new_company(request):
 	print "in new company"
 	#START OF CODE
+	### RELEVANT TO IMPORT
 	if request.method == "POST" and request.FILES:
 		print "in new company upload multiple"
 		form = UploadFileForm(request.FILES)

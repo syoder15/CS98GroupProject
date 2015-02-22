@@ -56,17 +56,7 @@ listItem.on('click', function(){
 	$(this).siblings().children('p.list-group-item-text').addClass('hidden');
 });
 
-function parseFile(nameOfFile){
-	jQuery.get(nameOfFile, function(data){
-		var lines = data.split("\n");
-		for (var i = 0; i < lines.length; i++){
-			var splitLine = lines[i].split(", ");
-			var companyName = splitLine[0];
-			var applicationDate = splitLine[1];
-			//ADD COMPANY WITH THIS INFORMATION NOW
-		}
-	});
-}
+
 
 /*$("#company_deadline_input").datepicker({ 
 	altFormat: "yy-mm-dd",

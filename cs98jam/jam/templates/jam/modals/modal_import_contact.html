@@ -10,11 +10,11 @@
       	</div>
       <div class="modal-body">
 
-      	<form name="company_import_form" class="form-horizontal" enctype="multipart/form-data" action="http://127.0.0.1:8000/jam/new_company/" method="POST">
+      	<form name="contact_import_form" class="form-horizontal" enctype="multipart/form-data" action="http://127.0.0.1:8000/jam/new_contact/" method="POST">
 		{% csrf_token %}
 
       	<div class="form-group inputFileForm"> 
-			<label for="multiple_companies" class="col-sm-4 control-label">Upload Multiple: </label>
+			<label for="multiple_contacts" class="col-sm-4 control-label">Upload Multiple: </label>
 				<div class="col-sm-8">
 					{{ upload_form.filep }}
 				</div>
@@ -30,7 +30,7 @@
 
 		<div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			<input class="btn btn-primary company-btn" type="submit" value="Add New Companies"/>
+			<input class="btn btn-primary" type="submit" value="Add New Contacts"/>
 			<br> 
 			<span class="server-error" style="color:red">{{ error }}</span>
       	</div>

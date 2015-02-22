@@ -12,6 +12,9 @@
 -->
 {% block side_col %}
 	<h2>Contacts</h2>
+	<button type="button" class="btn btn-default"><a style="text-decoration:none" data-toggle="modal" data-target="#importContactModal"> Import my contacts</a></button>
+
+
 	<div class="list-group">
 		<form class="deleteContact" method='POST' action="">
 			{% csrf_token %}

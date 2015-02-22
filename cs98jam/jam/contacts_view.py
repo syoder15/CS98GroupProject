@@ -51,7 +51,7 @@ def contacts(request, contact_name):
 			path_name = "/Users/%s/Downloads/" % user
 			f = open(os.path.join(path_name, "jam_contacts.txt"), "w")
 			for contact in contacts:
-				f.write(str(contact) + ", " + str(contact.employer) + "\n")
+				f.write(str(contact) + ", " + str(contact.phone_number) + ", " + str(contact.email) + ", " + str(contact.employer) + ", " + str(contact.notes) + "\n")
 			f.close()
 		
 		elif('save' in data):
@@ -249,91 +249,112 @@ def edit_contact(request, contact_name):
 
 @login_required
 def new_contact(request):
-	form_data = request.POST
-	
-	# avoid adding contacts with the same name!
-	contact_num = form_data.get('phone')
-	print "contact num = " + contact_num
-
-	contact_email = form_data.get('email')
-	contact_name = form_data.get('name')
-	print contact_name
-	
-	#print "contact name = " + contact_name
-
-	''' see whether a contact with the same name already exists
-			if it does, re-render the form with an appropriate error.
-			if it doesn't, go ahead with business as usual, creating the company DB record
-	'''
-	if len(contact_num) != 0 and request.user.contact_set.filter(phone_number=contact_num).exists():
-			#request.user.contact_set.get(name=contact_name)
-		print "INVALID NUM!!!"
-		msg = "Sorry, you've already added a contact with that number!"
-
-		# return err response to AJAX via JSON
-		response={}
-		response["error"] = msg
-		print "got here"
-		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
-
-	elif len(contact_email) != 0 and request.user.contact_set.filter(email=contact_email).exists():
-			#request.user.contact_set.get(name=contact_name)
-		print "INVALID EMAIL!!!"
-		msg = "Sorry, you've already added a contact with that email!"
-
-		# return err response to AJAX via JSON
-		response={}
-		response["error"] = msg
-		print "got here"
-		return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
-
-	else:
-		print "making new contact!"
-
-		contact_notes = form_data.get('notes')
-		if contact_notes=='' :
-			contact_notes=" "
-
-		if len(contact_num) == 0 and len(contact_email) == 0:
-			contact = Contact(name=contact_name,
-							  employer=form_data.get('company'),
-							  notes=contact_notes,
-							  user=request.user)
-		elif len(contact_num) == 0:
-			contact = Contact(name=contact_name,
-							  email=form_data.get('email'),
-							  employer=form_data.get('company'),
-							  notes=contact_notes,
-							  user=request.user)
-		elif len(contact_email) == 0:
-			contact = Contact(name=contact_name,
-							  phone_number=form_data.get('phone'),
-							  employer=form_data.get('company'),
-							  notes=contact_notes,
-							  user=request.user)
-		else:
-			contact = Contact(name=contact_name,
-							  phone_number=form_data.get('phone'),
-							  email=form_data.get('email'),
-							  employer=form_data.get('company'),
-							  notes=contact_notes,
-							  user=request.user)
-
-
-		contact.save()
+	print "In new contact"
+	if request.method == "POST" and request.FILES:
+		print "in new contact upload multiple"
+		form = UploadFileForm(request.FILES)
+		read_contacts_from_file(request.user, request.FILES['filep'])
 		context = {'username': request.user.username}
 
-		return render(request, 'jam/index/index_landing_home.html', context)
+		#return contacts(request,'all')
+		return HttpResponseRedirect('/jam/contacts/all/')
+
+
+
+	if request.method == "POST" :	
+		form_data = request.POST
+		
+		# avoid adding contacts with the same name!
+		contact_num = form_data.get('phone')
+		print "contact num = " + contact_num
+
+		contact_email = form_data.get('email')
+		contact_name = form_data.get('name')
+		print contact_name
+		
+		#print "contact name = " + contact_name
+
+		''' see whether a contact with the same name already exists
+				if it does, re-render the form with an appropriate error.
+				if it doesn't, go ahead with business as usual, creating the company DB record
+		'''
+		if len(contact_num) != 0 and request.user.contact_set.filter(phone_number=contact_num).exists():
+				#request.user.contact_set.get(name=contact_name)
+			print "INVALID NUM!!!"
+			msg = "Sorry, you've already added a contact with that number!"
+
+			# return err response to AJAX via JSON
+			response={}
+			response["error"] = msg
+			print "got here"
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
+		elif len(contact_email) != 0 and request.user.contact_set.filter(email=contact_email).exists():
+				#request.user.contact_set.get(name=contact_name)
+			print "INVALID EMAIL!!!"
+			msg = "Sorry, you've already added a contact with that email!"
+
+			# return err response to AJAX via JSON
+			response={}
+			response["error"] = msg
+			print "got here"
+			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
+
+		else:
+			print "making new contact!"
+
+			contact_notes = form_data.get('notes')
+			if contact_notes=='' :
+				contact_notes=" "
+
+			if len(contact_num) == 0 and len(contact_email) == 0:
+				contact = Contact(name=contact_name,
+								  employer=form_data.get('company'),
+								  notes=contact_notes,
+								  user=request.user)
+			elif len(contact_num) == 0:
+				contact = Contact(name=contact_name,
+								  email=form_data.get('email'),
+								  employer=form_data.get('company'),
+								  notes=contact_notes,
+								  user=request.user)
+			elif len(contact_email) == 0:
+				contact = Contact(name=contact_name,
+								  phone_number=form_data.get('phone'),
+								  employer=form_data.get('company'),
+								  notes=contact_notes,
+								  user=request.user)
+			else:
+				contact = Contact(name=contact_name,
+								  phone_number=form_data.get('phone'),
+								  email=form_data.get('email'),
+								  employer=form_data.get('company'),
+								  notes=contact_notes,
+								  user=request.user)
+
+
+			contact.save()
+			context = {'username': request.user.username}
+
+			return render(request, 'jam/index/index_landing_home.html', context)
 
 def read_contacts_from_file(user, input_file):
 	print "in read_from_file"
 	for line in input_file:
-		contact_info = line.split(',')
+		contact_info = line.split(', ')
 		contact_name = contact_info[0]
 		contact_phone = contact_info[1]
 		contact_email = contact_info[2]
 		contact_employer = contact_info[3]
 		contact_notes = contact_info[4].strip()
+
+		if len(contact_phone) != 10 :
+			print "ERROR ERROR, phone number"
+			print len(contact_phone)
+			return
+		if "@" not in contact_email:
+			print "ERROR ERROR, email"
+			return
 
 		contact = Contact(name=contact_name, phone_number = contact_phone, email = contact_email, employer = contact_employer, notes = contact_notes, user= user)
 		contact.save()
