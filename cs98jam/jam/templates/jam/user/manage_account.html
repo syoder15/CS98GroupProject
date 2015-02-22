@@ -6,13 +6,35 @@
 
 		<h3><a href='../../password_change/new/'>Reset Password</a></h2>
 
-		<h3>Update Email Address</h2>
-		<form method="post">{% csrf_token %}
+		<h3>Update Email Address</h3>
+		
+		<form method="post" action="account_management/">{% csrf_token %}
 		{{ form.as_p }}
-		<input type="text" placeholder= {{ email }} name="new_email">
+		<input type="text" placeholder= "{{ email }}" name="new_email">
 
-		<input type="submit" value = "Save">
+
+		
+		<h3>Deadline Notification Frequency</h3>
+
+		<p>We currently start notifying you <b>{{ not_freq }}</b> your application deadline. </p>
+
+		<p> Notify me starting
+		<!--<label for ="notification_freq">Notify me starting</label>-->
+		<select name ="notification_freq" id="notification_freq">
+		  <option value="0">1 day before</option>
+		  <option value="1">1 week before</option>
+		  <option value="2">1 month before</option>
+		</select>
+		the application deadline
+	</p>
+		<!--<label for ="notification_freq"">before company application deadlines</label>-->
+
+		<br>
+		<button  class="btn btn-default" type="submit">Save</button>
+
+
 		</form>
+
 
 	</div>
 {% endblock %}

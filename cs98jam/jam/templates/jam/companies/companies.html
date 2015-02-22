@@ -12,7 +12,7 @@
 
 {% block side_col %}
 	<h2>My Companies</h2>
-		 <button type="button" class="btn btn-default"><a style="text-decoration:none" data-toggle="modal" data-target="#importCompanyModal"> Import my companies</a></button>
+		 <button type="button" class="btn btn-default"><a style="text-decoration:none; color:#333" data-toggle="modal" data-target="#importCompanyModal"> Import my companies</a></button>
 
 	<div class="list-group">
 		<form action="" method="POST" id="company_form">
@@ -20,7 +20,7 @@
 		{% for c in companies %}
 			<div class="companies_names_list">
 				<div class="company_name_in_list">
-					<input type="submit" name="company_name" value="{{c}}" class="companyNames" title="Click to see detailed company page"style="color:#993399"/>
+					<input type="submit" name="company_name" value="{{c}}" class="companyNames" title="Click to see detailed company page"style="color:#428bca"/>
 				</div>
 				<div class="complete_checkbox">
 					<label class="complete_text">Complete</label>

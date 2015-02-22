@@ -93,7 +93,7 @@ def new_channel(request):
 			channel = Channel(name=form_data.get('name'), 
 				moniker=form_data.get('moniker'), 
 				description=form_data.get('description'), 
-				is_public=(form_data.get('is_public')))
+				is_public=True)
 			channel.save()
 			
 			

@@ -21,7 +21,7 @@
 			{% for c in contacts %}
 				<div class="contact_names_list">
 					
-					<input type="submit" title="Click to see detailed contact page"name="contact_name" value="{{c}}" class="contactNames" style="color:#993399"/>
+					<input type="submit" title="Click to see detailed contact page"name="contact_name" value="{{c}}" class="contactNames" style="color:#428bca"/>
 					<button class="submit btn btn-default btn-small" name="{{ c.name }}" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete {{ c.name }}?')">Delete</button>
 				</div>
 			{% empty %}

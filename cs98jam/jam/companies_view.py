@@ -107,6 +107,7 @@ def new_company(request):
 				evt.save()
 
 				request.user.events.add(evt)
+				request.user.owned_events.add(evt)
 			if application_deadline == '':
 				company = Company(name=company_name,notes=form_data.get('company_notes'),user=request.user, link=form_data.get('app_link'))
 			else:
@@ -165,12 +166,44 @@ def edit_company(request, company_name):
 	if form_data:
 		print "GOT HERE YAY"
 		if user and company: 
+			print "first if"
+			if company.application_deadline != form_data.get('app_deadline'):
+
+				title = str(company.name) + ' Deadline'
+				print "second if"
+				if company.application_deadline:
+					old_evt = request.user.events.filter(name=title).first()
+					request.user.events.delete(old_evt)
+					request.user.owned_events.delete(old_evt)
+					old_evt.delete()
+					print "third if"
+
+
+			
+				evt = jam_event(
+					name=title,
+					event_type='Application Deadline',
+					description='',
+					companies=company_name,
+					start_time='12:00',
+					end_time='13:00',
+					event_date=form_data.get('app_deadline'),
+					creator=request.user
+				)
+				evt.save()
+
+				request.user.events.add(evt)
+				request.user.owned_events.add(evt)
+
 			company.name=form_data.get('company_name')
 			company.application_deadline=form_data.get('app_deadline')
 			company.notes=form_data.get('notes')
 			print company.name + company.application_deadline + company.notes
 			company.save()
 			redirect_link = '../../../companies/' + company.name
+
+
+
 			return HttpResponseRedirect(redirect_link)
 
 		else:
@@ -204,9 +237,11 @@ def company_info(company_name,request):
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
 	events = company.events.all()
 
+
 	app_deadline = company.application_deadline
-	app_deadline = str(app_deadline)
-	datetime.strptime(app_deadline, "%Y-%m-%d")
+	if app_deadline:
+		app_deadline = str(app_deadline)
+		datetime.strptime(app_deadline, "%Y-%m-%d")
 	show_company = True
 
 	link = company.link
@@ -259,7 +294,37 @@ def companies(request, company_name):
 			print "in save"
 			company_name = data.get('name')
 
-			company = request.user.company_set.filter(name=company_name).first()		
+			company = request.user.company_set.filter(name=company_name).first()
+			user = User.objects.get(username=request.user.username)
+
+			if user and company: 
+				
+				if company.application_deadline != data.get('application_deadline'):
+
+					title = str(company.name) + ' Deadline'
+					if company.application_deadline:
+						old_evt = request.user.events.filter(name=title).first()
+						old_owned_evt = request.user.owned_events.filter(name=title).first()
+						
+						old_evt.delete()
+						old_owned_evt.delete()
+				
+					evt = jam_event(
+						name=title,
+						event_type='Application Deadline',
+						description='',
+						companies=company_name,
+						start_time='12:00',
+						end_time='13:00',
+						event_date=data.get('application_deadline'),
+						creator=request.user
+					)
+					evt.save()
+
+					request.user.events.add(evt)
+					request.user.owned_events.add(evt)
+					company.events.add(evt)
+					
 			company.name = company_name
 			company.application_deadline=data.get('application_deadline')
 			company.notes=data.get('notes')
