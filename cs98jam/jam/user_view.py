@@ -68,11 +68,30 @@ def index(request):
 		for note in c.adminNotes.all():
 			if note.created_at > datetime.now() - timedelta(days=7):
 				news_feed_notes.append(note)	
+	
+	user_profile = UserProfile.objects.filter(user=request.user).first()
 
 	# application status notifications
 	app_notifications = []
 	for c in companies:
 		if c.application_deadline != '' and c.application_deadline != None:
+			if user_profile.notification_frequency == 0:
+				if c.application_deadline == datetime.today().date() + timedelta(days=1) and not c.application_status:
+					app_notifications.append("Your " + c.name + " application is due tomorrow. Get on that ASAP!")
+				elif c.application_deadline == datetime.today().date() and not c.application_status:
+					app_notifications.append("Your " + c.name + " application is due TODAY. Get on that ASAP!")
+			elif user_profile.notification_frequency == 1:
+				if c.application_deadline <= datetime.today().date() + timedelta(days=7) and not c.application_status:
+					app_notifications.append("Your " + c.name + " application is due this week. Get on that ASAP!")
+				elif c.application_deadline == datetime.today().date() and not c.application_status:
+					app_notifications.append("Your " + c.name + " application is due TODAY. Get on that ASAP!")
+			else:
+				if c.application_deadline <= datetime.today().date() + timedelta(days=31) and not c.application_status:
+					app_notifications.append("Your " + c.name + " application is due this month. Get on that ASAP!")
+				elif c.application_deadline == datetime.today().date() and not c.application_status:
+					app_notifications.append("Your " + c.name + " application is due TODAY. Get on that ASAP!")
+
+			'''
 			if c.application_deadline <= datetime.today().date() + timedelta(days=2) and not c.application_status:
 				if c.application_deadline == datetime.today().date():
 					app_notifications.append("Your " + c.name + " application is due today. Get on that ASAP!")
@@ -80,7 +99,7 @@ def index(request):
 					app_notifications.append("Your " + c.name + " application is due tomorrow. Get on that ASAP!")
 				else: 
 					app_notifications.append("Your " + c.name + " application is due in two days. Get on that ASAP!")
-
+			'''
 	show_feed = False    # if true, show newsfeed. else, show regular homepage
 
 	if request.method == "GET":
@@ -259,12 +278,31 @@ def manage_account(request):
 	form_data = request.POST
 
 	site = settings.DOMAIN
-	user_profile = UserProfile.objects.filter(user=request.user)
+	user_profile = UserProfile.objects.filter(user=request.user).first()
 
 	user = request.user
-	context ={'site': site, 'profile': user_profile, 'email': user.email, "controlled_channels": request.user.controlledChannels}
+
+	#context ={'site': site, 'profile': user_profile, 'email': user.email, "controlled_channels": request.user.controlledChannels, 'not_freq': freq}
+
 
 	if form_data:
-		user.email = form_data.get('new_email')
-		user.save()
+		if form_data.get('new_email'):
+			user.email = form_data.get('new_email')
+			user.save()
+		freq = form_data.get('notification_freq')
+		print "frequency is "  + freq
+		user_profile.notification_frequency = int(freq)
+		user_profile.save()
+
+	not_freq = user_profile.notification_frequency
+	if not_freq == 0:
+		freq = "one day before"
+	elif not_freq == 1:
+		freq = "one week before"
+	else: 
+		freq = "one month before"
+
+
+	context ={'site': site, 'profile': user_profile, 'email': user.email, "controlled_channels": request.user.controlledChannels, 'not_freq': freq}
+
 	return render(request, 'jam/user/manage_account.html', context)
