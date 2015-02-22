@@ -26,11 +26,6 @@
 			<input class="button" type="submit" value="Submit Changes"/>
 		</form>
 		
-		{% if channel_status %}
-			<p>Status: Public </p>
-		{% else %}
-			<p>Status: Private </p>
-		{% endif %}
 		
 		<form class="postAdminNote" method="POST">
 			{% csrf_token %}
@@ -60,8 +55,7 @@
 		{% empty %} No events
 		{% endfor %}
 		
-		
-		<a href="../../../events/add/{{ channel_name }}">Add New Event</a>
+
 		
 	{% else %}
 		Sorry, according to our records, you are not an admin for this channel.

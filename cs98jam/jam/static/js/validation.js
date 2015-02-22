@@ -126,7 +126,6 @@ function submitChannelForm(event){
 	var moniker = $('#moniker_input').val();
 	var description = $('#description_input').val();
 	var category = $('#category_input').val();
-	var is_public = $('#is_public_input').val();
 	var csrftoken = getCookie('csrftoken');
 
 	var donezo = true;
@@ -145,7 +144,6 @@ function submitChannelForm(event){
 			"moniker": moniker,
 			"description": description,
 			"category_names": category,
-			"is_public":is_public
 		},
 		success: function(){
 			donezo = true;
