@@ -26,11 +26,6 @@
 			<input class="button" type="submit" value="Submit Changes"/>
 		</form>
 		
-		{% if channel_status %}
-			<p>Status: Public </p>
-		{% else %}
-			<p>Status: Private </p>
-		{% endif %}
 		
 		<form class="postAdminNote" method="POST">
 			{% csrf_token %}
@@ -56,12 +51,11 @@
 		
 		<h3>All Events</h3>
 		<ul>{% for e in events.all %}
-		<li><a href="{{ e.get_absolute_url }}">{{ e }}</a></li>
+		<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a></li>
 		{% empty %} No events
 		{% endfor %}
 		
-		
-		<a href="../../../events/add/{{ channel_name }}">Add New Event</a>
+
 		
 	{% else %}
 		Sorry, according to our records, you are not an admin for this channel.
