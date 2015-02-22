@@ -52,7 +52,7 @@ addFileButton.mouseenter(function(){
 	//companyForm.submit(); //DOES NOT ENTER submitCompanyForm in validation
 });
 */
-
+/*
 $('#company_deadline_input').on('blur', function(){
 
 	console.log('company deadline');
@@ -68,6 +68,7 @@ $('#company_name_input').on('blur', function(){
 		validateName('#company_name_input');
 	}
 });
+*/
 
 addFileButton.mouseleave(function(){
 	console.log('HOVERING');
