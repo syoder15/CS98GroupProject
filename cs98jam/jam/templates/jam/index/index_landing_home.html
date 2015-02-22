@@ -35,7 +35,7 @@
 			{% if show %}
 				{% include "jam/channels/channel_feed.html" %}
 				
-				<p><b>All Events:</b></p>
+<!-- 				<p><b>All Events:</b></p>
 				<ul>{% for e in unadded_e.all %}
 				<li>{{ e }} - {{e.start_time}}</li>
 				<form class="addEvent" method="POST">
@@ -47,14 +47,14 @@
 				<ul>{% for e in added_e.all %}
 				<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a> - {{e.event_date}} - {{e.start_time}}</li>
 				
-				{% endfor %}
+				{% endfor %} -->
 				
 				<form class="goHome" method="POST" action="">
 				{% csrf_token %}
 				
 				<br>
 				<p>
-					<input class="button" name="back_home" type="submit" value="Back"/>
+					<input class="button btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
 				</p>
 				</form>
 				<!--<p>News Articles</p>
