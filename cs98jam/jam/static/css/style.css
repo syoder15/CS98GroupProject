@@ -261,6 +261,7 @@ a:visited {
 .details-body {
 	height: 100vh;
 	background-color: #f5f5f5;
+	overflow:auto;
 }
 
 @media screen and (max-width: 768px){
