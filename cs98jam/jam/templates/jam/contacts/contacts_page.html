@@ -28,6 +28,20 @@
 				<th>Notes:</th>
 				<td>{{ contact_notes }} </td>
 			</tr>
+			<tr> 
+				<th>
+					<form class="goHome" method="POST" action="">
+					{% csrf_token %}
+						<button class="btn btn-default btn-small" name="back_home" type="submit" value="Back">Back</button>
+					</form>
+				</th>
+				<td>
+					<form class="goHome" method="POST" action="">
+					{% csrf_token %}
+						<a href="../../edit/contact/{{ c_name }}"><button type="submit" name="contact_edit" class="btn btn-default btn-small" value="{{ c_name }}">Edit</button></a>
+					</form>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 </div>

@@ -13,7 +13,7 @@
 	{% endif %}
 
 	<div class="table-responsive">
-		<table class="table table-contacts"> 
+		<table class="table table-channel"> 
 			<thead> 
 				<tr> 
 					<th class="col-md-3"><h3>Channel Name: </h3></th>
@@ -85,41 +85,6 @@
 			</tbody>
 		</table>
 	</div>
-	
-<!-- 	
-	<form class="joinChannel" method="POST">
-		{% csrf_token %}
-		
-		{% if is_subscriber %}
-			<p>You are subscribed to this channel!</p>
-			<input class="button" name="Unsubscribe" type="submit" value="Unsubscribe"/>
-			
-			<p style="font-weight: bold;">All Events:</p>
-			<ul>{% for e in unadded_e.all %}
-			<li>{{ e }} -  {{e.event_date}} - {{e.start_time}}</li>
-			<form class="addEvent" method="POST">
-				{% csrf_token %}
-				<input class="button" name="{{e.pk}}" type="submit" value="Add"/>
-			</form>
-			{% endfor %}
-			
-			<ul>{% for e in added_e.all %}
-			<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }} - {{e.event_date}} - {{e.start_time}}</a></li>
-			
-			{% endfor %}
-			
-		{% elif channel_status %}
-			<p>
-				<input class="button" name="Subscribe" type="submit" value="Subscribe"/>
-			</p>
-		{% else %}
-			<p>
-				<input class="button" type="submit" value="Request to join"/>
-			</p>
-		{% endif %}	
-	</form> -->
-	
-	
 	
 </div>
 
