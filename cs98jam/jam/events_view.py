@@ -185,7 +185,7 @@ def add_recurring_events(event, occurrence):
 					occurrence_id = occurrence.id,
 					creator=event.creator)
 
-				newer_event.save()
+				#newer_event.save()
 			year += 1
 	#if occurrence.frequency == "monthly":
 			# for year < end year
