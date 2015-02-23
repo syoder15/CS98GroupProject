@@ -4,9 +4,7 @@
 {% load notification_custom %}
 
 {% block side_col %}
-	<!-- <div class="navbar navbar-fixed-top"> -->
     <h2>Channels</h2>
-    <!-- </div> -->
 	<div class="list-group">
 		{% for c in channels %}
 		<form action="" method="post">
@@ -16,7 +14,6 @@
 		</a>
 		-->
 			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
-			
 		</form>
 		{% empty %}
 			<h5> You aren't currently following any channels. Follow one <a href="/jam/channels/list">here</a>. </h5>
@@ -61,7 +58,6 @@
 				{% endfor %}
 			{% endif %}
 		</div>
-		<!-- <div class="push"></div> -->
 	</section>
 
 

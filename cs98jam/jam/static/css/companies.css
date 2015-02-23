@@ -48,14 +48,14 @@
 .table-companies thead tr th,
 .table-companies tbody tr th {
 	border: none;
-	font-size: 18px;
+	font-size: 16px;
 	text-align: right;
 }
 
 .table-companies thead tr td,
 .table-companies tbody tr td {
 	border: none;
-	font-size: 18px;
+	font-size: 16px;
 	white-space: nowrap;
 	width: 100%;
 }

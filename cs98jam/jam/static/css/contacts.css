@@ -20,12 +20,14 @@
 .table-contacts thead tr th,
 .table-contacts tbody tr th {
 	border: none;
+	font-size: 16px;
 	text-align: right; 
 }
 
 .table-contacts thead tr td,
 .table-contacts tbody tr td {
 	border: none;
+	font-size: 16px;
 	white-space: nowrap; 
 	width: 100%;
 }
