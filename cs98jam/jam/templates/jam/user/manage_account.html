@@ -1,7 +1,13 @@
 {% extends "../../jam/templates/jam/index/index.html" %}
 
+{% block styles %}
+	{{ block.super }}
+	{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'css/manage_account.css' %}" />
+{% endblock %}
+
 {% block content %}
-	<div> 
+	<div class="outer"> 
 		<h1>Manage My Account</h1>
 
 		<h3><a href='../../password_change/new/'>Reset Password</a></h2>
