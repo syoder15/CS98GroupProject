@@ -4,7 +4,7 @@
 	{% endif %}
 
 	<div class="table-responsive">
-		<table class="table table-contacts"> 
+		<table class="table table-channel"> 
 			<thead> 
 				<tr> 
 					<th class="col-md-3"><h3>Channel Name: </h3></th>
@@ -54,6 +54,15 @@
 						{% endfor %}
 					</td>
 				</tr>	
+				<tr> 
+					<th>
+						<form class="goHome" method="POST" action="">
+						{% csrf_token %}
+							<input class="button btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
+						</form>
+					</th>
+					<td></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

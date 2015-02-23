@@ -32,15 +32,6 @@
 		<div class="newsfeed-scroll">
 			{% if show %}
 				{% include "jam/channels/channel_feed.html" %}
-				
-				<form class="goHome" method="POST" action="">
-				{% csrf_token %}
-				
-				<br>
-				<p>
-					<input class="button btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
-				</p>
-				</form>
 				<!--<p>News Articles</p>
 				{% for k, v in article_urls.items %}
 				    <p><a href="{{k}}">{{v}}</a></p>

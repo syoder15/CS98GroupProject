@@ -267,6 +267,19 @@ a:visited {
 	overflow:auto;
 }
 
+.table-channel thead tr th,
+.table-channel tbody tr th {
+	border: none;
+	text-align: right; 
+}
+
+.table-channel thead tr td,
+.table-channel tbody tr td {
+	border: none;
+	white-space: nowrap; 
+	width: 100%;
+}
+
 @media screen and (max-width: 768px){
 	.menuBar{
 		height: 50px;
