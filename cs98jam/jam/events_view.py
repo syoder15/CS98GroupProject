@@ -141,6 +141,83 @@ def startEndTimeValidation(start_time, end_time):
 
 	return (start,end)
 
+def add_recurring_events(event, occurrence):
+	start_date = datetime.strptime(event.event_date, "%Y-%m-%d")
+	end_date = datetime.strptime(occurrence.end_date, "%Y-%m-%d")
+	year = int(occurrence.start_year) + 1
+
+	#if occurrence.start_year <= start_date.year && occurrence.start_month <= start_date.month && occurrence.start_day <= start_date.day:
+	if occurrence.frequency == "Annually":
+		while year <= int(end_date.year):
+			date = str(year) + "-" + start_date.strftime("%m") + "-" + start_date.strftime("%d")
+			date_datetime = datetime.strptime(date, "%Y-%m-%d")
+
+			if date_datetime < end_date:
+				newer_event = jam_event(
+					name=event.name,
+					event_type=event.event_type,
+					description=event.description,
+					companies=event.companies,
+					event_date=date,
+					start_time=event.start_time,
+					end_time=event.end_time,
+					occurrence_id = occurrence.id,
+					creator=event.creator)
+
+				newer_event.save()
+			year += 1
+
+	if occurrence.frequency == "Monthly":
+		month = int(occurrence.start_month) + 1
+		while year <= int(end_date.year):
+			date = str(year) + "-" + start_date.strftime("%m") + "-" + start_date.strftime("%d")
+			date_datetime = datetime.strptime(date, "%Y-%m-%d")
+
+			if date_datetime < end_date:
+				newer_event = jam_event(
+					name=event.name,
+					event_type=event.event_type,
+					description=event.description,
+					companies=event.companies,
+					event_date=date,
+					start_time=event.start_time,
+					end_time=event.end_time,
+					occurrence_id = occurrence.id,
+					creator=event.creator)
+
+				#newer_event.save()
+			year += 1
+	#if occurrence.frequency == "monthly":
+			# for year < end year
+			# for month before end date
+				# if year = end year and month < end month
+				# event = jam_event()
+				# event.save()
+				#year += 1
+	#if occurrence.frequency == "weekly":
+			# for year < end year
+			# same month/yr if/for from above
+				#
+	#if occurrence.frequency == "daily":
+			# for year < end year
+				# for month/year if/for from above
+					# for day < end day when month=end month and year = end year
+						# event = jam_event()
+						# event.save()
+
+					#if current date is before end date
+			
+
+
+			#create a datetime for event, make sure this is before or equal to end date
+			# check if start_year is less than or equal to
+			# check if start_month is less than or equal to
+			# Create the right number of events for each frequency
+				# if it is daily, event for every day of the month
+				# if it is weekly, use day_of_the_week
+				# if it is monthly, create one on that day
+				# if it annual - only create it is month = start_month
+
 @login_required
 def new_event(request):
 	if request.method == "POST":
@@ -171,7 +248,8 @@ def new_event(request):
 				start_month=form_data.get('event_date')[5:7],
 				start_year=form_data.get('event_date')[0:4],
 				start_day=form_data.get('event_date')[8:10],
-				day_of_the_week=date_obj.strftime('%A'))
+				day_of_the_week=date_obj.strftime('%A'),
+				end_date=form_data.get('end_date'))
 
 			occurrence.save()
 
@@ -185,6 +263,8 @@ def new_event(request):
 						  end_time=endTime,
 						  occurrence_id = occurrence_id,
 						  creator=request.user)
+
+			add_recurring_events(event, occurrence)
 		else:
 			event = jam_event(name=event_name,
 							  event_type=form_data.get('event_type'),
@@ -235,7 +315,10 @@ def events_page(request, event_id, event_name):
 	end_time = event.end_time
 
 	recurrence_object = EventOccurrence.objects.filter(id=event.occurrence_id).first() #first?
-	recurrence = recurrence_object.frequency
+	if recurrence_object:
+		recurrence = recurrence_object.frequency
+	else:
+		recurrence = 'None'
 
 	if (event_type == 'app'): 
 		event_type = 'Application Deadline'
@@ -332,28 +415,6 @@ def delete_event(request, event_id):
 
 	event.delete()
 	owned_event.delete()
-
-# def get_month_occurrences(month, year, day):
-# 	all_events = request.user.events.all()
-# 	for e in all_events:
-# 		if e.occurrence_id != None:
-# 			occ_info = EventOccurrence.objects.filter(id=e.occurrence_id).first()
-# 			if occ_info.start_year <= year && occ_info.start_month <= month && occ_info.start_day <= day:
-# 				if occ_info.end_date != None:
-# 					end_date = datetime.strptime(occ_info.end_date, "%Y-%m-%d")
-
-# 			if e.frequency == "annually":
-			
-
-
-			#create a datetime for event, make sure this is before or equal to end date
-			# check if start_year is less than or equal to
-			# check if start_month is less than or equal to
-			# Create the right number of events for each frequency
-				# if it is daily, event for every day of the month
-				# if it is weekly, use day_of_the_week
-				# if it is monthly, create one on that day
-				# if it annual - only create it is month = start_month
 
 @login_required
 def month_view(
