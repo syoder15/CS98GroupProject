@@ -408,10 +408,9 @@ function submitEventForm(event){
   	var description = $('#event_description_input').val();
   	var companies = $('#event_companies_input').val();
   	var startTime = $('#event_start_time_input').val();
-  	console.log("START" + startTime);
   	var endTime = $('#event_end_time_input').val();
-  	console.log("END" + endTime);
   	var recurrence = $('#event_recurrence_input').val();
+  	var endDate = $('#end_date_input').val();
 	var channel = $('#channel_input').val();
 	var csrftoken = getCookie('csrftoken');
 
@@ -444,6 +443,7 @@ function submitEventForm(event){
 			"start_time": startTime,
 			"end_time": endTime,
 			"recurrence": recurrence,
+			"end_date": endDate,
 			"channel": channel
 		},
 		singleton:true,
