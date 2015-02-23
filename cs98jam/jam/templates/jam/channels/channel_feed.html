@@ -1,33 +1,10 @@
-<!-- <div>
-	{% if is_admin %}
-		<a href="channels/view_as_admin/{{ channel_name }}">Switch to Administrator View</a>
-	
-	{% endif %}
-	
-	<p>Name: {{ channel_name }} </p>
-	<p>Nickname: {{ channel_nickname }} </p>
-	<p>Description: {{ channel_description }} </p>
-	
-	<form class="leaveChannel" method="POST">
-		{% csrf_token %}
-		<input class="button" name="Unsubscribe-{{channel_name}}" type="submit" value="Unsubscribe"/>
-	</form>
-	
-	<br>
-	<p><b> Recent Notes from Admins: </b></p>
-	{% for note in adminNotes.all %}
-			<p>{{ note.text }} - {{ note.author }} @ {{ note.created_at }}</p>
-	{% endfor %}
-	
-</div> -->
-
 <div>
 	{% if is_admin %}
 		<a href="channels/view_as_admin/{{ channel_name }}">Switch to Administrator View</a>
 	{% endif %}
 
 	<div class="table-responsive">
-		<table class="table table-contacts"> 
+		<table class="table table-channel"> 
 			<thead> 
 				<tr> 
 					<th class="col-md-3"><h3>Channel Name: </h3></th>
@@ -77,6 +54,15 @@
 						{% endfor %}
 					</td>
 				</tr>	
+				<tr> 
+					<th>
+						<form class="goHome" method="POST" action="">
+						{% csrf_token %}
+							<input class="button btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
+						</form>
+					</th>
+					<td></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

@@ -12,8 +12,7 @@
 -->
 {% block side_col %}
 	<h2>Contacts</h2>
-	<button type="button" class="btn btn-default"><a style="text-decoration:none" data-toggle="modal" data-target="#importContactModal"> Import my contacts</a></button>
-
+	<button type="button" class="btn btn-default"><a style="text-decoration:none; color:#333" data-toggle="modal" data-target="#importContactModal"> Import my contacts</a></button>
 
 	<div class="list-group">
 		<form class="deleteContact" method='POST' action="">
@@ -42,7 +41,7 @@
 <div id="showContactPage">
 	{% if show %}
 		{% include "jam/contacts/contacts_page.html" %}
-		<div>
+<!-- 		<div>
 			<form class="goHome" method="POST" action="">
 			{% csrf_token %}
 				
@@ -50,7 +49,7 @@
 				<button class="btn btn-default btn-small" name="back_home" type="submit" value="Back">Back</button>
 				<a href="../../edit/contact/{{ c_name }}"><button style="color:black" type="submit" name="contact_edit" class="btn btn-default btn-small" value="{{ c_name }}">Edit</button></a>
 			</form>
-		</div>
+		</div> -->
 	{% elif contact_edit %}
 		{% include "jam/contacts/contact_edit.html" %}
 	{% endif %}

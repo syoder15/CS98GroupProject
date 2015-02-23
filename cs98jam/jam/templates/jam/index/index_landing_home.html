@@ -17,11 +17,9 @@
 		-->
 			<input type="submit" name="channel_name" value="{{c.name}}" style="border: 0; background:transparent" >
 			
-			
-
 		</form>
 		{% empty %}
-			<h5> You currently don't have any channels. Add one <a href="{% url 'new_channel' %}">here</a>. </h5>
+			<h5> You aren't currently following any channels. Follow one <a href="/jam/channels/list">here</a>. </h5>
 		{% endfor %}
 	</div>
 {% endblock %}
@@ -34,29 +32,6 @@
 		<div class="newsfeed-scroll">
 			{% if show %}
 				{% include "jam/channels/channel_feed.html" %}
-				
-<!-- 				<p><b>All Events:</b></p>
-				<ul>{% for e in unadded_e.all %}
-				<li>{{ e }} - {{e.start_time}}</li>
-				<form class="addEvent" method="POST">
-					{% csrf_token %}
-					<input class="button" name="{{e.pk}}-{{channel_name}}" type="submit" value="Add"/>
-				</form>
-				{% endfor %}
-				
-				<ul>{% for e in added_e.all %}
-				<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a> - {{e.event_date}} - {{e.start_time}}</li>
-				
-				{% endfor %} -->
-				
-				<form class="goHome" method="POST" action="">
-				{% csrf_token %}
-				
-				<br>
-				<p>
-					<input class="button btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
-				</p>
-				</form>
 				<!--<p>News Articles</p>
 				{% for k, v in article_urls.items %}
 				    <p><a href="{{k}}">{{v}}</a></p>
