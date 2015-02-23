@@ -347,7 +347,11 @@ def companies(request, company_name):
 			companies = request.user.company_set.all()
 			companies = sorted(companies, key=lambda company: company.name)
 
-			context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
+			if(len(companies) > 0):
+				company_name = companies[0]
+				context = company_info(company_name,request)
+			else:
+				context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
 
 		elif(go_home == ("Back")):

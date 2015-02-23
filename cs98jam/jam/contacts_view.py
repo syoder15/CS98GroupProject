@@ -78,26 +78,8 @@ def contacts(request, contact_name):
 			contact.employer=data.get('employer')
 			contact.notes=data.get('notes')
 
-			contact.save()
-
-			email_address = contact.email
-			employer = contact.employer
-			notes = contact.notes
-
-			# check whether the employer exists as a company in the user's DB
-			employer_exists = False
-			if request.user.company_set.filter(name=employer).exists():
-				employer_exists = True
-
-			phone_num = contact.phone_number
-			if phone_num == 0 or phone_num == None:
-				phone_num = ''
-			if email_address == '' or email_address == None:
-				email_address = ''
-
-			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
-			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
+			contact.save()			
+			context = get_contact_info(request,contact.name,False)
 
 			print "saved contact"
 
@@ -105,6 +87,7 @@ def contacts(request, contact_name):
 			show_contact = False
 
 		elif('contact_edit' in data or 'contact_name' in data):
+			contact_edit = False
 			if('contact_edit' in data):
 				contact_edit = True
 				contact_name = data.get('contact_edit')
@@ -112,32 +95,14 @@ def contacts(request, contact_name):
 				print "edit pressed"
 			else:
 				contact_name = data.get('contact_name')
-			contact = request.user.contact_set.get(name=contact_name)
-			email_address = contact.email
-			phone_number = contact.phone_number
-			employer = contact.employer
-			notes = contact.notes
 
-			# check whether the employer exists as a company in the user's DB
-			employer_exists = False
-			if request.user.company_set.filter(name=employer).exists():
-				employer_exists = True
-
-			phone_num = contact.phone_number
-			if phone_num == 0 or phone_num == None:
-				phone_num = ''
-			if email_address == '' or email_address == None:
-				email_address = ''
-
-			context = {'contact_edit': contact_edit, 'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': contact.notes, "controlled_channels": request.user.controlledChannels,
-			'phone_number': phone_num, 'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists}
+			context = get_contact_info(request,contact_name, contact_edit)
 		else: 
 			for c in contacts:
 				if c.name in data:
 					c.delete()
 					break
-			contacts = request.user.contact_set.all()
+			context = get_contact_info(request,contact_name,False)
 
 	else:
 
@@ -145,28 +110,41 @@ def contacts(request, contact_name):
 			if contact_name == 'all':
 				contact_name = contacts[0].name
 
-			contact = request.user.contact_set.get(name=contact_name)
-
-			email_address = contact.email
-			employer = contact.employer
-			notes = contact.notes
-
-			# check whether the employer exists as a company in the user's DB
-			employer_exists = False
-			if request.user.company_set.filter(name=employer).exists():
-				employer_exists = True
-
-			phone_num = contact.phone_number
-			if phone_num == 0 or phone_num == None:
-				phone_num = ''
-			if email_address == '' or email_address == None:
-				email_address = ''
-
-			context = {'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
-			'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
-			'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
-
+			context = get_contact_info(request,contact_name,False)
+			
 	return render(request, 'jam/contacts/contacts.html', context)
+
+def get_contact_info(request, contact_name, contact_edit):
+
+	contacts = request.user.contact_set.all()
+	contacts = sorted(contacts, key=lambda contact: contact.name)
+
+	contact = request.user.contact_set.get(name=contact_name)
+
+	email_address = contact.email
+	employer = contact.employer
+	notes = contact.notes
+
+	# check whether the employer exists as a company in the user's DB
+	employer_exists = False
+	if request.user.company_set.filter(name=employer).exists():
+		employer_exists = True
+
+	phone_num = contact.phone_number
+	if phone_num == 0 or phone_num == None:
+		phone_num = ''
+	if email_address == '' or email_address == None:
+		email_address = ''
+
+	show_contact = True
+	if(contact_edit):
+		show_contact = False
+
+	context = {'contact_edit': contact_edit,'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
+	'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
+	'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
+
+	return context
 
 @login_required
 @csrf_exempt
@@ -349,11 +327,11 @@ def read_contacts_from_file(user, input_file):
 		contact_notes = contact_info[4].strip()
 
 		if len(contact_phone) != 10 :
-			print "ERROR ERROR, phone number"
+			print "ERROR: phone number"
 			print len(contact_phone)
 			return
 		if "@" not in contact_email:
-			print "ERROR ERROR, email"
+			print "ERROR: email"
 			return
 
 		contact = Contact(name=contact_name, phone_number = contact_phone, email = contact_email, employer = contact_employer, notes = contact_notes, user= user)
