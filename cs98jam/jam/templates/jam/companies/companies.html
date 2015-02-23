@@ -54,17 +54,16 @@
 <div id="showCompanyPage">
 	{% if show %}
 		{% include "jam/companies/company_page.html" %}
-			<div>
+<!-- 			<div>
 				<form class="goHome" method="POST" action="">
 				{% csrf_token %}
 					
 				<br />
 				<input class="btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
-<!-- 				<a href="../../edit/company/{{ company_name }}"><button style="color:black" type="button">Edit</button></a> -->
 				<button class="btn btn-default btn-small" id="company_edit" name="company_edit" type="submit" value="{{company_name}}">Edit</button>
 				<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ company_name }}" onclick="return confirm('Are you sure you want to delete {{ company_name }}?')">Delete</button>
 				</form>
-			</div>
+			</div> -->
 	{% elif company_edit %}
 		{% include "jam/companies/company_page_edit.html" %}
 	{% endif %}	
