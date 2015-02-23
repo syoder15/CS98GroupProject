@@ -6,6 +6,8 @@ links.click( function() {
 	$(this).addClass('activeButton');
 });
 
+$("#end_date_div").hide();
+
 $("#event_date_input").datepicker({ 
 	altFormat: "yy-mm-dd",
     dateFormat: "yy-mm-dd",
@@ -25,12 +27,12 @@ $("#end_date_input").datepicker({
 $(document).ready(function(){
     $('#event_recurrence_input').on('change', function() {
       if ( this.value != 'None')
-      {
-        $("#end_date_input").show();
+      { 
+        $("#end_date_div").show();
       }     
         else
-      {
-        $("#end_date_input").hide();
+      { 
+        $("#end_date_div").hide();
      }
     })
 });
