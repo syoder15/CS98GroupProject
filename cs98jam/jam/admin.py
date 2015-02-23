@@ -1,5 +1,5 @@
 from django.contrib import admin
-from jam.models import Company, Contact, Profile, Channel, UserProfile, ChannelAdminNote, ChannelCategory, Event
+from jam.models import Company, Contact, Profile, Channel, UserProfile, ChannelAdminNote, ChannelCategory, Event, EventOccurrence
 
 # Register your models here.
 admin.site.register(Company)
@@ -10,3 +10,4 @@ admin.site.register(Channel)
 admin.site.register(UserProfile)
 admin.site.register(ChannelAdminNote)
 admin.site.register(ChannelCategory)
+admin.site.register(EventOccurrence)

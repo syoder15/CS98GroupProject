@@ -333,6 +333,27 @@ def delete_event(request, event_id):
 	event.delete()
 	owned_event.delete()
 
+# def get_month_occurrences(month, year, day):
+# 	all_events = request.user.events.all()
+# 	for e in all_events:
+# 		if e.occurrence_id != None:
+# 			occ_info = EventOccurrence.objects.filter(id=e.occurrence_id).first()
+# 			if occ_info.start_year <= year && occ_info.start_month <= month && occ_info.start_day <= day:
+# 				if occ_info.end_date != None:
+# 					end_date = datetime.strptime(occ_info.end_date, "%Y-%m-%d")
+
+# 			if e.frequency == "annually":
+			
+
+
+			#create a datetime for event, make sure this is before or equal to end date
+			# check if start_year is less than or equal to
+			# check if start_month is less than or equal to
+			# Create the right number of events for each frequency
+				# if it is daily, event for every day of the month
+				# if it is weekly, use day_of_the_week
+				# if it is monthly, create one on that day
+				# if it annual - only create it is month = start_month
 
 @login_required
 def month_view(
@@ -384,6 +405,13 @@ def month_view(
 	#### JAM CODE ####
 	
 	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
+
+	## Use below to append occurrences to list!
+	### STACK_OVERFLOW ###
+	# mydb2_query = []
+	# for row in mydb1_query_set:
+    #mydb2_query.extend(list(Mytable.objects.filter(id=row.id)))
+    ### END ###
 
 	my_new_events = request.user.profile.events.none()
 	print month
