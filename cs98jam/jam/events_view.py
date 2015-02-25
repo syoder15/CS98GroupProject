@@ -142,7 +142,7 @@ def startEndTimeValidation(start_time, end_time):
 
 	return (start,end)
 
-def add_recurring_events(event, occurrence):
+def add_recurring_events(request, event, occurrence):
 	start_date = datetime.strptime(event.event_date, "%Y-%m-%d")
 	end_date = datetime.strptime(occurrence.end_date, "%Y-%m-%d")
 	year = int(occurrence.start_year) + 1
@@ -166,6 +166,8 @@ def add_recurring_events(event, occurrence):
 					creator=event.creator)
 
 				newer_event.save()
+				request.user.events.add(newer_event)
+				request.user.owned_events.add(newer_event)
 			year += 1
 		return
 
@@ -186,6 +188,8 @@ def add_recurring_events(event, occurrence):
 					creator=event.creator)
 
 			newer_event.save()
+			request.user.events.add(newer_event)
+			request.user.owned_events.add(newer_event)
 
 			increment += 1
 			date_datetime = start_date + relativedelta(months=increment)
@@ -211,6 +215,8 @@ def add_recurring_events(event, occurrence):
 					creator=event.creator)
 
 		newer_event.save()
+		request.user.events.add(newer_event)
+		request.user.owned_events.add(newer_event)
 
 		increment += incr
 		date_datetime = start_date + relativedelta(days=increment)
@@ -261,7 +267,7 @@ def new_event(request):
 						  occurrence_id = occurrence_id,
 						  creator=request.user)
 
-			add_recurring_events(event, occurrence)
+			add_recurring_events(request, event, occurrence)
 		else:
 			event = jam_event(name=event_name,
 							  event_type=form_data.get('event_type'),
@@ -463,6 +469,7 @@ def month_view(
 	#### JAM CODE ####
 	
 	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
+	print my_events
 
 	my_new_events = request.user.profile.events.none()
 	print month
@@ -531,6 +538,7 @@ def month_view(
 		return o.event_date.month
 
 	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_date)])
+	print by_day
 	#by_day = dict([(m, dt) for m,dt in groupby(start_month, start_date)])
 	
 	data = {
