@@ -25,6 +25,7 @@ from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
 from dateutil import rrule
+from dateutil.relativedelta import relativedelta
 
 upload_form = UploadFileForm
 
@@ -141,7 +142,7 @@ def startEndTimeValidation(start_time, end_time):
 
 	return (start,end)
 
-def add_recurring_events(event, occurrence):
+def add_recurring_events(request, event, occurrence):
 	start_date = datetime.strptime(event.event_date, "%Y-%m-%d")
 	end_date = datetime.strptime(occurrence.end_date, "%Y-%m-%d")
 	year = int(occurrence.start_year) + 1
@@ -165,58 +166,60 @@ def add_recurring_events(event, occurrence):
 					creator=event.creator)
 
 				newer_event.save()
+				request.user.events.add(newer_event)
+				request.user.owned_events.add(newer_event)
 			year += 1
+		return
 
 	if occurrence.frequency == "Monthly":
-		month = int(occurrence.start_month) + 1
-		while year <= int(end_date.year):
-			date = str(year) + "-" + start_date.strftime("%m") + "-" + start_date.strftime("%d")
-			date_datetime = datetime.strptime(date, "%Y-%m-%d")
+		increment = 1
 
-			if date_datetime < end_date:
-				newer_event = jam_event(
+		date_datetime = start_date + relativedelta(months=increment)
+		while date_datetime <= end_date:
+			newer_event = jam_event(
 					name=event.name,
 					event_type=event.event_type,
 					description=event.description,
 					companies=event.companies,
-					event_date=date,
+					event_date=date_datetime,
 					start_time=event.start_time,
 					end_time=event.end_time,
 					occurrence_id = occurrence.id,
 					creator=event.creator)
 
-				#newer_event.save()
-			year += 1
-	#if occurrence.frequency == "monthly":
-			# for year < end year
-			# for month before end date
-				# if year = end year and month < end month
-				# event = jam_event()
-				# event.save()
-				#year += 1
-	#if occurrence.frequency == "weekly":
-			# for year < end year
-			# same month/yr if/for from above
-				#
-	#if occurrence.frequency == "daily":
-			# for year < end year
-				# for month/year if/for from above
-					# for day < end day when month=end month and year = end year
-						# event = jam_event()
-						# event.save()
+			newer_event.save()
+			request.user.events.add(newer_event)
+			request.user.owned_events.add(newer_event)
 
-					#if current date is before end date
-			
+			increment += 1
+			date_datetime = start_date + relativedelta(months=increment)
+		return
 
+	if occurrence.frequency == "Weekly":
+		incr = 7
+	if occurrence.frequency == "Daily":
+		incr = 1
 
-			#create a datetime for event, make sure this is before or equal to end date
-			# check if start_year is less than or equal to
-			# check if start_month is less than or equal to
-			# Create the right number of events for each frequency
-				# if it is daily, event for every day of the month
-				# if it is weekly, use day_of_the_week
-				# if it is monthly, create one on that day
-				# if it annual - only create it is month = start_month
+	increment = incr
+	date_datetime = start_date + relativedelta(days=increment)
+	while date_datetime <= end_date:
+		newer_event = jam_event(
+					name=event.name,
+					event_type=event.event_type,
+					description=event.description,
+					companies=event.companies,
+					event_date=date_datetime,
+					start_time=event.start_time,
+					end_time=event.end_time,
+					occurrence_id = occurrence.id,
+					creator=event.creator)
+
+		newer_event.save()
+		request.user.events.add(newer_event)
+		request.user.owned_events.add(newer_event)
+
+		increment += incr
+		date_datetime = start_date + relativedelta(days=increment)
 
 @login_required
 def new_event(request):
@@ -264,7 +267,7 @@ def new_event(request):
 						  occurrence_id = occurrence_id,
 						  creator=request.user)
 
-			add_recurring_events(event, occurrence)
+			add_recurring_events(request, event, occurrence)
 		else:
 			event = jam_event(name=event_name,
 							  event_type=form_data.get('event_type'),
@@ -466,13 +469,7 @@ def month_view(
 	#### JAM CODE ####
 	
 	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
-
-	## Use below to append occurrences to list!
-	### STACK_OVERFLOW ###
-	# mydb2_query = []
-	# for row in mydb1_query_set:
-    #mydb2_query.extend(list(Mytable.objects.filter(id=row.id)))
-    ### END ###
+	print my_events
 
 	my_new_events = request.user.profile.events.none()
 	print month
@@ -541,6 +538,7 @@ def month_view(
 		return o.event_date.month
 
 	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_date)])
+	print by_day
 	#by_day = dict([(m, dt) for m,dt in groupby(start_month, start_date)])
 	
 	data = {
