@@ -6,24 +6,31 @@
   <title>JAM | Login</title>
   
   {% load staticfiles %}
+      <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
+      <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+      <link rel="stylesheet" href="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.css' %}" />
 
   <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
   <script src="{% static 'account/login.js' %}"></script>
-  
+    <script src="{% static 'js/bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+
+
 {% endblock %}
 
 {% block body %}
+  <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/login-nav.html" %}
+  </header>
+
   <div class="login">
   <header>
-    <h1>JAM</h1>
-    <h2>Login Page</h2>
+    <h1>Please login.</h1>
   </header>
 
   <section>
     {% if form.errors %}
-      <p>Your username and password didn't match, please try again.</p>
+      <p>Your username or password is incorrect, please try again.</p>
     {% endif %}
 
     <form method="post" action=".">
