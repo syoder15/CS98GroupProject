@@ -34,7 +34,7 @@
 				<br>
 			</div>
 		{% empty %}
-			You haven't entered any companies yet.
+			<h5> You haven't entered any companies. Add one <a data-toggle="modal" data-target="#companyModal">here</a>.</h5>
 		{% endfor %}
 		{% if companies %}
 		<div class="company_submit_btn">
@@ -54,20 +54,9 @@
 <div id="showCompanyPage">
 	{% if show %}
 		{% include "jam/companies/company_page.html" %}
-<!-- 			<div>
-				<form class="goHome" method="POST" action="">
-				{% csrf_token %}
-					
-				<br />
-				<input class="btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
-				<button class="btn btn-default btn-small" id="company_edit" name="company_edit" type="submit" value="{{company_name}}">Edit</button>
-				<button class="btn btn-default btn-small" id="delete" name="delete" type="submit" value="{{ company_name }}" onclick="return confirm('Are you sure you want to delete {{ company_name }}?')">Delete</button>
-				</form>
-			</div> -->
 	{% elif company_edit %}
 		{% include "jam/companies/company_page_edit.html" %}
 	{% endif %}	
-
 </div>
 
 {% endblock %}

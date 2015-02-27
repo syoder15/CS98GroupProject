@@ -25,6 +25,7 @@ from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
 from dateutil import rrule
+from dateutil.relativedelta import relativedelta
 
 upload_form = UploadFileForm
 
@@ -141,6 +142,85 @@ def startEndTimeValidation(start_time, end_time):
 
 	return (start,end)
 
+def add_recurring_events(request, event, occurrence):
+	start_date = datetime.strptime(event.event_date, "%Y-%m-%d")
+	end_date = datetime.strptime(occurrence.end_date, "%Y-%m-%d")
+	year = int(occurrence.start_year) + 1
+
+	#if occurrence.start_year <= start_date.year && occurrence.start_month <= start_date.month && occurrence.start_day <= start_date.day:
+	if occurrence.frequency == "Annually":
+		while year <= int(end_date.year):
+			date = str(year) + "-" + start_date.strftime("%m") + "-" + start_date.strftime("%d")
+			date_datetime = datetime.strptime(date, "%Y-%m-%d")
+
+			if date_datetime < end_date:
+				newer_event = jam_event(
+					name=event.name,
+					event_type=event.event_type,
+					description=event.description,
+					companies=event.companies,
+					event_date=date,
+					start_time=event.start_time,
+					end_time=event.end_time,
+					occurrence_id = occurrence.id,
+					creator=event.creator)
+
+				newer_event.save()
+				request.user.events.add(newer_event)
+				request.user.owned_events.add(newer_event)
+			year += 1
+		return
+
+	if occurrence.frequency == "Monthly":
+		increment = 1
+
+		date_datetime = start_date + relativedelta(months=increment)
+		while date_datetime <= end_date:
+			newer_event = jam_event(
+					name=event.name,
+					event_type=event.event_type,
+					description=event.description,
+					companies=event.companies,
+					event_date=date_datetime,
+					start_time=event.start_time,
+					end_time=event.end_time,
+					occurrence_id = occurrence.id,
+					creator=event.creator)
+
+			newer_event.save()
+			request.user.events.add(newer_event)
+			request.user.owned_events.add(newer_event)
+
+			increment += 1
+			date_datetime = start_date + relativedelta(months=increment)
+		return
+
+	if occurrence.frequency == "Weekly":
+		incr = 7
+	if occurrence.frequency == "Daily":
+		incr = 1
+
+	increment = incr
+	date_datetime = start_date + relativedelta(days=increment)
+	while date_datetime <= end_date:
+		newer_event = jam_event(
+					name=event.name,
+					event_type=event.event_type,
+					description=event.description,
+					companies=event.companies,
+					event_date=date_datetime,
+					start_time=event.start_time,
+					end_time=event.end_time,
+					occurrence_id = occurrence.id,
+					creator=event.creator)
+
+		newer_event.save()
+		request.user.events.add(newer_event)
+		request.user.owned_events.add(newer_event)
+
+		increment += incr
+		date_datetime = start_date + relativedelta(days=increment)
+
 @login_required
 def new_event(request):
 	if request.method == "POST":
@@ -171,7 +251,8 @@ def new_event(request):
 				start_month=form_data.get('event_date')[5:7],
 				start_year=form_data.get('event_date')[0:4],
 				start_day=form_data.get('event_date')[8:10],
-				day_of_the_week=date_obj.strftime('%A'))
+				day_of_the_week=date_obj.strftime('%A'),
+				end_date=form_data.get('end_date'))
 
 			occurrence.save()
 
@@ -185,6 +266,8 @@ def new_event(request):
 						  end_time=endTime,
 						  occurrence_id = occurrence_id,
 						  creator=request.user)
+
+			add_recurring_events(request, event, occurrence)
 		else:
 			event = jam_event(name=event_name,
 							  event_type=form_data.get('event_type'),
@@ -235,7 +318,10 @@ def events_page(request, event_id, event_name):
 	end_time = event.end_time
 
 	recurrence_object = EventOccurrence.objects.filter(id=event.occurrence_id).first() #first?
-	recurrence = recurrence_object.frequency
+	if recurrence_object:
+		recurrence = recurrence_object.frequency
+	else:
+		recurrence = 'None'
 
 	if (event_type == 'app'): 
 		event_type = 'Application Deadline'
@@ -333,28 +419,6 @@ def delete_event(request, event_id):
 	event.delete()
 	owned_event.delete()
 
-# def get_month_occurrences(month, year, day):
-# 	all_events = request.user.events.all()
-# 	for e in all_events:
-# 		if e.occurrence_id != None:
-# 			occ_info = EventOccurrence.objects.filter(id=e.occurrence_id).first()
-# 			if occ_info.start_year <= year && occ_info.start_month <= month && occ_info.start_day <= day:
-# 				if occ_info.end_date != None:
-# 					end_date = datetime.strptime(occ_info.end_date, "%Y-%m-%d")
-
-# 			if e.frequency == "annually":
-			
-
-
-			#create a datetime for event, make sure this is before or equal to end date
-			# check if start_year is less than or equal to
-			# check if start_month is less than or equal to
-			# Create the right number of events for each frequency
-				# if it is daily, event for every day of the month
-				# if it is weekly, use day_of_the_week
-				# if it is monthly, create one on that day
-				# if it annual - only create it is month = start_month
-
 @login_required
 def month_view(
 	request,
@@ -405,13 +469,7 @@ def month_view(
 	#### JAM CODE ####
 	
 	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
-
-	## Use below to append occurrences to list!
-	### STACK_OVERFLOW ###
-	# mydb2_query = []
-	# for row in mydb1_query_set:
-    #mydb2_query.extend(list(Mytable.objects.filter(id=row.id)))
-    ### END ###
+	print my_events
 
 	my_new_events = request.user.profile.events.none()
 	print month
@@ -480,6 +538,7 @@ def month_view(
 		return o.event_date.month
 
 	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_date)])
+	print by_day
 	#by_day = dict([(m, dt) for m,dt in groupby(start_month, start_date)])
 	
 	data = {
