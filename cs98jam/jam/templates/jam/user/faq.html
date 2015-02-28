@@ -1,36 +1,28 @@
-{% extends "../../jam/templates/jam/index/index.html" %}
+{% extends "../../jam/templates/jam/index/base.html" %}
 
 {% load staticfiles %}
 
-<!--{% comment %}
-How to contact us!
+{% comment %}
+frequently asked questions 
 {% endcomment %}
 
-{% block head %}
-  
-  {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
-
-    <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
-
-{% endblock %}
--->
-
-{% block content %}
-{% if user %}
+{% block header %}
+{% if username %}
   <header class="navbar navbar-fixed-top">
     {% include "jam/nav/nav-bar.html" %}
   </header>
+      {% include "jam/nav/modal_nav_bar.html" %}
+      {% include "jam/modals/modal_import_company.html" %}
+      {% include "jam/modals/modal_import_contact.html" %}
+
   {% else %}
     <header class="navbar navbar-fixed-top">
     {% include "jam/nav/login-nav.html" %}
   </header>
 {% endif %}
+{% endblock %}
 
+{% block content %}
 
   <section>
     <div class="login">

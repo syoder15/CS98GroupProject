@@ -1,9 +1,22 @@
-{% extends "../../jam/templates/jam/index/index.html" %}
+{% extends "../../jam/templates/jam/index/base.html" %}
 
 {% load staticfiles %}
 
 {% block header %}
-{{ block.super }}
+	{% if username %}
+	<header class="navbar navbar-fixed-top">
+	        {% include "jam/nav/nav-bar.html" %}
+	    </header>
+	    	{% include "jam/nav/modal_nav_bar.html" %}
+			{% include "jam/modals/modal_import_company.html" %}
+			{% include "jam/modals/modal_import_contact.html" %}
+
+	{% else %}
+		<header class="navbar navbar-fixed-top">
+	        {% include "jam/nav/login-nav.html" %}
+	    </header>
+	{% endif %}
+
 {% endblock %}
 
 {% block content %}
