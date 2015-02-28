@@ -1,0 +1,50 @@
+{% extends "../../jam/templates/jam/index/index.html" %}
+
+{% load staticfiles %}
+
+<!--{% comment %}
+How to contact us!
+{% endcomment %}
+
+{% block head %}
+  
+  {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
+
+    <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-3.2.0-dist/js/bootstrap.js' %}"></script>
+
+{% endblock %}
+-->
+
+{% block content %}
+{% if user %}
+  <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/nav-bar.html" %}
+  </header>
+  {% else %}
+    <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/login-nav.html" %}
+  </header>
+{% endif %}
+
+
+  <section>
+    <div class="login">
+      <p>Frequently Asked Questions
+        <ol>
+          <li>What is JAM? 
+            <p>JAM is Job Application Manager, a site created by 7 Dartmouth students to streamline the Job search</p></li>
+          <li>What can I do with JAM?</li>
+          <li>More questions....</li>
+        </ol></p>
+      </div>
+  </section>
+{% endblock %}
+
+
+
+
