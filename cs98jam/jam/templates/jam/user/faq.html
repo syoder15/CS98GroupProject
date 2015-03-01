@@ -1,0 +1,42 @@
+{% extends "../../jam/templates/jam/index/base.html" %}
+
+{% load staticfiles %}
+
+{% comment %}
+frequently asked questions 
+{% endcomment %}
+
+{% block header %}
+{% if username %}
+  <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/nav-bar.html" %}
+  </header>
+      {% include "jam/nav/modal_nav_bar.html" %}
+      {% include "jam/modals/modal_import_company.html" %}
+      {% include "jam/modals/modal_import_contact.html" %}
+
+  {% else %}
+    <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/login-nav.html" %}
+  </header>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <section>
+    <div class="login">
+      <p>Frequently Asked Questions
+        <ol>
+          <li>What is JAM? 
+            <p>JAM is Job Application Manager, a site created by 7 Dartmouth students to streamline the Job search</p></li>
+          <li>What can I do with JAM?</li>
+          <li>More questions....</li>
+        </ol></p>
+      </div>
+  </section>
+{% endblock %}
+
+
+
+

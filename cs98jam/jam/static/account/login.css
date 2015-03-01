@@ -9,14 +9,24 @@
 }
 
 .login a {
-	color: white;
+	color:#0D4F8B;
+	text-decoration: none;
 }
 
-input {
+
+input,button {
 	color: #999999;
 }
-
+.login h1, .login p{
+	color:#5ea6d9;
+}
+.login button{
+	border-color: white;
+	background-color: white;
+	color:#5ea6d9;
+}
 html {
+	color:#5ea6d9;
 	background-color: #5ea6d9;
 
 }

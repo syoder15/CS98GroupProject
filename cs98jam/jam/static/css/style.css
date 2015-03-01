@@ -9,6 +9,15 @@ html, body {
 	height: 100%;
 }
 
+
+.vertical-center {
+	 margin: auto;
+	 position: absolute;
+	 top: 0; left: 0; bottom: 0; right: 0;
+	 height: 50%;
+	 text-align: center;
+}
+
 .page-wrap {
 	height: 100%;	
 	height: auto !important;

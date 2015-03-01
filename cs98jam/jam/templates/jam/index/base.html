@@ -20,9 +20,8 @@
 	</head>
 
 	<body> 
-		<header class="navbar navbar-fixed-top">
-	        {% include "jam/nav/nav-bar.html" %}
-	    </header>
+		{% block header %}
+	    {% endblock %}
 
 		<div id="main" role="main">
 			<div class="menuBar"></div>
@@ -32,9 +31,6 @@
 	        </div>
 	    </div>
 
-	{% include "jam/nav/modal_nav_bar.html" %}
-	{% include "jam/modals/modal_import_company.html" %}
-	{% include "jam/modals/modal_import_contact.html" %}
 	</body>
 
 

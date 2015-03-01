@@ -1,17 +1,19 @@
+{% extends "../../jam/templates/jam/index/base.html" %}
+
+ {% block header %}
+  <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/login-nav.html" %}
+  </header>
+{% endblock %}
+
 {% comment %}
 	Account Activation Expired/Unsuccessful
 {% endcomment %}
 
-{% block head %}  
-  {% load staticfiles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
-  
- {% endblock %}
-
-{% block body %}
-<div class="main">
-<h1>:(</h1>
-<p> I'm sorry, your activation link has expired. Please try again later. </p> 
+{% block content %}
+<div class="vertical-center" "container">
+		<h1>:(</h1>
+		<p> I'm sorry, your activation link has expired. Please try again later. </p> 
 </div>
 
 {% endblock %}
