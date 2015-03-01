@@ -22,7 +22,8 @@ urlpatterns = patterns('',
     url(r'^new_event/', views.new_event, name='new_event'),
     url(r'^events/(?P<event_id>.+)/(?P<event_name>.+)/$', views.events_page, name='events_page'),
     url(r'^edit/event/(?P<event_id>.+)/$', views.edit_event, name='edit_event'),
-    
+    url(r'^edit/event/recurring/$', views.edit_recurring_event, name='edit_recurring_event'),
+
     url(r'^channels/create/', views.new_channel, name='new_channel'),
     url(r'^channels/activate/(?P<channel_name>.+)/(?P<user_name>.+)/$', views.activate_subscriber, name='activate_subscriber'),
 	url(r'^channels/view/(?P<channel_name>.+)/$', views.view_channel, name="view_channel"),

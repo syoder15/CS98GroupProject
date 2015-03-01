@@ -67,6 +67,15 @@
 		</form>
 
 	</div>
+
+	{% if delete_button %}
+	<div>
+			<form class="delete_all" method="POST" action="">
+			{% csrf_token %}
+			<button class="btn btn-default btn-small" id="delete_all" name="delete_all" type="submit" value="{{ event.id }}" onclick="return confirm('Are you sure you want to delete all recurring events: {{ event_name }}?')">Delete All {{ event_name }} </button>
+			</form>
+	</div>
+	{% endif %}
 </div>
 {% endblock %}
 

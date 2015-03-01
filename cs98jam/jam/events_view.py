@@ -296,13 +296,16 @@ def new_event(request):
 					company = request.user.company_set.filter(name=c)
 					company = company[0]
 					company.events.add(event)
-		#user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-		#user_profile.events.add(event) #associate the current event with a user's profile
-		#user_profile.owned_events.add(event)
 		
 		context = {'username': request.user.username}
 
 		return render(request, 'jam/index/index_landing_home.html', context)
+
+def delete_recurring_events(request, occurrence_id):
+	events = request.user.events.filter(occurrence_id=occurrence_id)
+	for e in events:
+		delete_event(request, e.id)
+	return
 
 @login_required
 def events_page(request, event_id, event_name):
@@ -320,8 +323,12 @@ def events_page(request, event_id, event_name):
 	recurrence_object = EventOccurrence.objects.filter(id=event.occurrence_id).first() #first?
 	if recurrence_object:
 		recurrence = recurrence_object.frequency
+		show_delete_all = True
+		occurrence_id = event.occurrence_id
 	else:
 		recurrence = 'None'
+		show_delete_all = False
+		occurrence_id = None
 
 	if (event_type == 'app'): 
 		event_type = 'Application Deadline'
@@ -351,16 +358,36 @@ def events_page(request, event_id, event_name):
  		
  		return HttpResponseRedirect(link)
 
- 	
+ 	if('delete_all' in data):
+ 		delete_recurring_events(request, event.occurrence_id)
+ 		month = str(event_date)[5:7]
+ 		year = str(event_date)[0:4]
+ 		link = "/jam/calendar/" + str(year) + '/' + str(month)
+ 		
+ 		return HttpResponseRedirect(link)
+
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 
 	'google_link': google_link, "controlled_channels": request.user.controlledChannels, 
-	'companies': companies, 'recurrence': recurrence}
+	'companies': companies, 'recurrence': recurrence, 'delete_button': show_delete_all, 'occurrence_id': occurrence_id, 'event_id': event.id}
 
 	return render(request, 'events/event_detail_page.html', context)
 
+def edit_recurring_event(request):
+	print 'recurring'
+	if (request.POST.occurrence_id):
+		occurrence_id = int(request.POST.occurrence_id)
+
+		delete_recurring_events(request, occurrence_id)
+		new_event(request)
+
+		datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+		redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
+		return HttpResponseRedirect(redirect_link)
+
 @login_required
 def edit_event(request, event_id):
+	print request
 	form_data = request.POST
 
 	user = User.objects.get(username=request.user.username)
@@ -368,10 +395,19 @@ def edit_event(request, event_id):
 
 	if form_data:
 		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
-		print startTime
-		print endTime
 
-		if user and event: 
+		if "Save_All" in form_data:
+			if request.POST.get("occurrence_id"):
+				occurrence_id = int(request.POST.get("occurrence_id"))
+
+				delete_recurring_events(request, occurrence_id)
+				new_event(request)
+
+				datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+				redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
+				return HttpResponseRedirect(redirect_link)
+
+		if user and event:
 			event.name=form_data.get('event_name')
 			event.event_type=form_data.get('event_type')
 			event.description=form_data.get('description')
@@ -406,9 +442,17 @@ def edit_event(request, event_id):
 	event_date = str(event_date)
 	datetime.strptime(event_date, "%Y-%m-%d")
 
+	if event.occurrence_id:
+		delete_button = True
+		recurrence_object = EventOccurrence.objects.filter(id=event.occurrence_id).first()
+		recurrence = recurrence_object.frequency
+	else:
+		delete_button = False
+		recurrence = None
+
 	context = {'event': event, 'event_name': event.name, 'description': event.description, 'event_date': event_date,
 	'start_time': event.start_time.strftime("%I:%M %p"), 'end_time': event.end_time.strftime("%I:%M %p"), 'creator': event.creator, 'event_type': event.event_type, 
-	'companies': event.companies}
+	'companies': event.companies, "delete_button": delete_button, 'recurrence': recurrence}
 
 	return render(request, 'events/event_edit.html', context)
 
