@@ -9,6 +9,12 @@ html, body {
 	height: 100%;
 }
 
+#id_username {
+	color: #999999;
+}
+#id_password {
+	color: #999999;
+}
 
 .vertical-center {
 	 margin: auto;
