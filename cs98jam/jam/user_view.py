@@ -332,8 +332,22 @@ def team(request):
 
 
 def contact(request):
+	form_data = request.POST
+
 	user = request.user
-	if user:
+	if form_data:
+		name = form_data.get('name')
+		email = form_data.get('email')
+		msg = form_data.get('message') 
+		msg = msg + "\n reply to " + email
+		email_subject = 'JobApplicationManager Contact from ' + email 
+		send_mail(email_subject, msg, 'no-reply@gmail.com', ['dartmouthjam@gmail.com'], fail_silently =False)
+		success = "Your message has been sent!"
+		if user: 
+			context = {'user':user, 'username': user.username, 'success': success}
+		else:
+			context = {'sucess',success}
+	elif user:
 		context = {'user': user, 'username': user.username}
 	else: 
 		context ={}
