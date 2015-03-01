@@ -54,7 +54,14 @@
 </div>
 </div>
 
+{% load staticfiles %}
+<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+<script src="{% static 'account/login.js' %}"></script>
+
 {% endblock %}
+
+
+
 
 <!--
 {% block head %}
@@ -66,7 +73,7 @@
       <link rel="stylesheet" href="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
 
-  <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+  
   <script src="{% static 'account/login.js' %}"></script>
 
 
