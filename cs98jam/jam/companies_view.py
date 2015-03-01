@@ -250,7 +250,7 @@ def company_info(company_name,request, error):
 		has_link = True
 
 	company_edit = False
-	if error != "":
+	if error != None:
 		company_edit = True
 		show_company = False
 
@@ -437,7 +437,7 @@ def is_valid_date(date):
 	now = datetime.now()
 
 	if(date == "" or len(date) == 0):
-		return ""
+		return None
 
 	year = int(date[0:4])
 	month = int(date[5:7])
@@ -451,7 +451,7 @@ def is_valid_date(date):
 	elif ( month >  12 or day > 31):
 		return date + ' is an invalid date. Please enter a valid one.'
 
-	return ""
+	return None
 
 def read_from_file(user, input_file):
 	print "in read_from_file"
