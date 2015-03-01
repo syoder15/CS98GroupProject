@@ -1,12 +1,67 @@
+{% extends "../../jam/templates/jam/index/base.html" %}
+
 {% comment %}
   Main page to authenticate users.
 {% endcomment %}
 
+
+{% block header %}
+  <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/login-nav.html" %}
+  </header>
+{% endblock %}
+
+{% block content %}
+
+<div class="vertical-center">
+  <div class="container" >
+  <header>
+    <h1>Please login.</h1>
+  </header>
+
+  <section>
+    {% if form.errors %}
+      <p>Your username or password is incorrect, please try again.</p>
+    {% endif %}
+
+    <form method="post" action=".">
+      {% csrf_token %}
+      <p>
+        <label for="id_username"></label>
+        {{ form.username }}
+      </p>
+      <p>
+        <label for="id_password"></label>
+        {{ form.password }}
+      </p>
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+      {% else %}
+        <input type="hidden" name="next" value="/jam/" />
+      {% endif %}
+      <button type="submit" class="btn-default btn-primary" value="Login">Login</button>
+      <!--<input type="submit" value="Login" />-->
+    </form>
+  </section>
+  
+  <a href="../password_change/reset/">Forgot Your Password?</a>
+
+<section>
+  <p>
+    Don't have an account? Get one <a href="/register">here!</a>
+  </p>
+</section>
+</div>
+</div>
+
+{% endblock %}
+
+<!--
 {% block head %}
   <title>JAM | Login</title>
   
   {% load staticfiles %}
-      <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.css' %}" />
+      <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.2.0-dist/css/bootstrap.min.css' %}" />
       <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
       <link rel="stylesheet" href="{% static 'js/jquery-ui-1.11.2/jquery-ui.min.css' %}"/>
   <link rel="stylesheet" type="text/css" href="{% static 'account/login.css' %}" />
@@ -16,9 +71,9 @@
 
 
 {% endblock %}
-
-{% block body %}
-  <header class="navbar navbar-fixed-top">
+-->
+<!-- {% block body %}
+ <header class="navbar navbar-fixed-top">
     {% include "jam/nav/login-nav.html" %}
   </header>
 
@@ -48,7 +103,7 @@
         <input type="hidden" name="next" value="/jam/" />
       {% endif %}
       <button type="submit" value="Login">Login</button>
-      <!--<input type="submit" value="Login" />-->
+      <input type="submit" value="Login" />
     </form>
   </section>
   
@@ -60,7 +115,7 @@
   </p>
 </section>
 </div>
-{% endblock %}
+{% endblock %}-->
 
 
 
