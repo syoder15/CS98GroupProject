@@ -166,7 +166,7 @@ def contacts_page(request, contact_name):
 
 	return render(request, 'jam/contact_page.html', context)
 
-@login_required
+'''@login_required
 def edit_contact(request, contact_name):
 	form_data = request.POST
 
@@ -223,7 +223,7 @@ def edit_contact(request, contact_name):
 	'phone_number': phone_num, 'employer': contact.employer, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/contacts/contact_page_edit.html', context)
-
+'''
 
 @login_required
 def new_contact(request):

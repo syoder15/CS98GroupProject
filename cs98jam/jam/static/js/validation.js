@@ -201,7 +201,7 @@ function submitContactForm(event){
   	var phone = $('#phone_number_input').val();
   	var email = $('#email_input').val();
   	var company = $('#company_input').val();
-  	var notes = $('#comment').val();
+  	var notes = $('#contact_notes_input').val();
 	var csrftoken = getCookie('csrftoken');
 
 	var formName = $('.contact_form').attr('name');
