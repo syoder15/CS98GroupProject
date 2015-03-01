@@ -277,3 +277,12 @@ a:link, a:visited {
 		float: left; 
 	}
 }
+
+#faq_title {
+	color: #172691;
+	font-size: 20px; 
+	margin-left: 10px
+}
+.faq_question {
+	color: #5ea6d9;
+}
