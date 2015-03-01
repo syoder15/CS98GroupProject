@@ -107,7 +107,7 @@ function validateDeadline(){
 	return msg;
 }
 
-function validatePhone(){
+/*function validatePhone(){
 	var number = $('#phone_number_input').val();
 	console.log("PHONE NUMBER" + number);
 	var msg = validatePhoneNumber(number);
@@ -121,7 +121,7 @@ function validatePhone(){
 		$('#phone_number_input').css('border','solid 0px red');
 	}
 	return msg;
-}
+}*/
 
 function validateEmailAddress(){
 	var email = $('#email_input').val();

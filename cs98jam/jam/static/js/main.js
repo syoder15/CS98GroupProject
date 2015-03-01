@@ -10,16 +10,18 @@ function validateEmail(email){
 };
 
 function validatePhoneNumber(number) {
-	number = number.replace(/[^0-9]/g, '');
-
-	if(! (number.match(/\d/g) && number.length==10) && number.length!=0){
+	phone = number.replace(/[^0-9]/g, '');
+	console.log('got here');
+	if(! (phone.match(/\d/g) && phone.length==10) && number.length!=0){
+		console.log("invalid");
 		return "Please enter a valid phone number";
 	}
 	else{
-		$('#phone_number_input').val(number);
+		console.log('valid');
+		phone = phone.replace(/\)\s*|\(\s*|-/g, '');
+		$('#phone_number_input').val(phone);
 		return '';
 	}
-	number = number.replace(/\)\s*|\(\s*|-/g, '');
 
 	return number;
 };

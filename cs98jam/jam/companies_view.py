@@ -229,7 +229,7 @@ def edit_company(request, company_name):
 
 
 # yay refactoring reused code. 
-def company_info(company_name,request):
+def company_info(company_name,request, error):
 	companies = request.user.company_set.all()
 	companies = sorted(companies, key=lambda company: company.name)
 
@@ -249,8 +249,13 @@ def company_info(company_name,request):
 	if link != '':
 		has_link = True
 
+	company_edit = False
+	if error != "":
+		company_edit = True
+		show_company = False
+
 	context = {'companies': companies, 'company_name': company.name, 'events': events,			
-	'application_deadline': app_deadline, 'show': show_company,'status': company.application_status,
+	'application_deadline': app_deadline, 'show': show_company,'status': company.application_status, 'error': error, 'company_edit': company_edit,
 	'contacts': contacts, 'link': link, 'has_link': has_link, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 	return context
 
@@ -272,7 +277,7 @@ def companies(request, company_name):
 		if company_name == 'all':
 			company_name = companies[0]
 		
-		context = company_info(company_name,request)
+		context = company_info(company_name,request,None)
 	
 	if(data):
 		company_edit = False
@@ -298,8 +303,10 @@ def companies(request, company_name):
 			user = User.objects.get(username=request.user.username)
 
 			if user and company: 
-				
-				if company.application_deadline != data.get('application_deadline'):
+				application_deadline = data.get('application_deadline')
+				error = is_valid_date(application_deadline)
+
+				if error == "" and company.application_deadline != datetime.strptime(data.get('application_deadline'),"%Y-%m-%d"):
 
 					title = str(company.name) + ' Deadline'
 					if company.application_deadline:
@@ -325,13 +332,16 @@ def companies(request, company_name):
 					request.user.owned_events.add(evt)
 					company.events.add(evt)
 					
-			company.name = company_name
-			company.application_deadline=data.get('application_deadline')
+			#company.name = company_name
+
+			company.name = data.get('name')
 			company.notes=data.get('notes')
 			company.link = data.get('app_link')
-			company.save()
+			if error == "":
+				company.application_deadline = application_deadline
+				company.save()
 
-			context = company_info(company_name,request)
+			context = company_info(company_name,request,error)
 
 		elif('delete' in data):
 			company_name = data.get('delete')
@@ -349,7 +359,7 @@ def companies(request, company_name):
 
 			if(len(companies) > 0):
 				company_name = companies[0]
-				context = company_info(company_name,request)
+				context = company_info(company_name,request,None)
 			else:
 				context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
@@ -376,7 +386,7 @@ def companies(request, company_name):
 					company.save()
 			#companies = request.user.company_set.all()
 
-			context = company_info(company_name,request)
+			context = company_info(company_name,request,None)
 
 			#context = {'companies': companies, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 		elif('company_name' in data or 'company_edit' in data):
@@ -435,11 +445,11 @@ def is_valid_date(date):
 
 
 	if(len(date) < 10):
-		return "Please enter a date in YYYY-MM-DD format"
+		return date + ' is not in YYYY-MM-DD format. Please enter the date properly.'
 	elif ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
-		return 'You cannot enter a date that is in the past.'
+		return date + ' is in the past. Please enter the correct date.'
 	elif ( month >  12 or day > 31):
-		return 'You must enter a valid date. Please try again.'
+		return date + ' is an invalid date. Please enter a valid one.'
 
 	return ""
 

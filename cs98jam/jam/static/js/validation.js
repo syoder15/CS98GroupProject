@@ -78,7 +78,7 @@ function validatePhone(){
 	var msg = validatePhoneNumber(number);
 	if(msg.length > 0){
 		$('.phone_error_message').show();
-		$('#phone_number_input').css('border','solid 2px red');
+		//$('#phone_number_input').css('border','solid 2px red');
 		$('.phone_error_message').html(msg);
 	}
 	else{
