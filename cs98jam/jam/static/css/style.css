@@ -226,6 +226,10 @@ a:link, a:visited {
 	overflow:auto;
 }
 
+.little-margin {
+	margin-top: 10px;
+}
+
 .details-body {
 	height: 91vh;
 	background-color: #f5f5f5;

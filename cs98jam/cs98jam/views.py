@@ -14,8 +14,8 @@ from django.conf import settings
 
 
 def main_page(request):
-    return render_to_response('index.html')
-
+    #return render_to_response('index.html')
+    return HttpResponseRedirect('/jam')
 def logout_page(request):
     """
     Log users out and re-direct them to the main page.

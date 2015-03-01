@@ -301,8 +301,42 @@ def manage_account(request):
 		freq = "one week before"
 	else: 
 		freq = "one month before"
-
-
+	
 	context ={'site': site, 'profile': user_profile, 'email': user.email, "controlled_channels": request.user.controlledChannels, 'not_freq': freq}
 
 	return render(request, 'jam/user/manage_account.html', context)
+
+def about(request):
+	user = request.user
+	context = {'user': user, 'username': user.username}
+
+	return render(request, 'jam/user/about.html', context)
+
+
+def faq(request):
+	user = request.user
+	if user:
+		context = {'user': user,  'username': user.username}
+	else:
+		context ={}
+	return render(request, 'jam/user/faq.html', context)
+
+
+def team(request):
+	user = request.user
+	if user:
+		context = {'user': user,  'username': user.username}
+	else: 
+		context ={}
+	return render(request, 'jam/user/team.html', context)
+
+
+def contact(request):
+	user = request.user
+	if user:
+		context = {'user': user, 'username': user.username}
+	else: 
+		context ={}
+
+	return render(request, 'jam/user/contact.html', context)
+

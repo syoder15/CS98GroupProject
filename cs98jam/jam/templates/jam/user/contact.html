@@ -1,0 +1,34 @@
+{% extends "../../jam/templates/jam/index/base.html" %}
+
+{% load staticfiles %}
+
+{% block header %}
+	{% if username %}
+	<header class="navbar navbar-fixed-top">
+	        {% include "jam/nav/nav-bar.html" %}
+	    </header>
+	    	{% include "jam/nav/modal_nav_bar.html" %}
+			{% include "jam/modals/modal_import_company.html" %}
+			{% include "jam/modals/modal_import_contact.html" %}
+
+	{% else %}
+		<header class="navbar navbar-fixed-top">
+	        {% include "jam/nav/login-nav.html" %}
+	    </header>
+	{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+  <section>
+    <div>
+      <p>
+      <p>Send us an<a href="mailto:dartmouthjam@gmail.com?subject=Note%20about%20JAM!"> email </a>about JAM!</p>
+    </div>
+  </section>
+{% endblock %}
+
+
+
+

@@ -23,6 +23,11 @@ urlpatterns = patterns('',
     url(r'^events/(?P<event_id>.+)/(?P<event_name>.+)/$', views.events_page, name='events_page'),
     url(r'^edit/event/(?P<event_id>.+)/$', views.edit_event, name='edit_event'),
     url(r'^edit/event/recurring/$', views.edit_recurring_event, name='edit_recurring_event'),
+    
+    url(r'^about/$', views.about, name='about'),
+    url(r'^faq/$', views.faq, name='faq'),
+    url(r'^team/$', views.team, name='team'),
+    url(r'^contact/$', views.contact, name='contact'),
 
     url(r'^channels/create/', views.new_channel, name='new_channel'),
     url(r'^channels/activate/(?P<channel_name>.+)/(?P<user_name>.+)/$', views.activate_subscriber, name='activate_subscriber'),
