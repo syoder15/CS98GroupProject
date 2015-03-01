@@ -274,14 +274,20 @@ a:link, a:visited {
 }
 
 .team-profile-border {
-	/*margin:0px 10px;*/
-	padding:10px;
+	padding:8px;
 	border:2px solid #fbfafa;
 	box-shadow: 0 0 3px gray;
 }
 
+.team-profile:hover {
+	opacity:0.3;
+	transition: all 1s ease;
+}
+
 .team-profile-pic {
 	width:100%;
+	margin-bottom:10px;
+	font:16px;
 }
 
 @media screen and (max-width: 768px){
