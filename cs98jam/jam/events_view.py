@@ -228,20 +228,17 @@ def new_event(request):
 
 		event_date = form_data.get('event_date')
 		validity = is_valid_date(event_date)
-		print "validity is " + validity
 		if(validity!=''):
 	
 			# return bad request if the date is still invalid somehow (but very unlikely!)
 			response={}
 			response["error"] = validity
-			print "got here"
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 		
 		event_name = form_data.get('name')
 
 		startTime, endTime = startEndTimeValidation(form_data.get('start_time'),form_data.get('end_time'))
 		#print "start time" + startTime + "end time" + endTime
-
 		if (form_data.get('recurrence') != 'None'):
 			date_obj = datetime.strptime(str(form_data.get('event_date')), "%Y-%m-%d")
 
@@ -253,6 +250,8 @@ def new_event(request):
 				start_day=form_data.get('event_date')[8:10],
 				day_of_the_week=date_obj.strftime('%A'),
 				end_date=form_data.get('end_date'))
+
+			print occurrence
 
 			occurrence.save()
 
@@ -266,6 +265,8 @@ def new_event(request):
 						  end_time=endTime,
 						  occurrence_id = occurrence_id,
 						  creator=request.user)
+
+			print event
 
 			add_recurring_events(request, event, occurrence)
 		else:
@@ -301,11 +302,20 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
-def delete_recurring_events(request, occurrence_id):
+def delete_recurring_events(request, occurrence_id, edit_date):
 	events = request.user.events.filter(occurrence_id=occurrence_id)
+
 	for e in events:
-		delete_event(request, e.id)
-	return
+		if edit_date and edit_date <= e.event_date:
+			delete_event(request, e.id)
+		elif edit_date == None:
+			delete_event(request, e.id)
+		else:
+			e.occurrence_id = None
+			e.save()
+
+	occurrence = EventOccurrence.objects.filter(id=occurrence_id).first()
+	occurrence.delete()
 
 @login_required
 def events_page(request, event_id, event_name):
@@ -325,10 +335,15 @@ def events_page(request, event_id, event_name):
 		recurrence = recurrence_object.frequency
 		show_delete_all = True
 		occurrence_id = event.occurrence_id
+		
+		end_date = recurrence_object.end_date
+		end_date = str(end_date)
+		datetime.strptime(end_date, "%Y-%m-%d")
 	else:
 		recurrence = 'None'
 		show_delete_all = False
 		occurrence_id = None
+		end_date = None
 
 	if (event_type == 'app'): 
 		event_type = 'Application Deadline'
@@ -359,7 +374,7 @@ def events_page(request, event_id, event_name):
  		return HttpResponseRedirect(link)
 
  	if('delete_all' in data):
- 		delete_recurring_events(request, event.occurrence_id)
+ 		delete_recurring_events(request, event.occurrence_id, None)
  		month = str(event_date)[5:7]
  		year = str(event_date)[0:4]
  		link = "/jam/calendar/" + str(year) + '/' + str(month)
@@ -369,25 +384,13 @@ def events_page(request, event_id, event_name):
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 
 	'google_link': google_link, "controlled_channels": request.user.controlledChannels, 
-	'companies': companies, 'recurrence': recurrence, 'delete_button': show_delete_all, 'occurrence_id': occurrence_id, 'event_id': event.id}
+	'companies': companies, 'recurrence': recurrence, 'delete_button': show_delete_all, 'occurrence_id': occurrence_id, 
+	'event_id': event.id, 'end_date': end_date}
 
 	return render(request, 'events/event_detail_page.html', context)
 
-def edit_recurring_event(request):
-	print 'recurring'
-	if (request.POST.occurrence_id):
-		occurrence_id = int(request.POST.occurrence_id)
-
-		delete_recurring_events(request, occurrence_id)
-		new_event(request)
-
-		datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
-		redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
-		return HttpResponseRedirect(redirect_link)
-
 @login_required
 def edit_event(request, event_id):
-	print request
 	form_data = request.POST
 
 	user = User.objects.get(username=request.user.username)
@@ -400,15 +403,15 @@ def edit_event(request, event_id):
 			if request.POST.get("occurrence_id"):
 				occurrence_id = int(request.POST.get("occurrence_id"))
 
-				delete_recurring_events(request, occurrence_id)
+				delete_recurring_events(request, occurrence_id, event.event_date)
 				new_event(request)
 
-				datetime_obj = datetime.strptime(event.event_date, "%Y-%m-%d")
+				datetime_obj = event.event_date
 				redirect_link = '../../../calendar/' +  datetime_obj.strftime('%Y') + '/' + datetime_obj.strftime('%m')
 				return HttpResponseRedirect(redirect_link)
 
 		if user and event:
-			event.name=form_data.get('event_name')
+			event.name=form_data.get('name')
 			event.event_type=form_data.get('event_type')
 			event.description=form_data.get('description')
 			event.companies=form_data.get('companies')
@@ -422,7 +425,7 @@ def edit_event(request, event_id):
 			return HttpResponseRedirect(redirect_link)
 
 		else:
-			event = jam_event(name=form_data.get('event_name'),
+			event = jam_event(name=form_data.get('name'),
 						  event_type=form_data.get('event_type'),
 						  description=form_data.get('description'),
 						  companies=form_data.get('companies'),
@@ -446,13 +449,19 @@ def edit_event(request, event_id):
 		delete_button = True
 		recurrence_object = EventOccurrence.objects.filter(id=event.occurrence_id).first()
 		recurrence = recurrence_object.frequency
+		
+		end_date = recurrence_object.end_date
+		end_date = str(end_date)
+		datetime.strptime(end_date, "%Y-%m-%d")
 	else:
 		delete_button = False
 		recurrence = None
+		end_date = None
 
 	context = {'event': event, 'event_name': event.name, 'description': event.description, 'event_date': event_date,
 	'start_time': event.start_time.strftime("%I:%M %p"), 'end_time': event.end_time.strftime("%I:%M %p"), 'creator': event.creator, 'event_type': event.event_type, 
-	'companies': event.companies, "delete_button": delete_button, 'recurrence': recurrence}
+	'companies': event.companies, "delete_button": delete_button, 'recurrence': recurrence, 'end_date': end_date,
+	'occurrence_id': event.occurrence_id}
 
 	return render(request, 'events/event_edit.html', context)
 
@@ -513,10 +522,8 @@ def month_view(
 	#### JAM CODE ####
 	
 	my_events = request.user.events.filter(event_date__contains=month) #access all of the users events
-	print my_events
 
 	my_new_events = request.user.profile.events.none()
-	print month
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
 			my_new_events = my_events.filter(event_type = 'Interview') | my_new_events
@@ -544,36 +551,6 @@ def month_view(
 		else:
 			other = False
 		my_events = my_new_events
-
-	#my_events = request.user.events.all()
-	# my_new_events = request.user.profile.events.none()
-	# if request.method == "POST":
-	# 	if request.POST.get('Interviews'):
-	# 		my_new_events = my_events.filter(event_type = 'int') | my_new_events
-	# 	else:
-	# 		interview = False
-
-	# 	if request.POST.get('Career Fairs'):
-	# 		my_new_events = my_events.filter(event_type = 'fair') | my_new_events
-	# 	else:
-	# 		careerFair = False
-
-	# 	if request.POST.get('Application Deadline'):
-	# 		my_new_events = my_events.filter(event_type = 'app') | my_new_events
-	# 	else:
-	# 		app_deadline = False
-
-	# 	if request.POST.get('Info Sessions'):
-	# 		my_new_events = my_events.filter(event_type = 'info') | my_new_events
-	# 	else:
-	# 		infoSession = False
-
-	# 	if request.POST.get('Other'):
-	# 		my_new_events = my_events.filter(event_type = 'other') | my_new_events
-	# 	else:
-	# 		other = False
-
-	# 	my_events = my_new_events
 
 	def start_date(o):
 		return o.event_date.day

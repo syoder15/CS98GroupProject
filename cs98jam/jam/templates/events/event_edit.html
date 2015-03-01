@@ -22,29 +22,29 @@
 
 				<div class="form-group">
 					<label for="event_name_input" class="col-md-4 control-label">Event Name: </label>
-					<div class="col-md-8"> 
-						<input id="event_name_input" class="form-control" name="event_name" placeholder="Google Tech Interview" onblur = 'validateName(this.id)' value="{{ event_name }}" required  />
+					<div class="col-md-4"> 
+						<input id="event_name_input" class="form-control" name="name" placeholder="Google Tech Interview" onblur = 'validateName(this.id)' value="{{ event_name }}" required  />
 						<span class="error" name="event_name_input" style="display:none; background-color: white; color: red"> </span>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="event_description_input" class="col-md-4 control-label">Event Description: </label>
-					<div class="col-md-8"> 
+					<div class="col-md-4"> 
 						<input id="event_description_input" class="form-control" name="description" placeholder="At 123 Main Street, bring resume" value="{{description}}"  />
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="event_companies_input" class="col-md-4 control-label">Companies: </label>
-					<div class="col-md-8"> 
+					<div class="col-md-4"> 
 						<input id="event_companies_input" class="form-control" name="companies" placeholder="Google, Pinterest, Apple" value="{{ companies }}"  />
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="event_date_input" class="col-md-4 control-label">Date: </label>
-					<div class="col-md-8">
+					<div class="col-md-2">
 						<input id="event_date_input" class="form-control" name="event_date" placeholder="YYYY-MM-DD" onblur="validateDeadline('event_date_input')" value="{{ event_date }}" required />
 						<span class="error-message" style="display:none; color:red;"> {{ validity }} </span>
 					</div>
@@ -52,7 +52,7 @@
 
 				<div class="form-group">
 					<label for="event_start_time_input" class="col-md-4 control-label">Start Time: </label>
-					<div class="col-md-8">
+					<div class="col-md-2">
 						<input id="event_start_time_input" class="form-control" name="start_time" placeholder="2:00 PM" 
 						value="{{ start_time }}" required />
 					</div>
@@ -60,7 +60,7 @@
 
 				<div class="form-group">
 					<label for="event_end_time_input" class="col-md-4 control-label">End Time: </label>
-					<div class="col-md-8">
+					<div class="col-md-2">
 						<input id="event_end_time_input" class="form-control" name="end_time" placeholder="5:00 PM" onblur="validateTimes('event_start_time_input','event_end_time_input')" value="{{ end_time }}" />
 						<span class="time-error" style="display:none; color:red;">  </span>
 
@@ -69,7 +69,7 @@
 
 				<div class="form-group">
 					<label for="event_recurrence_input" class="col-md-4 control-label">Recurrence: </label>
-					<div class="col-md-8"> 
+					<div class="col-md-2"> 
 						<select id="event_recurrence_input" name="recurrence">
 							<option value="{{recurrence}}">{{recurrence}}</option>
 			                <option value="None">None</option>
@@ -79,6 +79,14 @@
 			                <option value="Annually">Annually</option>
 		        		</select>
 	        		</div>
+				</div>
+
+				<div class="form-group">
+					<label for="end_date_input" class="col-md-4 control-label">Recurrence End Date: </label>
+					<div class="col-md-2">
+						<input id="end_date_input" class="form-control" name="end_date" placeholder="YYYY-MM-DD" onblur="validateDeadline('end_date_input')" value="{{ end_date }}" />
+						<span class="error-message" style="display:none; color:red;"> {{ validity }} </span>
+					</div>
 				</div>
 				
 				<div class="form-group">
