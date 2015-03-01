@@ -54,6 +54,12 @@ a:link, a:visited {
 	color: #209cc1;
 }
 
+#userIconFirst {
+	margin-top:4px;
+	width:47px; 
+	height:40px;
+}
+
 #userIcon {
 	margin-top: -9px;
 	margin-bottom: -7px;
@@ -256,6 +262,10 @@ a:link, a:visited {
 	border: none;
 	white-space: nowrap; 
 	width: 100%;
+}
+
+.col-md-offset-1-5 {
+	margin-left:12.5%;
 }
 
 @media screen and (max-width: 768px){
