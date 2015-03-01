@@ -28,10 +28,17 @@
 			{% if companies %}
 			<tr>
 				<th>Companies:</th> 
-				<td> 
+				<ol>
+					<td>
 					{% for c in companies %}
-					<a href="{% url 'companies' c %}">{{ c }}</a></td>
+						<li><a href="{% url 'companies' c %}">{{ c }}</a></li>
 					{% endfor %}
+					{% for d in other_comp %}
+						<li>{{ d }}</li>
+					{% endfor %}
+				</td>
+				</ol>
+
 			</tr>
 			{% endif %}
 

@@ -359,9 +359,15 @@ def events_page(request, event_id, event_name):
 		comps = ''
 
 	companies = []
+	non_companies = []
+	print "COMPANY SET" + str(request.user.company_set.all())
 	for c in comps:
 		if request.user.company_set.filter(name=c).exists():
  			companies.append(c)
+ 		else:
+ 			non_companies.append(c)
+ 	print "COMPANIES!!! " + str(companies)
+ 	print "NON COMPANIES!!!  " + str(non_companies)
  	
  	
  	if('delete' in data):
@@ -384,7 +390,7 @@ def events_page(request, event_id, event_name):
 	context = {'events': events, 'event': event, 'event_name': event_name, 'event_description': event_description, 'event_date': event_date,
 	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 
 	'google_link': google_link, "controlled_channels": request.user.controlledChannels, 
-	'companies': companies, 'recurrence': recurrence, 'delete_button': show_delete_all, 'occurrence_id': occurrence_id, 
+	'companies': companies, 'other_comp': non_companies, 'recurrence': recurrence, 'delete_button': show_delete_all, 'occurrence_id': occurrence_id, 
 	'event_id': event.id, 'end_date': end_date}
 
 	return render(request, 'events/event_detail_page.html', context)
