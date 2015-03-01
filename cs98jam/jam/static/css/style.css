@@ -142,7 +142,7 @@ a:link, a:visited {
 }
 
 .menuBar {
-	height: 9vh;
+	height: 7vh;
 }
 
 /******* Container *******/
@@ -222,7 +222,7 @@ a:link, a:visited {
 .left-bar {
 	background-color:#bddbef;
 	border-right:1px solid #c8c8c8; 
-	height:91vh; 
+	height:91.5vh; 
 	overflow:auto;
 }
 
@@ -231,7 +231,7 @@ a:link, a:visited {
 }
 
 .details-body {
-	height: 91vh;
+	height: 91.5vh;
 	background-color: #f5f5f5;
 	overflow:auto;
 }
