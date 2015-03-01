@@ -1,19 +1,21 @@
-{% block head %}
-  <title>JAM | Login</title>
-  
-  {% load staticfiles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'account/register.css' %}" />
-  
+{% extends "../../jam/templates/jam/index/base.html" %}
+
+ {% block header %}
+  <header class="navbar navbar-fixed-top">
+    {% include "jam/nav/login-nav.html" %}
+  </header>
 {% endblock %}
 
-<body>
-<div class="register">
+
+{% block content %}
+<div class="vertical-center container">
+	<div class="text-left">
   <h1>Create an account.</h1>
 
-  <form action="" method="post">
+  <form action="" method="post" class="text-left">
 	{% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Create the account">
+      <button type="submit" class="btn-default btn-primary" value="Create the account">Create the account</button>
   </form> 
 </div>
-</body>
+{% endblock %}
