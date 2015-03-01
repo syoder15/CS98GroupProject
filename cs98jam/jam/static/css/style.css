@@ -9,6 +9,12 @@ html, body {
 	height: 100%;
 }
 
+#id_username {
+	color: #999999;
+}
+#id_password {
+	color: #999999;
+}
 
 .vertical-center {
 	 margin: auto;
@@ -266,6 +272,28 @@ a:link, a:visited {
 
 .col-md-offset-1-5 {
 	margin-left:12.5%;
+}
+
+.team-profile {
+	margin:10px 0px;
+	padding:10px;
+}
+
+.team-profile-border {
+	padding:8px;
+	border:2px solid #fbfafa;
+	box-shadow: 0 0 3px gray;
+}
+
+.team-profile:hover {
+	opacity:0.3;
+	transition: all 1s ease;
+}
+
+.team-profile-pic {
+	width:100%;
+	margin-bottom:10px;
+	font:16px;
 }
 
 @media screen and (max-width: 768px){
