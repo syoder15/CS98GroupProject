@@ -49,7 +49,7 @@ def new_company(request):
 		# check whether we've got a valid date. if invalid, we need them to fix their form errors!
 		application_deadline = form_data.get('deadline')
 		validity = is_valid_date(application_deadline)
-		if(validity!=''):
+		if(validity!=None):
 			# return bad request if the deadline is still invalid somehow (but very unlikely!)
 			response={}
 			response["error"] = validity
@@ -306,7 +306,7 @@ def companies(request, company_name):
 				application_deadline = data.get('application_deadline')
 				error = is_valid_date(application_deadline)
 
-				if error == "" and company.application_deadline != datetime.strptime(data.get('application_deadline'),"%Y-%m-%d"):
+				if error == None and company.application_deadline != datetime.strptime(data.get('application_deadline'),"%Y-%m-%d"):
 
 					title = str(company.name) + ' Deadline'
 					if company.application_deadline:
