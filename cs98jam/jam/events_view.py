@@ -228,7 +228,13 @@ def new_event(request):
 
 		event_date = form_data.get('event_date')
 		validity = is_valid_date(event_date)
-		if(validity!=''):
+
+		end_date = form_data.get('end_date')
+		end_validity = ''
+		if (end_date):
+			end_validity = is_valid_date(end_date)
+
+		if(validity!='' and end_validity !=''):
 	
 			# return bad request if the date is still invalid somehow (but very unlikely!)
 			response={}
