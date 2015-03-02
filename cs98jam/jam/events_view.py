@@ -360,14 +360,12 @@ def events_page(request, event_id, event_name):
 
 	companies = []
 	non_companies = []
-	print "COMPANY SET" + str(request.user.company_set.all())
 	for c in comps:
 		if request.user.company_set.filter(name=c).exists():
  			companies.append(c)
  		else:
  			non_companies.append(c)
- 	print "COMPANIES!!! " + str(companies)
- 	print "NON COMPANIES!!!  " + str(non_companies)
+
  	
  	
  	if('delete' in data):
