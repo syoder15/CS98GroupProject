@@ -270,6 +270,8 @@ a:link, a:visited {
 	width: 100%;
 }
 
+/***** Team *****/
+
 .col-md-offset-1-5 {
 	margin-left:12.5%;
 }
@@ -288,12 +290,27 @@ a:link, a:visited {
 .team-profile:hover {
 	opacity:0.3;
 	transition: all 1s ease;
+	z-index: 1; 
 }
 
 .team-profile-pic {
 	width:100%;
 	margin-bottom:10px;
 	font:16px;
+}
+
+.team-profile-bio {
+	display: block;
+	position: absolute;
+	width: 100%;
+	top: 10px;
+	left: 0;
+	z-index: -1;
+	text-align: center;
+}
+
+.team-profile-bio:hover {
+	z-index:5 !important;
 }
 
 @media screen and (max-width: 768px){
