@@ -255,7 +255,7 @@ def company_info(company_name,request, error):
 		show_company = False
 
 	context = {'companies': companies, 'company_name': company.name, 'events': events,			
-	'application_deadline': app_deadline, 'show': show_company,'status': company.application_status, 'error': error, 'company_edit': company_edit,
+	'application_deadline': app_deadline, 'show': show_company,'status': company.application_status, 'errors': error, 'company_edit': company_edit,
 	'contacts': contacts, 'link': link, 'has_link': has_link, 'company_notes': company.notes, 'upload_form': upload_form, 'username': request.user.username, "controlled_channels": request.user.controlledChannels}
 	return context
 

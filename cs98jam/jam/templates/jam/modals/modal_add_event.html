@@ -89,7 +89,8 @@
 				<div class="form-group" id="end_date_div">
 					<label for="end_date_input" class="col-md-4 control-label">Recurrence End Date: </label>
 					<div class="col-md-8">
-						<input id="end_date_input" class="form-control" name="end_date" placeholder="YYYY-MM-DD" required />
+						<input id="end_date_input" class="form-control" name="end_date" placeholder="YYYY-MM-DD" onblur="validateDeadline('end_date_input')" required />
+						<span class="error-message" style="display:none; color:red;"> </span>
 					</div>
 				</div>
 				
@@ -114,7 +115,7 @@
         	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			<input class="btn btn-primary event-btn" type="submit" value="Add New Event"/>
 			<br>
-			<span class="server-error" style="color:red">{{ error }}</span>
+			<span class="event-server-error" style="color:red">{{ error }}</span>
       	</div>
       </div>
 	</div>

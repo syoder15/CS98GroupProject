@@ -12,7 +12,7 @@
 			<label for="application_deadline_input" class="col-md-3 control-label">Application Deadline: </label>
 			<div class="col-md-8"> 
 				<input id="application_deadline_input" class="form-control" placeholder="YYYY-MM-DD" name="application_deadline" value='{{ application_deadline }}' onblur="validateDeadline()"/>
-				<span class ="date_error_message" style="color:red;"> {% if error %} {{error}} {% endif %} </span>
+				<span class ="date_error_message" style="color:red;"> {% if errors %} {{errors}} {% endif %} </span>
 			</div>
 		</div>
 		<div class="form-group"> 

@@ -160,7 +160,7 @@ function submitChannelForm(event){
 			me.data('requestRunning',false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
-				$('.server-error').html(errors[error]);
+				$('.channel-server-error').html(errors[error]);
 			}
 			console.log('about to return false');
 			return false;
@@ -241,7 +241,7 @@ function submitContactForm(event){
 			me.data('requestRunning',false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
-				$('.server-error').html(errors[error]);
+				$('.contact-server-error').html(errors[error]);
 			}
 			console.log('about to return false');
 			return false;
@@ -357,7 +357,7 @@ function submitCompanyForm(event){
 			//$("input[type=submit]").prop("disabled", false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
-				$('.server-error').html(errors[error]);
+				$('.company-server-error').html(errors[error]);
 			}
 			me.on('click', submitCompanyForm);
 			me.data('requestRunning',false);
@@ -465,7 +465,7 @@ function submitEventForm(event){
 			//$("input[type=submit]").prop("disabled", false);
 			var errors = JSON.parse(response.responseText);
 			for(error in errors){
-				$('.server-error').html(errors[error]);
+				$('.event-server-error').html(errors[error]);
 			}
 			me.on('click', submitEventForm);
 			me.data('requestRunning',false);
