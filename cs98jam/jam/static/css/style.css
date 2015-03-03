@@ -290,7 +290,7 @@ a:link, a:visited {
 .team-profile:hover {
 	opacity:0.3;
 	transition: all 1s ease;
-	z-index: 1; 
+	z-index: 555 !important; 
 }
 
 .team-profile-pic {
@@ -310,7 +310,9 @@ a:link, a:visited {
 }
 
 .team-profile-bio:hover {
-	z-index:5 !important;
+	opacity:0.3;
+	transition: all 1s ease;
+	z-index:555555 !important;
 }
 
 @media screen and (max-width: 768px){
