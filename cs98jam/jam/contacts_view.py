@@ -102,8 +102,12 @@ def contacts(request, contact_name):
 				if c.name in data:
 					c.delete()
 					break
-			context = get_contact_info(request,contact_name,False)
-
+			#context = get_contact_info(request,contact_name,False)
+			contacts = request.user.contact_set.all()
+			contacts = sorted(contacts, key=lambda contact: contact.name)
+			if len(contacts) != 0:
+				contact_name = contacts[0].name
+				context = get_contact_info(request,contact_name,False)
 	else:
 
 		if len(contacts) != 0:
