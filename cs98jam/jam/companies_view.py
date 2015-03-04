@@ -58,7 +58,7 @@ def new_company(request):
 
 			#probs should get rid of this shit bc its dead code but yolo...soon!
 			#context = { 'validity' : validity }
-			#return render(request, 'jam/modals/modal_add_company.html', context)
+			return render(request, 'jam/modals/modal_add_company.html', context)
 		
 		company_name = form_data.get('name')
 
