@@ -61,25 +61,30 @@ def contacts(request, contact_name):
 			contact = request.user.contact_set.filter(name=contact_name).first()
 			print "Contact name is " + contact.name 
 
-			contact.name = data.get('name')
-
-			emailAddr = data.get('email')
-			if emailAddr:
-				contact.email=emailAddr
+			new_name = data.get('name')
+			if contact.name != new_name and request.user.contact_set.filter(name=new_name).exists():
+				error = "I'm sorry, you have another contact with the name " + new_name + ". Please change the name to ensure uniqueness."
+				context = get_contact_info(request,contact.name,True, error)
 			else:
-				contact.email=None
+				contact.name = new_name
 
-			phoneNum = data.get('phone')
-			if phoneNum:
-				contact.phone_number=phoneNum
-			else:
-				contact.phone_number=None
-				
-			contact.employer=data.get('employer')
-			contact.notes=data.get('notes')
+				emailAddr = data.get('email')
+				if emailAddr:
+					contact.email=emailAddr
+				else:
+					contact.email=None
 
-			contact.save()			
-			context = get_contact_info(request,contact.name,False)
+				phoneNum = data.get('phone')
+				if phoneNum:
+					contact.phone_number=phoneNum
+				else:
+					contact.phone_number=None
+					
+				contact.employer=data.get('employer')
+				contact.notes=data.get('notes')
+
+				contact.save()			
+				context = get_contact_info(request,contact.name,False,None)
 
 			print "saved contact"
 
@@ -96,7 +101,7 @@ def contacts(request, contact_name):
 			else:
 				contact_name = data.get('contact_name')
 
-			context = get_contact_info(request,contact_name, contact_edit)
+			context = get_contact_info(request,contact_name, contact_edit,None)
 		else: 
 			for c in contacts:
 				if c.name in data:
@@ -107,7 +112,7 @@ def contacts(request, contact_name):
 			contacts = sorted(contacts, key=lambda contact: contact.name)
 			if len(contacts) != 0:
 				contact_name = contacts[0].name
-				context = get_contact_info(request,contact_name,False)
+				context = get_contact_info(request,contact_name,False,None)
 			else: 	
 				context = {'contacts': contacts, 'username': request.user.username, 'upload_form': upload_form, "controlled_channels": request.user.controlledChannels}
 
@@ -117,11 +122,11 @@ def contacts(request, contact_name):
 			if contact_name == 'all':
 				contact_name = contacts[0].name
 
-			context = get_contact_info(request,contact_name,False)
+			context = get_contact_info(request,contact_name,False,None)
 			
 	return render(request, 'jam/contacts/contacts.html', context)
 
-def get_contact_info(request, contact_name, contact_edit):
+def get_contact_info(request, contact_name, contact_edit, error):
 
 	contacts = request.user.contact_set.all()
 	contacts = sorted(contacts, key=lambda contact: contact.name)
@@ -149,7 +154,7 @@ def get_contact_info(request, contact_name, contact_edit):
 
 	context = {'contact_edit': contact_edit,'contacts': contacts, 'username': request.user.username, 'contact_email': email_address,
 	'show': show_contact, 'c_name': contact_name, 'contact_notes': notes, 'phone_number': phone_num,
-	'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels}
+	'employer': employer, 'upload_form': upload_form, 'employer_exists': employer_exists, "controlled_channels": request.user.controlledChannels, 'name_error': error}
 
 	return context
 

@@ -5,8 +5,8 @@
 			<label for="{{ c_name }}" class="col-md-3 control-label"><h3>Contact Name: </h3></label>
 			<div class="col-md-8"> <h3>
 				<input id="name_input" class="form-control" name="name" value='{{ c_name }}' maxlength="50" placeholder="Name: eg. John Smith" onblur = 'validateName(this.id)' required  />
-				<input type="hidden" name="contact_name" value='{{ c_name }}'/>
-				<span class="error" name="name_input" style="display:none; background-color: white; color: red"> </span> </h3>
+				<input type="hidden" name="contact_name" value='{{ c_name }}'/> </h3>
+				<span class="error" name="name_input" style="color: red"> {% if name_error %} {{ name_error }} {% endif %}</span>
 			</div>
 		</div>
 
