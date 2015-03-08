@@ -20,7 +20,7 @@
 					<th>Description:</th> 
 					<td>{{ channel_description }}</a></td>
 				</tr>
-				<tr> 
+<!-- 				<tr> 
 					<th>
 						To unsubscribe:
 					</th>
@@ -30,7 +30,8 @@
 							<input class="button btn btn-default btn-small" name="Unsubscribe-{{channel_name}}" type="submit" value="Unsubscribe"/>
 						</form>
 					</td>
-				</tr>
+				</tr> -->
+				{% if adminNotes.all %}
 				<tr>
 					<th>Recent Notes from Admins:</th>
 					<td>
@@ -38,6 +39,9 @@
 							{{ note.text }} - {{ note.author }} @ {{ note.created_at }}
 						{% endfor %}
 					</td>
+				</tr>
+				{% endif %}
+				{% if unadded_e.all %}
 				<tr>
 					<th>All Events: </th>
 					<td> 
@@ -54,6 +58,7 @@
 						{% endfor %}
 					</td>
 				</tr>	
+				{% endif %}
 				<tr> 
 					<th>
 						<form class="goHome" method="POST" action="">
@@ -61,7 +66,12 @@
 							<input class="button btn btn-default btn-small" name="back_home" type="submit" value="Back"/>
 						</form>
 					</th>
-					<td></td>
+					<td>
+						<form class="leaveChannel" method="POST">
+							{% csrf_token %}
+							<input class="button btn btn-default btn-small" name="Unsubscribe-{{channel_name}}" type="submit" value="Unsubscribe"/>
+						</form>
+					</td>
 				</tr>
 			</tbody>
 		</table>

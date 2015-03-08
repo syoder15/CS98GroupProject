@@ -39,15 +39,18 @@
 				{% if is_subscriber %} 
 				<tr> 
 					<th>
-						You are subscribed to this channel!
+						
 					</th>
 					<td>
-						<form class="joinChannel" method="POST">
+						You are subscribed to this channel!
+						<form class="joinChannel" method="POST" style="margin-top:20px;">
 							{% csrf_token %}
 							<input class="button btn btn-default btn-small" name="Unsubscribe" type="submit" value="Unsubscribe"/> 
 						</form>
 					</td>
 				</tr>
+
+				{% if unadded_e.all %}
 				<tr>
 					<th>All Events: </th>
 					<td> 
@@ -64,6 +67,8 @@
 						{% endfor %}
 					</td>
 				</tr>	
+				{% endif %}
+						
 				{% elif channel_status %}
 				<tr>
 					<th></th>

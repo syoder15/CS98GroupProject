@@ -13,8 +13,8 @@
 		<form class="channelInfo form-horizontal" method="POST"> 
 			{% csrf_token %}
 			<div class="form-group"> 
-				<label class="col-md-3 control-label"><h3>Channel Name: </h3></label>
-				<div class="col-md-8"> 
+				<label class="col-md-3 control-label-jam"><h3>Channel Name: </h3></label>
+				<div class="col-md-8" > 
 					<h3>{{ channel_name }}</h3>
 				</div>
 			</div>
@@ -43,24 +43,23 @@
 				<label class="col-md-3 control-label" for="adminNote_input">New Note: </label>
 				<div class="col-md-8">
 					<input class="form-control" id="adminNote_input" name="newAdminNote"/>
-					<input class="button btn btn-default btn-small" type="submit" value="Post"/>
+					<input class="button btn btn-default btn-small" type="submit" value="Post" style="margin-bottom:10px;"/>
+
+					{% for note in adminNotes.all %}
+					
+							<p>{{ note.text }} - {{ note.author }} @ {{ note.created_at }}</p>
+						
+					{% endfor %}
 				</div>
-			</div>
 		</form>
 
-		{% for note in adminNotes.all %}
-		<form class="form-horizontal">
-			<div class="form-group">
-				<p>{{ note.text }} - {{ note.author }} @ {{ note.created_at }}</p>
-			</div>
-		</form>
-		{% endfor %}
+		
 		
 		{% for subscriber in subscribers.all %}
 		<form class="form-horizontal removeSubs" method="POST">
 			{% csrf_token %}
 			<div class="form-group">
-				<label class="col-md-3 control-label">{{ subscriber.username }} </label>
+				<label class="col-md-3 control-label-jam">{{ subscriber.username }} </label>
 				<div class="col-md-8">
 					<input class="button btn btn-default btn-small" name="{{ subscriber.username }}" type="submit" value="Remove"/>
 					<input class="button btn btn-default btn-small" name="{{ subscriber.username }}" type="submit" value="Make Admin"/>
@@ -70,7 +69,7 @@
 		{% endfor %}
 		<form class="form-horizontal">
 			<div class="form-group">
-				<label class="col-md-3 control-label">All Events</label>
+				<label class="col-md-3 control-label-jam">All Events</label>
 				<div class="col-md-8"> 
 					<ul>{% for e in events.all %}
 						<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }}</a></li>

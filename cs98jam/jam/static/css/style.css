@@ -333,3 +333,8 @@ a:link, a:visited {
 .faq_question {
 	color: #5ea6d9;
 }
+
+.control-label-jam {
+	text-align: right;
+	margin-bottom:0;
+}
