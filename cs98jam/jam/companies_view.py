@@ -57,7 +57,7 @@ def new_company(request):
 			return HttpResponseBadRequest(json.dumps(response),content_type="application/json")
 
 			#probs should get rid of this shit bc its dead code but yolo...soon!
-			context = { 'validity' : validity }
+			#context = { 'validity' : validity }
 			return render(request, 'jam/modals/modal_add_company.html', context)
 		
 		company_name = form_data.get('name')
@@ -143,7 +143,8 @@ def company_page(request, company_name):
 	site = settings.DOMAIN
 
 	app_deadline = str(application_deadline)
-	datetime.strptime(app_deadline, "%Y-%m-%d")
+	if app_deadline != "":
+		datetime.strptime(app_deadline, "%Y-%m-%d")
 
 	print 'app_deadline'
 	print app_deadline
@@ -306,7 +307,7 @@ def companies(request, company_name):
 				application_deadline = data.get('application_deadline')
 				error = is_valid_date(application_deadline)
 
-				if error == None and company.application_deadline != datetime.strptime(data.get('application_deadline'),"%Y-%m-%d"):
+				if error == None and application_deadline != "" and company.application_deadline != datetime.strptime(data.get('application_deadline'),"%Y-%m-%d"):
 
 					title = str(company.name) + ' Deadline'
 					if company.application_deadline:
@@ -337,9 +338,12 @@ def companies(request, company_name):
 			company.name = data.get('name')
 			company.notes=data.get('notes')
 			company.link = data.get('app_link')
-			if error == "":
+			if error == None and len(application_deadline) > 0:
 				company.application_deadline = application_deadline
-				company.save()
+			elif len(application_deadline) == 0: 
+				company.application_deadline = None
+
+			company.save()
 
 			context = company_info(company_name,request,error)
 
@@ -439,14 +443,19 @@ def is_valid_date(date):
 	if(date == "" or len(date) == 0):
 		return None
 
-	year = int(date[0:4])
-	month = int(date[5:7])
-	day = int(date[8:10])
-
-
 	if(len(date) < 10):
 		return date + ' is not in YYYY-MM-DD format. Please enter the date properly.'
-	elif ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
+
+	try:
+		year = int(date[0:4])
+		month = int(date[5:7])
+		day = int(date[8:10])
+	except ValueError:
+		return date + ' is not in YYYY-MM-DD format. Please enter the date properly.'
+
+
+
+	if ((year < now.year) or (month < now.month) and (year == now.year)) or  ((month == now.month) and (year == now.year) and (day < now.day)):
 		return date + ' is in the past. Please enter the correct date.'
 	elif ( month >  12 or day > 31):
 		return date + ' is an invalid date. Please enter a valid one.'

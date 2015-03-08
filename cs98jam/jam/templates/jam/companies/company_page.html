@@ -9,7 +9,9 @@
 		<tbody>
 			<tr>
 				<th>Application Deadline:</th>
+				{% if application_deadline %}
 				<td>{{ application_deadline }}</td>
+				{% endif %}
 			</tr>
 			<tr>
 				<th>Notes:</th> 
