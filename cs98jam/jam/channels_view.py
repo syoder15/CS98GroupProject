@@ -12,7 +12,7 @@ import os
 import json
 import re
 from django.db.models import Q
-from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory
+from jam.models import Contact, Company, Profile, Channel, ChannelAdminNote, UserProfile, ChannelCategory, Event, EventOccurrence
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from swingtime import utils, forms
@@ -21,7 +21,6 @@ from dateutil import parser
 from django import http
 import calendar
 from datetime import datetime, timedelta, time
-from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
@@ -217,17 +216,28 @@ def view_channel(request, channel_name):
 
 	added_events = channel.events.all() & request.user.events.all()
 	unadded_events = channel.events.all().exclude(pk__in = added_events.all())
+
+	recurring_events = []
+	for e in added_events:
+		if e.occurrence_id:
+			occ = EventOccurrence.objects.filter(id=e.occurrence_id).first()
+			recurring_events.append(occ)
+		else:
+			recurring_events.append(None)
 		
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
-		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events, "controlled_channels": request.user.controlledChannels}
+		'is_admin': is_admin, 'unadded_e': unadded_events, 'added_e': added_events, "controlled_channels": request.user.controlledChannels,}
 
 	if request.method == 'POST':
 		event_added = False
 		for key in request.POST:
 			if key.isdigit() and channel.events.filter(pk = key).exists():
 				event = channel.events.filter(pk = key).first()
-				request.user.events.add(event)
+
+				all_events = Event.objects.filter(occurrence_id=event.occurrence_id)
+				for e in all_events:
+					request.user.events.add(e)
 				event_added = True
 		
 		if 'Unsubscribe' in request.POST:

@@ -60,7 +60,11 @@
 						{% endfor %}
 						
 						<ul>{% for e in added_e.all %}
+							{% if e.occurrence_id %}
+							<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }} - {{e.event_date}} - {{e.start_time}} (RECURRING)</a></li>
+							{% else %}
 						<li><a href="{% url 'events_page' event_id=e.id event_name=e.name %}">{{ e }} - {{e.event_date}} - {{e.start_time}}</a></li>
+							{% endif %}
 						{% endfor %}
 					</td>
 				</tr>	

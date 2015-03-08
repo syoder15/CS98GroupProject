@@ -272,8 +272,6 @@ def new_event(request):
 						  occurrence_id = occurrence_id,
 						  creator=request.user)
 
-			print event
-
 			add_recurring_events(request, event, occurrence)
 		else:
 			event = jam_event(name=event_name,
@@ -308,20 +306,35 @@ def new_event(request):
 
 		return render(request, 'jam/index/index_landing_home.html', context)
 
+
+def delete_event(request, event_id):
+	event = request.user.events.get(id=event_id)
+	if event in request.user.owned_events.all():
+		owned_event = request.user.owned_events.get(id=event_id)
+		owned_event.delete()
+
+		event.delete()
+	else:
+		request.user.events.remove(event)
+
 def delete_recurring_events(request, occurrence_id, edit_date):
 	events = request.user.events.filter(occurrence_id=occurrence_id)
-
+	print request.user.owned_events.all()
 	for e in events:
-		if edit_date and edit_date <= e.event_date:
-			delete_event(request, e.id)
-		elif edit_date == None:
-			delete_event(request, e.id)
+		if e in request.user.owned_events.all():
+			if edit_date and edit_date <= e.event_date:
+				delete_event(request, e.id)
+			elif edit_date == None:
+				delete_event(request, e.id)
+			else:
+					e.occurrence_id = None
+					e.save()
 		else:
-			e.occurrence_id = None
-			e.save()
+			reques.user.events.remove(e)
 
-	occurrence = EventOccurrence.objects.filter(id=occurrence_id).first()
-	occurrence.delete()
+	if events[0] in request.user.owned_events.all():
+		occurrence = EventOccurrence.objects.filter(id=occurrence_id).first()
+		occurrence.delete()
 
 @login_required
 def events_page(request, event_id, event_name):
@@ -329,7 +342,11 @@ def events_page(request, event_id, event_name):
 	events = request.user.events.all()
 	#event = request.user.events.filter(id=event_id)
 	event = request.user.events.get(id=event_id)
-	
+	if event in request.user.owned_events.all():
+		owned = True
+	else:
+		owned = False
+
 	event_type = event.event_type
 	event_description = event.description
 	event_date = event.event_date
@@ -395,7 +412,7 @@ def events_page(request, event_id, event_name):
 	'start_time': start_time.strftime("%I:%M %p"), 'end_time': end_time.strftime("%I:%M %p"), 'event_type': event_type, 
 	'google_link': google_link, "controlled_channels": request.user.controlledChannels, 
 	'companies': companies, 'other_comp': non_companies, 'recurrence': recurrence, 'delete_button': show_delete_all, 'occurrence_id': occurrence_id, 
-	'event_id': event.id, 'end_date': end_date}
+	'event_id': event.id, 'end_date': end_date, 'owned_event': owned}
 
 	return render(request, 'events/event_detail_page.html', context)
 
@@ -475,12 +492,7 @@ def edit_event(request, event_id):
 
 	return render(request, 'events/event_edit.html', context)
 
-def delete_event(request, event_id):
-	event = request.user.events.get(id=event_id)
-	owned_event = request.user.owned_events.get(id=event_id)
 
-	event.delete()
-	owned_event.delete()
 
 @login_required
 def month_view(

@@ -46,7 +46,8 @@
 				<div class="form-group">
 					<label for="event_date_input" class="col-md-4 control-label">Event Date: </label>
 					<div class="col-md-8">
-						<input id="event_date_input" class="form-control" name="date" placeholder="YYYY-MM-DD" required />
+						<input id="event_date_input" class="form-control" name="date" placeholder="YYYY-MM-DD" onblur="validateDeadline('event_date_input')" required />
+						<span class="error-message" style="display:none; color:red;"> </span>
 					</div>
 				</div>
 
@@ -54,6 +55,7 @@
 					<label for="event_start_time_input" class="col-md-4 control-label">Start Time: </label>
 					<div class="col-md-8">
 						<input id="event_start_time_input" class="form-control" name="startTime" placeholder="2:00 PM" required />
+
 					</div>
 				</div>
 
