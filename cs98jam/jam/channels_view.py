@@ -226,7 +226,6 @@ def view_channel(request, channel_name):
 				event = channel.events.filter(pk = key).first()
 
 				all_events = Event.objects.filter(occurrence_id=event.occurrence_id)
-				print all_events
 				for e in all_events:
 					request.user.events.add(e)
 				event_added = True
