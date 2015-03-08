@@ -50,8 +50,6 @@ def channel_list(request):
 	if(form_data):
 		if 'search_category' in form_data:
 			cat = form_data.get('search_category')
-		elif 'searchCats' in form_data:
-			cat = form_data.get('search')
 		# it must be a call from modal_add_channel to create a new channel!
 		elif 'searchWords' in form_data:
 			query_string = ''
@@ -67,7 +65,7 @@ def channel_list(request):
 			new_channel(request) 
 		
 		# if no channels are categorized under a given search term, the channels returned are an empty list... 
-		# the HTML will populate with the line "No results found" d
+		# the HTML will populate with the line "No results found" 
 		
 		if(cat != '' and ChannelCategory.objects.filter(name=cat).exists()):
 			channels = {}
