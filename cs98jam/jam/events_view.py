@@ -20,7 +20,6 @@ from dateutil import parser
 from django import http
 import calendar
 from datetime import datetime, timedelta, time
-from swingtime.models import Occurrence, Event
 from itertools import chain, groupby
 from django.db import models
 from django.utils import timezone
@@ -28,88 +27,6 @@ from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
 upload_form = UploadFileForm
-
-######################################################################################
-# The following views were taken from django swingtime: https://github.com/dakrauth/django-swingtime
-# We made slight edits which include comments below. These edits were made in order to allow user-specific
-# calendars for our Events page
-######################################################################################
-# @login_required
-# def add_event(
-# 	request,
-# 	template='swingtime/add_event.html',
-# 	event_form_class=forms.EventForm,
-# 	recurrence_form_class=forms.MultipleOccurrenceForm,
-# 	channel_name = None
-# ):
-# 	'''
-# 	Add a new ``Event`` instance and 1 or more associated ``Occurrence``s.
-
-# 	Context parameters:
-
-# 	dtstart
-# 		a datetime.datetime object representing the GET request value if present,
-# 		otherwise None
-
-# 	event_form
-# 		a form object for updating the event
-
-# 	recurrence_form
-# 		a form object for adding occurrences
-
-# 	'''
-# 	dtstart = None
-# 	if request.method == 'POST':
-# 		event_form = event_form_class(request.POST)
-# 		recurrence_form = recurrence_form_class(request.POST)
-# 		if event_form.is_valid() and recurrence_form.is_valid():
-# 			event = event_form.save()
-			
-# 			#### JAM CODE ####
-# 			if (not channel_name):
-# 				user_profile = get_object_or_404(UserProfile, user=request.user) ##grab the user profile which we will add events to
-# 				user_profile.events.add(event) #associate the current event with a user's profile
-# 				user_profile.owned_events.add(event)
-
-# 				company_field = request.POST.get('description')
-# 				company_field = company_field.replace(" ", "")
-# 				companies = company_field.split(',')
-# 				for c in companies:
-# 					if len(request.user.company_set.filter(name=c)) > 0:
-# 						company = request.user.company_set.filter(name=c)
-# 						company = company[0]
-# 						company.events.add(event)
-
-# 			elif (request.user.controlledChannels.filter(name=channel_name).exists()):
-# 				channel = get_object_or_404(Channel, name=channel_name)
-# 				channel.events.add(event)
-# 				for user in channel.admins.all():
-# 					user.profile.owned_events.add(event)
-# 					user.profile.events.add(event)
-				
-# 			#### JAM CODE ####	
-# 			recurrence_form.save(event)
-# 			return http.HttpResponseRedirect(event.occurrence_set.first().get_absolute_url())
-# 	else:
-# 		if 'dtstart' in request.GET:
-# 			try:
-# 				dtstart = parser.parse(request.GET['dtstart'])
-# 			except:
-# 				# TODO A badly formatted date is passed to add_event
-# 				pass
-
-# 		dtstart = dtstart or datetime.now()
-# 		event_form = event_form_class()
-# 		recurrence_form = recurrence_form_class(initial={'dtstart': dtstart})
-
-# 		#print recurrence_form
-
-
-# 	return render(
-# 		request,
-# 		template,
-# 		{'dtstart': dtstart, 'event_form': event_form, 'recurrence_form': recurrence_form, 'username': request.user.username}
-# 	)
 
 def startEndTimeValidation(start_time, end_time):
 	startTime = start_time.split(':')
@@ -549,7 +466,6 @@ def month_view(
 	if request.method == "POST":
 		if request.POST.get('Interviews'):
 			my_new_events = my_events.filter(event_type = 'Interview') | my_new_events
-			print my_new_events
 		else:
 			interview = False
 
@@ -581,8 +497,6 @@ def month_view(
 		return o.event_date.month
 
 	by_day = dict([(dt, list(o)) for dt,o in groupby(my_events, start_date)])
-	print by_day
-	#by_day = dict([(m, dt) for m,dt in groupby(start_month, start_date)])
 	
 	data = {
 		'today'		  : datetime.now(),

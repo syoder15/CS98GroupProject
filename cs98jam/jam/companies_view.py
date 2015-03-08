@@ -32,9 +32,7 @@ upload_form = UploadFileForm
 
 @login_required
 def new_company(request):
-	print "in new company"
-	#START OF CODE
-	### RELEVANT TO IMPORT
+	#START OF CODE RELEVANT TO IMPORT
 	if request.method == "POST" and request.FILES:
 		print "in new company upload multiple"
 		form = UploadFileForm(request.FILES)
@@ -117,7 +115,6 @@ def new_company(request):
 
 			if (application_deadline != "" and len(application_deadline) != 0):
 				company.events.add(evt)
-			print 'made company'
 			context = {'username': request.user.username}
 
 
@@ -127,7 +124,6 @@ def new_company(request):
 @login_required
 @csrf_exempt
 def company_page(request, company_name):
-	print 'company_page view'
 	companies = request.user.company_set.all()
 	company = request.user.company_set.filter(name=company_name).first()
 	contacts = Contact.objects.filter(user=request.user, employer=company_name)
@@ -146,10 +142,6 @@ def company_page(request, company_name):
 	if app_deadline != "":
 		datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	print 'app_deadline'
-	print app_deadline
-
-
 	context = {'company': companies, 'contacts': contacts,'status': company.application_status,'has_link': has_link, 'link': link, 
 	'events': events, 'company_name': company_name, 'application_deadline': app_deadline, 
 	'company_notes': company_notes, 'site': site, "controlled_channels": request.user.controlledChannels}
@@ -165,21 +157,15 @@ def edit_company(request, company_name):
 	company = request.user.company_set.filter(name=company_name).first()
 
 	if form_data:
-		print "GOT HERE YAY"
 		if user and company: 
-			print "first if"
 			if company.application_deadline != form_data.get('app_deadline'):
 
 				title = str(company.name) + ' Deadline'
-				print "second if"
 				if company.application_deadline:
 					old_evt = request.user.events.filter(name=title).first()
 					request.user.events.delete(old_evt)
 					request.user.owned_events.delete(old_evt)
 					old_evt.delete()
-					print "third if"
-
-
 			
 				evt = jam_event(
 					name=title,
@@ -199,11 +185,9 @@ def edit_company(request, company_name):
 			company.name=form_data.get('company_name')
 			company.application_deadline=form_data.get('app_deadline')
 			company.notes=form_data.get('notes')
-			print company.name + company.application_deadline + company.notes
+
 			company.save()
 			redirect_link = '../../../companies/' + company.name
-
-
 
 			return HttpResponseRedirect(redirect_link)
 
@@ -221,13 +205,9 @@ def edit_company(request, company_name):
 	app_deadline = str(app_deadline)
 	datetime.strptime(app_deadline, "%Y-%m-%d")
 
-	print 'app_deadline'
-	print app_deadline
-
 	context = {'company_name': company_name, 'application_deadline': app_deadline, 'notes': company.notes, "controlled_channels": request.user.controlledChannels}
 
 	return render(request, 'jam/companies/company_page_edit.html', context)
-
 
 # yay refactoring reused code. 
 def company_info(company_name,request, error):
@@ -263,7 +243,6 @@ def company_info(company_name,request, error):
 @login_required
 @csrf_exempt
 def companies(request, company_name):
-	print 'companies view'
 	companies = request.user.company_set.all()
 	companies = sorted(companies, key=lambda company: company.name)
 	data = request.POST
@@ -297,7 +276,6 @@ def companies(request, company_name):
 			f.close() 
 
 		elif('save' in data):
-			print "in save"
 			company_name = data.get('name')
 
 			company = request.user.company_set.filter(name=company_name).first()
@@ -333,8 +311,6 @@ def companies(request, company_name):
 					request.user.owned_events.add(evt)
 					company.events.add(evt)
 					
-			#company.name = company_name
-
 			company.name = data.get('name')
 			company.notes=data.get('notes')
 			company.link = data.get('app_link')
@@ -463,7 +439,6 @@ def is_valid_date(date):
 	return None
 
 def read_from_file(user, input_file):
-	print "in read_from_file"
 	for line in input_file:
 		if len(line) > 0:
 			company_info = line.split(',')
