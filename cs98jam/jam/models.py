@@ -61,7 +61,7 @@ class Channel(models.Model):
 	name = models.CharField(max_length = 50)
 	moniker = models.CharField(max_length = 20)
 	description = models.CharField(max_length = 140)
-	is_public = models.BooleanField(default=False)
+	is_public = models.BooleanField(default=True)
 	subscribers = models.ManyToManyField(User, blank=True, null=True)
 	admins = models.ManyToManyField(User, related_name="controlledChannels", blank=True, null=True)
 	events = models.ManyToManyField(Event, blank=True)
