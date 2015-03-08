@@ -272,7 +272,7 @@ a:link, a:visited {
 
 /***** Team *****/
 
-.col-md-offset-1-5 {
+.col-sm-offset-1-5 {
 	margin-left:12.5%;
 }
 
@@ -287,11 +287,6 @@ a:link, a:visited {
 	box-shadow: 0 0 3px gray;
 }
 
-.team-profile:hover {
-	opacity:0.3;
-	transition: all 1s ease;
-	z-index: 555 !important; 
-}
 
 .team-profile-pic {
 	width:100%;
@@ -299,20 +294,25 @@ a:link, a:visited {
 	font:16px;
 }
 
+
 .team-profile-bio {
 	display: block;
 	position: absolute;
-	width: 100%;
-	top: 10px;
-	left: 0;
-	z-index: -1;
+	width: 94%;
+	height: 85%;
+	top: 8px;
 	text-align: center;
+	background: rgba(255,255,255, 0.78);
+	visibility: hidden;
+	opacity: 0;
+	overflow:hidden;
 }
 
-.team-profile-bio:hover {
-	opacity:0.3;
+
+.team-profile-border:hover .team-profile-bio {
+	opacity:1;
+	visibility: visible;
 	transition: all 1s ease;
-	z-index:555555 !important;
 }
 
 @media screen and (max-width: 768px){
@@ -332,4 +332,9 @@ a:link, a:visited {
 }
 .faq_question {
 	color: #5ea6d9;
+}
+
+.control-label-jam {
+	text-align: right;
+	margin-bottom:0;
 }
