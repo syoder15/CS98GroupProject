@@ -69,13 +69,11 @@
 	<div class="col-sm-5" style="text-align:right">
 		<p> <a href="{{ google_link }}" target="_blank">Sync with Google Calendar</a> </p>
 
-		{% if owned_event %}
 		{% if delete_button %}
 			<form class="delete_all" method="POST" action="">
 			{% csrf_token %}
 			<button class="btn btn-default btn-small" id="delete_all" name="delete_all" type="submit" value="{{ event.id }}" onclick="return confirm('Are you sure you want to delete all recurring events: {{ event_name }}?')">Delete All </button>
 			</form>
-		{% endif %}
 		{% endif %}
 
 		<form class="delete" method="POST" action="">

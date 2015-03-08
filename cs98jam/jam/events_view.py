@@ -319,7 +319,7 @@ def delete_event(request, event_id):
 
 def delete_recurring_events(request, occurrence_id, edit_date):
 	events = request.user.events.filter(occurrence_id=occurrence_id)
-	print request.user.owned_events.all()
+
 	for e in events:
 		if e in request.user.owned_events.all():
 			if edit_date and edit_date <= e.event_date:
@@ -330,7 +330,7 @@ def delete_recurring_events(request, occurrence_id, edit_date):
 					e.occurrence_id = None
 					e.save()
 		else:
-			reques.user.events.remove(e)
+			request.user.events.remove(e)
 
 	if events[0] in request.user.owned_events.all():
 		occurrence = EventOccurrence.objects.filter(id=occurrence_id).first()

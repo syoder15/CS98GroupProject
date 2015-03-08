@@ -216,14 +216,6 @@ def view_channel(request, channel_name):
 
 	added_events = channel.events.all() & request.user.events.all()
 	unadded_events = channel.events.all().exclude(pk__in = added_events.all())
-
-	recurring_events = []
-	for e in added_events:
-		if e.occurrence_id:
-			occ = EventOccurrence.objects.filter(id=e.occurrence_id).first()
-			recurring_events.append(occ)
-		else:
-			recurring_events.append(None)
 		
 	context = {'channel_name': channel.name, 'channel_nickname': channel.moniker,
 		'channel_description': channel.description, 'channel_status': channel.is_public, 'categories': channel.categories.all(), 'is_subscriber': is_subscriber,
@@ -236,6 +228,7 @@ def view_channel(request, channel_name):
 				event = channel.events.filter(pk = key).first()
 
 				all_events = Event.objects.filter(occurrence_id=event.occurrence_id)
+				print all_events
 				for e in all_events:
 					request.user.events.add(e)
 				event_added = True
